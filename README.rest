@@ -7,3 +7,5 @@ This is work in progress, and some of it needs research / testing.
 
 
 Epic: http://apidev.atlassian.net/browse/DEVOPS-346
+
+Currently, much of the main code reside in pantheon. This will be moved RSN.

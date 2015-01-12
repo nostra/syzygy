@@ -19,11 +19,6 @@
 
         <dependency>
             <groupId>io.fabric8.etcd.reader</groupId>
-            <artifactId>fabric-etcd-reader-jackson</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.fabric8.etcd.reader</groupId>
             <artifactId>fabric-etcd-reader-gson</artifactId>
         </dependency>
 

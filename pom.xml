@@ -37,6 +37,8 @@
                 <artifactId>pantheon-syzygy</artifactId>
                 <version>${pantheon.version}</version>
             </dependency>
+            <!-- The jackson variant bombs with UnrecognizedPropertyException: Unrecognized field "index"
+                We would like to use it, if it gets corrected
             <dependency>
                 <groupId>io.fabric8.etcd.reader</groupId>
                 <artifactId>fabric-etcd-reader-jackson</artifactId>
@@ -48,6 +50,8 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            -->
+            <!-- Need (unfortunately) to use the gson version, as jackson bombs in 2.0.19 -->
             <dependency>
                 <groupId>io.fabric8.etcd.reader</groupId>
                 <artifactId>fabric-etcd-reader-gson</artifactId>

@@ -6,7 +6,7 @@
         </encoder>
     </appender>
     <logger name="com" level="INFO"/>
-    <logger name="no" level="INFO"/>
+    <logger name="no" level="DEBUG"/>
     <logger name="org" level="INFO"/>
     <logger name="org.apache" level="INFO"/>
     <root level="ALL">

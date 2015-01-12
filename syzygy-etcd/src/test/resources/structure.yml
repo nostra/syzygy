@@ -1,0 +1,10 @@
+config.key: 'top.level.config.value'
+www.rb.no:
+  config.key: 'config overridden by rb'
+  key1: 'value1 for rb'
+  key5: 'This value will be overridden (i.e. never hit)'
+  innermap:
+    innerkey: 'innervalue'
+www.ba.no:
+  key1: 'value1 for ba'
+  key2: 'value2 for ba'

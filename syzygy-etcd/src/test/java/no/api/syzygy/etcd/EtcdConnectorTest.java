@@ -6,6 +6,7 @@ import io.fabric8.etcd.api.Response;
 import io.fabric8.etcd.core.EtcdClientImpl.Builder;
 import io.fabric8.etcd.reader.gson.GsonResponseReader;
 import org.junit.After;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,6 +25,21 @@ public class EtcdConnectorTest {
 
     @Before
     public void setUp() throws URISyntaxException {
+        Assume.assumeTrue(false); // Deactivating test
+        if ( true ) {
+            return;
+        }
+        /***
+         *
+         * NOTE
+         *
+         * These tests are copied from fabric8, and are just here in order
+         * to be used as documentation.
+         *
+         *
+         */
+
+
         String url = "http://127.0.0.1:4001/v2/"; // System.getProperty("etcd.url");
         client = new Builder().baseUri(new URI(url)).responseReader(new GsonResponseReader()).build();
         client.start();
@@ -37,6 +53,9 @@ public class EtcdConnectorTest {
 
     @After
     public void tearDown() {
+        if ( client == null ) {
+            return;
+        }
         try {
             client.delete().forKey("key");
         } catch (EtcdException e) {
@@ -48,7 +67,7 @@ public class EtcdConnectorTest {
 
     @Test
     public void testConnectToEtcd() throws Exception {
-
+        // client.setData().dir().forKey("/syzygy").;
     }
 
     @Test

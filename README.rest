@@ -1,0 +1,9 @@
+Syzygy
+======
+
+Configuration system aiming to replace cetera and api-properties.
+
+This is work in progress, and some of it needs research / testing.
+
+
+Epic: http://apidev.atlassian.net/browse/DEVOPS-346

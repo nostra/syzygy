@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>no.api.maven-projects</groupId>
+        <artifactId>v3-super-pom</artifactId>
+        <version>2.256</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>no.api.syzygy</groupId>
+    <artifactId>syzygy</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <scm>
+        <connection>scm:git:ssh://git@github.com/amedia/syzygy.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/amedia/syzygy.git</developerConnection>
+    </scm>
+
+    <properties>
+        <site.name /> <!-- Yes, we need this property -->
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>no.api.syzygy</groupId>
+                <artifactId>syzygy-etcd</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.api.pantheon</groupId>
+                <artifactId>pantheon-syzygy</artifactId>
+                <version>${pantheon.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <modules>
+        <module>syzygy-etcd</module>
+    </modules>
+
+</project>

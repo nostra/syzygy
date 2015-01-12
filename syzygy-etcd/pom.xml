@@ -16,6 +16,27 @@
             <groupId>no.api.pantheon</groupId>
             <artifactId>pantheon-syzygy</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>io.fabric8.etcd.reader</groupId>
+            <artifactId>fabric-etcd-reader-jackson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.fabric8.etcd.reader</groupId>
+            <artifactId>fabric-etcd-reader-gson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

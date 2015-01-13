@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -25,9 +26,6 @@ public class MapFileBackAndForthTest {
 
     @Before
     public void determineBaseDirectory() throws IOException {
-        // TODO Need a better way of determining whether etcd is running or not.
-        //Assume.assumeTrue(false); // Deactivating test
-
         etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/");
         Assume.assumeNotNull(etcd);
 
@@ -59,17 +57,23 @@ public class MapFileBackAndForthTest {
         assertEquals("innervalue", inner.get("innerkey"));
     }
 
+    /** WORK IN PROGRESS */
     @Test
+    @Ignore
     public void testCopyBackAndForth() {
         assertTrue(etcd.store("junit", "test"));
         assertEquals("test", etcd.valueBy("junit"));
         assertTrue(etcd.remove("junit"));
 
-
         Map<String, Object> map = new HashMap<>();
         map.put("a", "value a");
         map.put("b", "value b");
         assertTrue(etcd.store("somemap", map));
+
+        Map<String, String> read = (Map<String, String>) etcd.valueBy("somemap");
+        assertNotNull(read);
+        assertEquals(map.get("a"), read.get("a"));
+
     }
 
 }

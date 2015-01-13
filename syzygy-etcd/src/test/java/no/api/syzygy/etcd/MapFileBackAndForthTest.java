@@ -26,10 +26,7 @@ public class MapFileBackAndForthTest {
     @Before
     public void determineBaseDirectory() throws IOException {
         // TODO Need a better way of determining whether etcd is running or not.
-        Assume.assumeTrue(false); // Deactivating test
-        if ( true ) {
-            return;
-        }
+        //Assume.assumeTrue(false); // Deactivating test
 
         etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/");
         Assume.assumeNotNull(etcd);

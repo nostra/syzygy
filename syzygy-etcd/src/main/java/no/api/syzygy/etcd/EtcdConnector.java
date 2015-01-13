@@ -23,6 +23,8 @@ public class EtcdConnector {
     private EtcdConnector(String url) throws URISyntaxException {
         client = new Builder().baseUri(new URI(url)).responseReader(new GsonResponseReader()).build();
         client.start();
+        // Just doing a query in order to get exception if etcd is not running
+        client.getData().forKey("/");
     }
 
     public void stop() {
@@ -35,7 +37,7 @@ public class EtcdConnector {
             EtcdConnector etcd = new EtcdConnector(url);
             return etcd;
 
-        } catch (URISyntaxException e) {
+        } catch (Exception e) { // NOSONAR Wide net catch is OK
             log.error("Got exception", e);
         }
 

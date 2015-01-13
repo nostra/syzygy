@@ -26,9 +26,7 @@ public class EtcdConnectorTest {
     @Before
     public void setUp() throws URISyntaxException {
         Assume.assumeTrue(false); // Deactivating test
-        if ( true ) {
-            return;
-        }
+
         /***
          *
          * NOTE

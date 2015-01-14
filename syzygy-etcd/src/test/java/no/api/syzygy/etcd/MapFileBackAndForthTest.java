@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -59,7 +60,11 @@ public class MapFileBackAndForthTest {
         assertEquals("innervalue", inner.get("innerkey"));
     }
 
+    /**
+     * Work in progress
+     */
     @Test
+    @Ignore
     public void testCopyBackAndForth() {
         assertTrue(etcd.store("junit", "test"));
         assertEquals("test", etcd.valueBy("junit"));

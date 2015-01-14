@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,7 +12,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -57,9 +59,7 @@ public class MapFileBackAndForthTest {
         assertEquals("innervalue", inner.get("innerkey"));
     }
 
-    /** WORK IN PROGRESS */
     @Test
-    @Ignore
     public void testCopyBackAndForth() {
         assertTrue(etcd.store("junit", "test"));
         assertEquals("test", etcd.valueBy("junit"));
@@ -72,8 +72,12 @@ public class MapFileBackAndForthTest {
 
         Map<String, String> read = (Map<String, String>) etcd.valueBy("somemap");
         assertNotNull(read);
-        assertEquals(map.get("a"), read.get("a"));
+        assertEquals("Expected map to contain value. Read map: "+read, map.get("a"), read.get("a"));
 
+        assertTrue(etcd.remove("/somemap/a"));
+        assertFalse("directory has to be empty before value can be removed", etcd.remove("somemap"));
+        assertTrue(etcd.remove("/somemap/b"));
+        assertTrue(etcd.remove("somemap"));
     }
 
 }

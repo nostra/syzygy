@@ -1,6 +1,7 @@
 package no.api.syzygy.etcd;
 
 import io.fabric8.etcd.api.EtcdClient;
+import io.fabric8.etcd.api.EtcdException;
 import io.fabric8.etcd.api.Node;
 import io.fabric8.etcd.api.Response;
 import io.fabric8.etcd.core.EtcdClientImpl.Builder;
@@ -62,6 +63,7 @@ public class EtcdConnector {
     public boolean store( String key, Map<String, Object> map) {
 
         try {
+            //if ( client.getData().dir().)
             client.setData().dir().forKey(key);
         } catch (Exception e) {
             log.debug("Ignoring error, as it probably just is that the directory already exists", e);
@@ -87,8 +89,27 @@ public class EtcdConnector {
     public boolean remove(String key) {
         Response response = null;
         try {
+            Response data = client.getData().forKey(key);
+            if ( data.getNode().isDir() ) {
+                return removeDirectory( key );
+            }
             response = client.delete().forKey(key);
         } catch (Exception e) {
+            log.error("Got exception removing key: "+key, e);
+            return false;
+        }
+        if ( response.getErrorCode() != 0 ) {
+            log.warn("Got removing ("+key+"). Error code: "+response.getErrorCode());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean removeDirectory(String key) {
+        Response response = null;
+        try {
+            response = client.delete().dir().forKey(key);
+        } catch (EtcdException e) {
             log.error("Got exception removing key: "+key, e);
             return false;
         }
@@ -115,19 +136,21 @@ public class EtcdConnector {
         if ( data.getNode().isDir()) {
             Map map = new HashMap();
             Response response = client.getData().recursive().forKey(key);
+            final int skipPrefix = 2+key.length();
             Set<Node> nodes = response.getNode().getNodes();
             for ( Node n : nodes ) {
+                // Map will have path /somemap/key
+                final String k = n.getKey().substring(skipPrefix);
                 if ( n.isDir() ) {
                     // Nested map
-                    map.put(n.getKey(), valueBy(n.getKey()));
+                    map.put(k, valueBy(n.getKey()));
                 } else {
-                    map.put(n.getKey(), n.getValue());
+                    map.put(k, n.getValue());
                 }
             }
             return map;
         }
         return data.getNode().getValue();
     }
-
 
 }

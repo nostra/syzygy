@@ -69,7 +69,7 @@ public class EtcdConnector {
      * @return true if storage process was OK
      */
     public boolean store( String key, String value ) {
-        Response response = client.setData().value(value).forKey(key);
+        Response response = client.setData().value(value).forKey(prefix+key);
         if ( response.getErrorCode() != 0 ) {
             log.warn("Got error storing ("+prefix+key+", "+value+"). Error code: "+response.getErrorCode());
             return false;
@@ -79,8 +79,10 @@ public class EtcdConnector {
 
     public boolean store( String key, Map<String, Object> map) {
         try {
-            //if ( client.getData().dir().)
-            client.setData().dir().forKey(prefix+key);
+            if ( !isDirectory(key)) {
+                log.debug("Creating directory "+prefix+key+" as it does not exist already.");
+                client.setData().dir().forKey(prefix+key);
+            }
         } catch (Exception e) {
             log.debug("Ignoring error, as it probably just is that the directory already exists", e);
             // Confirmation that this is a directory.
@@ -92,7 +94,9 @@ public class EtcdConnector {
         for ( String subkey : map.keySet()) {
             Object obj = map.get(subkey);
             if ( obj instanceof String ) {
-                if ( ! store( prefix+key+"/"+subkey, (String) obj)) {
+                log.debug("Trying to store at  "+prefix+key+"/"+subkey);
+                // Notice: Without prefix here, as prefix will be added in store
+                if ( ! store( key+"/"+subkey, (String) obj)) {
                     return false;
                 }
             } else {
@@ -100,6 +104,18 @@ public class EtcdConnector {
             }
         }
         return true;
+    }
+
+    private boolean isDirectory(String key) {
+        try {
+            Response data = client.getData().forKey(prefix+key);
+            if ( data.getNode().isDir() ) {
+                return true;
+            }
+        } catch (Exception ignore) {
+            log.debug("Ignoring exception, which just indicates that " + prefix + key + " is not a directory");
+        }
+        return false;
     }
 
     public boolean remove(String key) {
@@ -136,7 +152,7 @@ public class EtcdConnector {
         return true;
     }
 
-    public Object valueBy( String key ) {
+    public Object  valueBy( String key ) {
         Response data = null;
         try {
             data = client.getData().forKey(prefix+key);
@@ -145,14 +161,17 @@ public class EtcdConnector {
             return null;
         }
         if ( data.getNode().isDir()) {
+            log.debug(prefix+key+" is a directory. Trying to load it as a map.");
             Map map = new HashMap();
             Response response = client.getData().recursive().forKey(prefix+key);
             // So /syzygy/somemap/abc should be named abc
             final int skipPrefix = prefix.length()+2+key.length();
+            log.debug("skip "+prefix+key);
             Set<Node> nodes = response.getNode().getNodes();
             for ( Node n : nodes ) {
                 // Map will have path /syzygy/somemap/key
                 final String k = n.getKey().substring(skipPrefix);
+                log.debug("Got node: "+n.getKey());
                 if ( n.isDir() ) {
                     // Nested map
                     map.put(k, valueBy(n.getKey()));

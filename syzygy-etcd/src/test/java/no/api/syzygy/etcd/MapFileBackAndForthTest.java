@@ -61,7 +61,7 @@ public class MapFileBackAndForthTest {
     }
 
     /**
-     * Work in progress
+     * Temporarily ignored, WIP
      */
     @Test
     @Ignore

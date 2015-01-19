@@ -1,0 +1,7 @@
+{
+  "malformed": {
+    "doc": "validations shall fail",
+    "format": "url",
+    "default": "httX:/www.semispace.org"
+  }
+}

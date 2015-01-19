@@ -1,0 +1,87 @@
+// -*- Doc -*-
+
+## Roadmap for Syzygy
+
+:toc:
+:icons: font
+:source-highlighter: prettify
+
+* TODO: Need a discussion about distribution technology
+
+
+### Create new *configuration system java interface*.
+
+Need to add top level configuration file.
+
+Use current hieradata inpired yaml-based file, or should it
+take more pages out of the convict book?
+
+
+### Create new item *meta* format: Interface. REST specification? 
+
+Need to be able to query, and get a meta response object containing
+
+* Path to where the object was found
+* The other paths on which the object lives (found first on ..., then ...)
+* How often the element has been accessed (on the node in lifetime of container)
+* Documentation of item
+* other things??
+
+### Create support for *convict.js* JSON
+* Read a convict.js file
+* Present support doc
+
+### Replication strategy.
+
+*Decide* backend storage and
+distribution. Git-files, etcd or cetera-based. If not cetera,
+then we must migrate from that too.
+The choice influences migration strategy.
+
+* git-files: Establish download strategy
+* etcd: sync / read strategy between source files and etcd (i.e. deployment)
+** Directory for each file, each directories containing keys for each element
+** Read all elements, replace, remove and add as needed. etcd supports
+    recursive listing of directory contents.
+** Need export to back cetera at deployment time
+* cetera same as today
+
+### Syzygy data retrieval
+* Syzygy data as part of cetera
+* Library to support data retrieval with basis in importance:
+** Listening property holder, which can time out by a pulled signal
+* More than 1 gaia interface, to support ways an application can depend on data?
+   (Probably not, as long lived data, is data which effectively just ignores
+   server update)
+* Convert wp-config to yaml or convict.js
+
+### Syzygy library elements
+* Read yaml files (mostly done)
+* Read convict json
+* support setting and determination of dynamic variables (such as %{fqdn}
+* Support arbitrary implementations. I.e. classes that can query medusa, etc.
+
+### Put backend storage in production
+
+If something else than cetera, run in
+parallel until cetera phased out (from production). Cetera will probably live
+on, containing the normative definitions which later are distributed.
+
+### Establish temporary method for support staff to update properties.
+
+Edit yaml file in github?
+
+### Castor
+* Castor has a dependency to wp-mapper-0.0.x. This needs to be followed up,
+  and phased out / replaced.
+
+### Plan for phasing out api-properties. Some properties need to continue to
+  live due to relax.
+* Implement api-properties replacement in syzygy
+* Follow up projects using api-properties,
+   and replace dependency.
+
+### Create front end application which can edit data
+
+### Remove medusa
+

@@ -1,0 +1,8 @@
+# Test collection of convict resources
+
+:hierarchy:
+  - convict
+  - plain
+  - other
+
+stop_if_error: true

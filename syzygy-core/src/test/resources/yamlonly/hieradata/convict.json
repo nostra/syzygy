@@ -1,0 +1,12 @@
+{
+  "key4": {
+    "doc": "Key4 doc.",
+    "format": "*",
+    "default": "key4_value"
+  },
+  "shall_be_integer": {
+    "doc": "Must be integer",
+    "format": "int",
+    "default": 123
+  }
+}

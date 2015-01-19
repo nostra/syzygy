@@ -1,0 +1,6 @@
+key1: 'value from common'
+key2: 'updated value'
+array1:
+  - key1: 'array key1'
+  - key2: 'array key2'
+

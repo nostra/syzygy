@@ -1,0 +1,8 @@
+{
+  "key3": "Key3 from json",
+  "key4": "Key4 from json",
+  "jsonmap": {
+    "internal_1": "somevalue_1",
+    "internal_2": "somevalue_2"
+  }
+}

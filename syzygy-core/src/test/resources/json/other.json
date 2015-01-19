@@ -1,0 +1,13 @@
+{
+    "other": {
+        "doc": "Some other resource.",
+        "format": "Integer",
+        "default": "123"
+    },
+    "convict_key_1": {
+        "default": "key_1_from_other"
+    },
+    "convict_will_be_overriden_by_plain": {
+        "default": "value from convict other.json"
+    }
+}

@@ -1,0 +1,7 @@
+key1: 'value from common'
+key2: 'value from common' #  as it does not exist in the other files
+key3: 'value from common'
+array1:
+  - key1: 'array key1'
+  - key2: 'array key2'
+ending: 'from common'

@@ -22,7 +22,6 @@
     <properties>
         <site.name /> <!-- Yes, we need this property -->
         <fabric8.version>2.0.21</fabric8.version>
-        <pantheon.version>2.32-SNAPSHOT</pantheon.version>
     </properties>
 
 
@@ -33,13 +32,19 @@
                 <artifactId>syzygy-etcd</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>no.api.syzygy</groupId>
+                <artifactId>syzygy-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>no.api.pantheon</groupId>
-                <artifactId>pantheon-syzygy</artifactId>
+                <artifactId>pantheon-core</artifactId>
                 <version>${pantheon.version}</version>
             </dependency>
-            <!-- The jackson variant bombs with UnrecognizedPropertyException: Unrecognized field "index"
-                We would like to use it, if it gets corrected-->
+
             <dependency>
                 <groupId>io.fabric8.etcd.reader</groupId>
                 <artifactId>fabric-etcd-reader-jackson</artifactId>
@@ -51,23 +56,24 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- Need (unfortunately) to use the gson version, as jackson bombs in 2.0.19
+
             <dependency>
-                <groupId>io.fabric8.etcd.reader</groupId>
-                <artifactId>fabric-etcd-reader-gson</artifactId>
-                <version>${fabric8.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency> -->
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
 
     <modules>
+        <module>syzygy-core</module>
         <module>syzygy-etcd</module>
     </modules>
 

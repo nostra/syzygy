@@ -1,0 +1,4 @@
+:hierarchy:
+  - no.api.NonExisting
+
+stop_if_error: false

@@ -1,0 +1,249 @@
+// -*- Doc -*-
+
+
+:toc:
+:icons: font
+:source-highlighter: prettify
+
+== Preliminary notes for configuration project **syzygy**.
+
+=== Functionality summary
+
+The basis for the functionality is **inspired** by hieradata.
+The configuration files might be compatible, but this is not 
+a goal.
+
+Suggested lookup sequence:
+
+ common.yaml                  # Top level master config
+ medusa                       # If still relevant / alive
+ gaia                         # Possibly also where code will be put
+ %{AVISNAVN}/common.yaml      # newspaper override
+ support.yml                  # Separate config file for support staff and newspapers
+ %{ROLE}/%{AVISNAVN}.yaml     # Override for newspaper depending on the role of the server
+ %{fqdn}/%{AVISNAVN}.yaml     # Override for newspaper based on which server it runs
+ onlydevmode/wp-override.yaml # General local development configuration
+ onlydevmode/${CONFIGSET}.yaml  # Config set determined by system variable (For developers. Does not exist in production)
+
+The relevant structure from hieradata would need to be exported to
+The proper place in syzygy; Same as wp-override.xml.template today.
+ ikea/.../hieradata/*/localconfig.yaml  # Deprecated idea
+
+**Note** that there might be a wish for allowing the following construction:
+Activate Dr.Front for Nordlys on snap6 only.
+
+`${CONFIGSET}` is intended to be used in order for developers to share project 
+config. For instance, all developers that work on _garuda_ needs this and that 
+config, which might as well be put in `garuda.yaml` configuration set.
+Which configuration set to use, is (possibly) determined by a system variable.
+
+The yaml **files end up** in `/etc/api/syzygy` on all servers.
+
+Support the convict JSON- format as an alternative to yaml.
+
+=== Distribution of config
+
+Alternatives:
+
+1. These (static) files gets distributed by git, with the exception of
+   files in `.../onlydevmode/`. The distribution strategy is the same as for
+   menueditor (or something more mature).
+
+2. Set up and distribute with `etcd`
+
+3. Keep cetera
+
+
+=== Open questions
+
+* Make support for all files in cetera, and not just under wp/ ? (Probably not a good idea)
+* Internal caching of elements?
+* Cache lifetime for HTTP interfaces
+* Best way of invalidating cache?
+* Should the reading syzygydata repository be internal to gaia in production?
+* Which properties need to be changed quickly? (The update regime
+  today is not clear for Erlend)
+* Property metadata:
+** human readable description
+** relative importance
+** legal values
+
+== Existing providers and client interfaces
+
+The functionality of the following existing providers 
+need to be supported. (With a possible exception of 
+medusa.)
+
+[cols="2*", options="header"]
+|===
+|service            | comment
+|cetera             | Static file store
+|wp-override        | in ikea
+|medusa             | To be removed
+|api-properties.jar | To be replaced with syzygy.jar
+|gaia               | Umbrella solution for fetching all properties
+|===
+
+== Scenarios
+
+.As support staff: Change a global setting for `mobile.traffic.tns.cpid`
+* *Today*: Change entry in wp.xml in cetera and get a developer to deploy
+* *Future*: 
+** Near future: Perform change in syzygydata, which gets
+distributed automatically.
+** More distant: Support staff uses an application edit the config,
+possibly the same application as menueditor
+
+.As developer, set up a local URL in dev mode.
+* *Today*: Change or add a setting in cetera's `wp-override.xml`
+(which is local for developers only - it gets overwritten in the puppet regime).
+* *Future*: Syzygy will have an override file which belongs to the
+developer, similarly to the `wp-override.xml` of today.
+
+.As a newspaper, change "Questback title" - `questback.popup.message`
+* *Today*: Go to medusa and change setting. In the backend, the setting
+  gets invalidated in atomizer. There might be a need for forcing a
+  property refresh (by a developer).
+* *(Distant) future*: Edit `support.yaml`in a suitable application,
+and get the change distributed automatically.
+
+.Set up dynamic variable `admapper.director.url.prefix`
+* *Today*: Edit `ikea/etcapi/wp/wp-override.xml.template`, add entry like this:
+   `http://<%= scope.function_hiera(['v3local_hostname']) %>/admapper/`. The
+   hieradata value needs to exist.
+* *Future*: Edit `ikea/etcapi/wp/wp-override.yaml.template`
+
+.In a program, look up the value for `castor.url`
+* *Today*: 2 solutions:
+   1. Use api-properties and find value by java lookup (api-properties.jar)
+   2. Find value by gaia URL call
+* *Future*: 2 solutions:
+   1. look up via syzygy-core.jar
+   2. Call gaia as before
+
+.Set database password for the different environments
+* *Today*: Configure variable in `ikea/puppet/master/hieradata/` and use it in
+  `ikea/etcapi/wp/wp-override.properties`
+* *Future*: Same procedure, just yaml file.
+
+.If BA has default CMS ECE4, change it to ECE5 in test environment only
+* *Today*: Alternatives:
+1. Create branch in cetera and change publications.xml. Then deploy
+  cetera branch to test only.
+2. Magic setting in wp regime, using combination of newspaper and role
+* *Future*: Not sure if this is in project scope ??
+
+.Newspaper wants to change a menu entry
+* *Today*: Use menueditor, change and commit item in repo
+"menudata". Git gets pulled every minute, and git hook will invalidate
+cache
+* *Future*: Not sure if this is in project scope ??
+
+.CSS has been updated and shall be rolled out.
+* *Today*: Castor has been modified, and redeployed. Then jawrcounter is incremented.
+* *Future*: Not sure if this is in project scope ??
+
+.Pollux need config variables at startup
+* *Today*: Gaia URL will be read from config, and variables are collected from Gaia.
+  If Gaia is not up, the startup will fail.
+* *Future*: Not sure if this is in project scope ??
+
+.Read / update by REST
+* *Today*: N/A
+* *Future*: Application which support user editing also supports a
+REST interface. Or, more specifically, the application which updates
+the config communicates with a REST interface.
+
+.Cache lifetime of element
+* *Today*: When using REST interface in Gaia, the cache-channel header
+is 24h. It gets invalidated with gaia purge from atomizer.
+cetera. 
+* *Future*: TDB
+
+.Figure out which setting that is in use
+* *Today*: Painstakingly analyze the wp hierarchy
+* *Future*: Make admin interface which can be queried for this
+
+.Have different general settings (i.e. wp.xml) for production and development
+* *Today*: Use role in wp.xml. This is something which has introduced
+quite a bit of confusion.
+* *Future*: Use different files and setup, in addition ot have
+an interface (TDB) to query about where different settings are used. 
+
+.Encryption of sensitive elements
+* *Today*: The new setup supports eyaml (yaml with encrypted values),
+but these will be decrypted when distributed.
+* *Future*: TBD: Have encrypted elements in the config??
+
+.How to validate the setup / files
+* *Today*: If the XML is valid, the setup is valid
+* *Future*: TBD
+
+.How to switch between a set of developer settings
+* *Today*: Each person needs to bake the setting he or she needs
+* *Future*: Create a config set in the onlydevmode directory, and
+  refer to it with the `CONFIGSET` variable.
+
+
+== Future directions
+
+* Gaia does not (currently) support authentication. This exposes configuration elements
+* Cetera does not support authentication either.
+* What to do if we worry gaia data gets compromized? Today, we would ban
+  external IP addresses, to the detriment of developers.
+* Jawrproperties might be accessed through a config variable. Support this through syzygy?
+* Invalidate selected properties (as part of reload process with updated properties)
+* Use syzygy in gaia (or replacing gaia with it)
+* syzygy.jar to replace api-properties.jar
+* Create an application to edit the github data (or extend menueditor)
+
+== Related projects
+
+The most interesting is archaius: https://github.com/Netflix/archaius which is build on top of
+http://commons.apache.org/proper/commons-configuration/userguide/user_guide.html
+
+Archaius does give 3 or 4 MB of extra data. The commons-configuration looks a bit dated. 
+It may also be that the most useful part of this is the other framework technology, and 
+not the configuration as such.
+
+== Changes in applications
+
+=== Cetera
+
+Replace relevant config with yaml entries.
+
+Test URLs:
+
+* http://admin.api.no/cetera/publications.xml
+* http://textur.api.kunder.linpro.no:9901/cetera/publications.xml
+
+=== gaia
+
+Test URL:
+
+* http://doc.api.no/swagger/?discoveryUrl=http://v3local.api.no/gaia/api/public/v1/doc/api-docs
+
+=== wp-override
+
+You find `wp-override.xml.template` in `ikea/etcapi/wp/wp-override.xml.template`
+
+
+=== medusa
+
+Remove?
+
+=== api-properties.jar
+
+Replace with interface with is compliant to api-properties.
+
+=== menueditor
+
+No change necessary?
+
+== Interesting technology, and other links
+
+* https://github.com/GoogleCloudPlatform/kubernetes/
+* http://googlecloudplatform.blogspot.no/2014/07/welcome-microsoft-redhat-ibm-docker-and-more-to-the-kubernetes-community.html
+* http://thenewstack.io/about-etcd-the-distributed-key-value-store-used-for-kubernetes-googles-cluster-container-manager/
+
+include::roadmap.adoc[]

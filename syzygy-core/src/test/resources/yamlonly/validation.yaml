@@ -1,0 +1,7 @@
+---
+:datadir:
+  - hieradata
+:hierarchy:
+  - convict
+  - error
+stop_if_error: true

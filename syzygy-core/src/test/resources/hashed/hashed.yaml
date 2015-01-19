@@ -1,0 +1,6 @@
+:hierarchy:
+  - no.api.syzygy.loaders.DirectoryIntoMap
+  - fallback
+
+directory.to.map: overrides
+stop_if_error: true

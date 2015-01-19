@@ -1,0 +1,10 @@
+---
+:datadir:
+  - hieradata
+:hierarchy:
+  - ending
+  - convict
+  - key3
+  - specific   # The specific
+  - common     # Fallback level
+stop_if_error: true

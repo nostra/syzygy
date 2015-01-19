@@ -47,6 +47,13 @@ public class EtcdConnector {
      * @see #attach(String)
      */
     public static EtcdConnector attach(String url, String prefix) {
+        if ( !prefix.endsWith("/") || !prefix.startsWith("/")) {
+            throw new SyzygyException("Expecting prefix to start and end with a slash (/). It did not - it was: "+prefix);
+        }
+        if ( !prefix.startsWith("/syzygy")) {
+            log.warn("Unexpected prefix: "+prefix+". Note that this may mess up for linpro if this is not intentional. " +
+                    "We are sharing access to the etcd structure, and need to stay within /syzygy/");
+        }
         try {
             EtcdConnector etcd = new EtcdConnector(url, prefix);
 

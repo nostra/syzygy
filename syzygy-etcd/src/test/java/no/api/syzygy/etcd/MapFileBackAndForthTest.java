@@ -111,5 +111,6 @@ public class MapFileBackAndForthTest {
                 "structure");
         FromSyzygyToEtcd.mapSyzygyInto(config, etcd);
         assertEquals("top.level.config.value",  etcd.valueBy( config.getName()+"/config.key"));
+        assertTrue(etcd.removeMap(config.getName()));
     }
 }

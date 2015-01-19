@@ -105,21 +105,21 @@ public class EtcdConnector {
     public boolean store( String key, Map<String, Object> map) {
         try {
             if ( !isDirectory(key)) {
-                log.debug("Creating directory "+prefix+key+" as it does not exist already.");
+                log.trace("Creating directory {} as it does not exist already.", prefix + key);
                 client.setData().dir().forKey(prefix+key);
             }
         } catch (Exception e) {
-            log.debug("Ignoring error, as it probably just is that the directory already exists", e);
+            log.trace("Ignoring error, as it probably just is that the directory already exists", e);
             // Confirmation that this is a directory.
             Response directory = client.getData().forKey(prefix+key);
-            log.debug("Directory exists?? "+directory.getNode().isDir());
+            log.trace("Directory exists?? " + directory.getNode().isDir());
 
         }
 
         for ( String subkey : map.keySet()) {
             Object obj = map.get(subkey);
             if ( obj instanceof String ) {
-                log.debug("Trying to store at {}/{}", prefix + key, subkey);
+                log.trace("Trying to store at {}/{}", prefix + key, subkey);
                 // Notice: Without prefix here, as prefix will be added in store
                 if (!store(key + "/" + subkey, (String) obj)) {
                     return false;
@@ -171,17 +171,17 @@ public class EtcdConnector {
             return null;
         }
         if ( data.getNode().isDir()) {
-            log.debug(prefix+key+" is a directory. Trying to load it as a map.");
+            log.trace("{} is a directory. Trying to load it as a map.", prefix+key);
             Map map = new HashMap();
             Response response = client.getData().recursive().forKey(prefix+key);
             // So /syzygy/somemap/abc should be named abc
             final int skipPrefix = prefix.length()+key.length()+1; // +1 due to ending slash
             Set<Node> nodes = response.getNode().getNodes();
-            log.debug("Prefix to remove when storing in map:  "+prefix+key+". Number of nodes in map: "+ nodes.size());
+            log.trace("Prefix to remove when storing in map:  {}. Number of nodes in map: {}", prefix + key, nodes.size());
             for ( Node n : nodes ) {
                 // Map will have path /syzygy/somemap/key
                 final String k = n.getKey().substring(skipPrefix);
-                log.debug("Got node: "+n.getKey()+" with map key "+k);
+                log.trace("Got node: {} with map key {}", n.getKey(), k);
                 if ( n.isDir() ) {
                     // Nested map
                     map.put(k, valueBy(key+"/"+k));
@@ -220,7 +220,7 @@ public class EtcdConnector {
                 return true;
             }
         } catch (Exception ignore) {
-            log.debug("Ignoring exception, which just indicates that " + prefix + key + " is not a directory");
+            log.trace("Ignoring exception, which just indicates that {} is not a directory", prefix + key);
         }
         return false;
     }

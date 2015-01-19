@@ -5,7 +5,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -64,7 +63,6 @@ public class MapFileBackAndForthTest {
      * Temporarily ignored, WIP
      */
     @Test
-    @Ignore
     public void testCopyBackAndForth() {
         assertTrue(etcd.store("junit", "test"));
         assertEquals("test", etcd.valueBy("junit"));
@@ -79,9 +77,9 @@ public class MapFileBackAndForthTest {
         assertNotNull(read);
         assertEquals("Expected map to contain value. Read map: "+read, map.get("a"), read.get("a"));
 
-        assertTrue(etcd.remove("/somemap/a"));
+        assertTrue(etcd.remove("somemap/a"));
         assertFalse("directory has to be empty before value can be removed", etcd.remove("somemap"));
-        assertTrue(etcd.remove("/somemap/b"));
+        assertTrue(etcd.remove("somemap/b"));
         assertTrue(etcd.remove("somemap"));
     }
 

@@ -123,7 +123,7 @@ public class EtcdConnector {
         try {
             Response data = client.getData().forKey(prefix+key);
             if ( data.getNode().isDir() ) {
-                return removeDirectory( prefix+key );
+                return removeDirectory( key );
             }
             response = client.delete().forKey(prefix+key);
         } catch (Exception e) {
@@ -165,13 +165,13 @@ public class EtcdConnector {
             Map map = new HashMap();
             Response response = client.getData().recursive().forKey(prefix+key);
             // So /syzygy/somemap/abc should be named abc
-            final int skipPrefix = prefix.length()+2+key.length();
-            log.debug("skip "+prefix+key);
+            final int skipPrefix = prefix.length()+key.length()+1; // +1 due to ending slash
             Set<Node> nodes = response.getNode().getNodes();
+            log.debug("Prefix to remove when storing in map:  "+prefix+key+". Number of nodes in map: "+ nodes.size());
             for ( Node n : nodes ) {
                 // Map will have path /syzygy/somemap/key
                 final String k = n.getKey().substring(skipPrefix);
-                log.debug("Got node: "+n.getKey());
+                log.debug("Got node: "+n.getKey()+" with map key "+k);
                 if ( n.isDir() ) {
                     // Nested map
                     map.put(k, valueBy(n.getKey()));

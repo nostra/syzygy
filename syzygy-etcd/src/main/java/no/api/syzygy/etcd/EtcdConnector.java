@@ -5,6 +5,7 @@ import io.fabric8.etcd.api.EtcdException;
 import io.fabric8.etcd.api.Node;
 import io.fabric8.etcd.api.Response;
 import io.fabric8.etcd.core.EtcdClientImpl.Builder;
+import io.fabric8.etcd.dsl.DeleteDataBuilder;
 import io.fabric8.etcd.reader.jackson.JacksonResponseReader;
 import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
@@ -68,7 +69,7 @@ public class EtcdConnector {
     public void stop() {
         int numberOfChildren = numberOfChildElements(""); // "" becomes the prefix itself
         if ( numberOfChildren == 0 ) {
-            removeDirectory("");
+            removeDirectory("", false);
         }
         client.stop();
     }
@@ -118,11 +119,13 @@ public class EtcdConnector {
         for ( String subkey : map.keySet()) {
             Object obj = map.get(subkey);
             if ( obj instanceof String ) {
-                log.debug("Trying to store at  "+prefix+key+"/"+subkey);
+                log.debug("Trying to store at {}/{}", prefix + key, subkey);
                 // Notice: Without prefix here, as prefix will be added in store
-                if ( ! store( key+"/"+subkey, (String) obj)) {
+                if (!store(key + "/" + subkey, (String) obj)) {
                     return false;
                 }
+            } else if ( Map.class.isAssignableFrom(obj.getClass())) {
+                return store( key+"/"+subkey, (Map)obj);
             } else {
                 throw new SyzygyException("Sorry - I not supporting data type "+obj.getClass().getName()+" yet.");
             }
@@ -130,12 +133,22 @@ public class EtcdConnector {
         return true;
     }
 
+    /**
+     * Use with caution, as this will recursively remove your values
+     */
+    public boolean removeMap(String somemap) {
+        if ( !isDirectory(somemap)) {
+            return false;
+        }
+        return removeDirectory(somemap, true);
+    }
+
     public boolean remove(String key) {
         Response response = null;
         try {
             Response data = client.getData().forKey(prefix+key);
             if ( data.getNode().isDir() ) {
-                return removeDirectory( key );
+                return removeDirectory( key, false );
             }
             response = client.delete().forKey(prefix+key);
         } catch (Exception e) {
@@ -171,7 +184,7 @@ public class EtcdConnector {
                 log.debug("Got node: "+n.getKey()+" with map key "+k);
                 if ( n.isDir() ) {
                     // Nested map
-                    map.put(k, valueBy(n.getKey()));
+                    map.put(k, valueBy(key+"/"+k));
                 } else {
                     map.put(k, n.getValue());
                 }
@@ -181,10 +194,14 @@ public class EtcdConnector {
         return data.getNode().getValue();
     }
 
-    private boolean removeDirectory(String key) {
+    private boolean removeDirectory(String key, boolean recursive ) {
         Response response = null;
         try {
-            response = client.delete().dir().forKey(prefix+key);
+            DeleteDataBuilder deleter = client.delete();
+            if ( recursive ) {
+                deleter = deleter.recursive();
+            }
+            response = deleter.dir().forKey(prefix+key);
         } catch (EtcdException e) {
             log.error("Got exception removing key: "+prefix+key, e);
             return false;

@@ -22,20 +22,22 @@ public class FromSyzygyToEtcd {
     }
 
     private void mapFrom(SyzygyConfig syzgyConfig) {
+        final String prefix = syzgyConfig.getName()+"/";
         int counter = 0;
         for ( String key : syzgyConfig.keys()) {
+            String translatedKey = prefix+key;
             counter++;
             Object obj = syzgyConfig.lookup(key, Object.class);
             boolean storedOk = false;
             if ( obj instanceof Map) {
-                storedOk = etcdConnector.store(key, (Map)obj);
+                storedOk = etcdConnector.store(translatedKey, (Map)obj);
             } else if ( obj instanceof String) {
-                storedOk = etcdConnector.store(key, (String)obj);
+                storedOk = etcdConnector.store(translatedKey, (String)obj);
             } else {
                 throw new SyzygyException("Unexpected data type in syzygy. Got: "+obj.getClass());
             }
             if ( !storedOk ) {
-                throw new SyzygyException("Trouble storing element with key "+key+". This was item "+counter
+                throw new SyzygyException("Trouble storing element with key "+translatedKey+". This was item "+counter
                         +" out of "+syzgyConfig.keys().size());
             }
         }

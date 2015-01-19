@@ -2,6 +2,7 @@ package no.api.syzygy.etcd;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
 import org.junit.Assume;
@@ -88,9 +89,27 @@ public class MapFileBackAndForthTest {
     }
 
     @Test
+    public void testNestedMaps() {
+        Map<String, Object> nested = new HashMap<>();
+        nested.put("aa", "nested a");
+        Map<String, Object> map = new HashMap<>();
+        map.put("a", "value a");
+        map.put("nested", nested);
+        assertTrue(etcd.store("somemap", map));
+
+        map = (Map<String, Object>) etcd.valueBy("somemap");
+        assertEquals("value a", map.get("a"));
+        assertEquals("nested a", ((Map)map.get("nested")).get("aa"));
+
+        assertTrue(etcd.removeMap("somemap"));
+    }
+
+    @Test
     public void testSyzygyRead() {
-        SyzygyLoader config = SyzygyLoader.loadConfigurationFile(new File(readFrom+"/syzygy.yaml"));
-
-
+        SyzygyConfig
+                config = SyzygyLoader.loadConfigurationFile(new File(readFrom+"/syzygy.yaml")).configurationWithName(
+                "structure");
+        FromSyzygyToEtcd.mapSyzygyInto(config, etcd);
+        assertEquals("top.level.config.value",  etcd.valueBy( config.getName()+"/config.key"));
     }
 }

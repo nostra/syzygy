@@ -6,6 +6,7 @@ import io.fabric8.etcd.api.Node;
 import io.fabric8.etcd.api.Response;
 import io.fabric8.etcd.core.EtcdClientImpl.Builder;
 import io.fabric8.etcd.reader.gson.GsonResponseReader;
+import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,10 +26,6 @@ public class EtcdConnector {
     private final EtcdClient client;
     private final String prefix;
 
-    private EtcdConnector(String url) throws URISyntaxException {
-        this(url, "/syzygy/");
-    }
-
     private EtcdConnector(String url, String prefix) throws URISyntaxException {
         // We are working within a subdirectory of etcd. Intentionally using variable and not constant
         this.prefix = prefix;
@@ -36,13 +33,22 @@ public class EtcdConnector {
         client.start();
     }
 
-    public void stop() {
-        client.stop();
+    /**
+     * This would be your default entry point for getting the connector.
+     * It will work on the default sub director
+     */
+    public static EtcdConnector attach(String url) {
+        return attach(url, "/syzygy/");
     }
 
-    public static EtcdConnector attach(String url) {
+    /**
+     * Only use this method if you <b>intentionally</b> need or want
+     * a different prefix. <b>This is not the entry point for normal use.</b>
+     * @see #attach(String)
+     */
+    public static EtcdConnector attach(String url, String prefix) {
         try {
-            EtcdConnector etcd = new EtcdConnector(url);
+            EtcdConnector etcd = new EtcdConnector(url, prefix);
 
             return etcd.makeReady();
         } catch (Exception e) { // NOSONAR Wide net catch is OK
@@ -52,17 +58,8 @@ public class EtcdConnector {
         return null;
     }
 
-    private EtcdConnector makeReady() {
-        // Just doing a query in order to get exception if etcd is not running
-        client.getData().forKey("/");
-
-        try {
-            client.setData().dir().forKey(prefix);
-        } catch (Exception e) {
-            log.debug("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
-        }
-
-        return this;
+    public void stop() {
+        client.stop();
     }
 
     /**
@@ -100,22 +97,10 @@ public class EtcdConnector {
                     return false;
                 }
             } else {
-                throw new RuntimeException("Sorry - I not supporting data type "+obj.getClass().getName()+" yet.");
+                throw new SyzygyException("Sorry - I not supporting data type "+obj.getClass().getName()+" yet.");
             }
         }
         return true;
-    }
-
-    private boolean isDirectory(String key) {
-        try {
-            Response data = client.getData().forKey(prefix+key);
-            if ( data.getNode().isDir() ) {
-                return true;
-            }
-        } catch (Exception ignore) {
-            log.debug("Ignoring exception, which just indicates that " + prefix + key + " is not a directory");
-        }
-        return false;
     }
 
     public boolean remove(String key) {
@@ -127,21 +112,6 @@ public class EtcdConnector {
             }
             response = client.delete().forKey(prefix+key);
         } catch (Exception e) {
-            log.error("Got exception removing key: "+prefix+key, e);
-            return false;
-        }
-        if ( response.getErrorCode() != 0 ) {
-            log.warn("Got removing ("+prefix+key+"). Error code: "+response.getErrorCode());
-            return false;
-        }
-        return true;
-    }
-
-    private boolean removeDirectory(String key) {
-        Response response = null;
-        try {
-            response = client.delete().dir().forKey(prefix+key);
-        } catch (EtcdException e) {
             log.error("Got exception removing key: "+prefix+key, e);
             return false;
         }
@@ -182,6 +152,46 @@ public class EtcdConnector {
             return map;
         }
         return data.getNode().getValue();
+    }
+
+    private boolean removeDirectory(String key) {
+        Response response = null;
+        try {
+            response = client.delete().dir().forKey(prefix+key);
+        } catch (EtcdException e) {
+            log.error("Got exception removing key: "+prefix+key, e);
+            return false;
+        }
+        if ( response.getErrorCode() != 0 ) {
+            log.warn("Got removing ("+prefix+key+"). Error code: "+response.getErrorCode());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isDirectory(String key) {
+        try {
+            Response data = client.getData().forKey(prefix+key);
+            if ( data.getNode().isDir() ) {
+                return true;
+            }
+        } catch (Exception ignore) {
+            log.debug("Ignoring exception, which just indicates that " + prefix + key + " is not a directory");
+        }
+        return false;
+    }
+
+    private EtcdConnector makeReady() {
+        // Just doing a query in order to get exception if etcd is not running
+        client.getData().forKey("/");
+
+        try {
+            client.setData().dir().forKey(prefix);
+        } catch (Exception e) {
+            log.debug("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
+        }
+
+        return this;
     }
 
 }

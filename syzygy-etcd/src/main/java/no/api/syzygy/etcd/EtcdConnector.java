@@ -5,7 +5,7 @@ import io.fabric8.etcd.api.EtcdException;
 import io.fabric8.etcd.api.Node;
 import io.fabric8.etcd.api.Response;
 import io.fabric8.etcd.core.EtcdClientImpl.Builder;
-import io.fabric8.etcd.reader.gson.GsonResponseReader;
+import io.fabric8.etcd.reader.jackson.JacksonResponseReader;
 import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class EtcdConnector {
     private EtcdConnector(String url, String prefix) throws URISyntaxException {
         // We are working within a subdirectory of etcd. Intentionally using variable and not constant
         this.prefix = prefix;
-        client = new Builder().baseUri(new URI(url)).responseReader(new GsonResponseReader()).build();
+        client = new Builder().baseUri(new URI(url)).responseReader(new JacksonResponseReader()).build();
         client.start();
     }
 
@@ -66,7 +66,27 @@ public class EtcdConnector {
     }
 
     public void stop() {
+        int numberOfChildren = numberOfChildElements(""); // "" becomes the prefix itself
+        if ( numberOfChildren == 0 ) {
+            removeDirectory("");
+        }
         client.stop();
+    }
+
+    /**
+     * @return Number of child elements, or <tt>-1</tt> if some error occurred.
+     */
+    public int numberOfChildElements(String key) {
+        try {
+            Response data = client.getData().forKey(prefix+key);
+            if ( data.getNode().isDir() ) {
+                return data.getNode().getNodes().size();
+            }
+        } catch (Exception ignore) {
+            log.debug("Ignoring exception, which just indicates that " + prefix + key + " is not a directory");
+        }
+
+        return -1;
     }
 
     /**

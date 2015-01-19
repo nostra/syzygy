@@ -21,8 +21,8 @@
 
     <properties>
         <site.name /> <!-- Yes, we need this property -->
-        <!-- Note that we can use jackson with fabric9 greater than 2.0.10 -->
-        <fabric8.version>2.0.19</fabric8.version>
+        <fabric8.version>2.0.21</fabric8.version>
+        <pantheon.version>2.32-SNAPSHOT</pantheon.version>
     </properties>
 
 
@@ -39,7 +39,7 @@
                 <version>${pantheon.version}</version>
             </dependency>
             <!-- The jackson variant bombs with UnrecognizedPropertyException: Unrecognized field "index"
-                We would like to use it, if it gets corrected
+                We would like to use it, if it gets corrected-->
             <dependency>
                 <groupId>io.fabric8.etcd.reader</groupId>
                 <artifactId>fabric-etcd-reader-jackson</artifactId>
@@ -51,8 +51,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            -->
-            <!-- Need (unfortunately) to use the gson version, as jackson bombs in 2.0.19 -->
+            <!-- Need (unfortunately) to use the gson version, as jackson bombs in 2.0.19
             <dependency>
                 <groupId>io.fabric8.etcd.reader</groupId>
                 <artifactId>fabric-etcd-reader-gson</artifactId>
@@ -63,7 +62,7 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
+            </dependency> -->
         </dependencies>
     </dependencyManagement>
 

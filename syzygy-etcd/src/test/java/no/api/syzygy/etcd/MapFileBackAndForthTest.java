@@ -2,6 +2,7 @@ package no.api.syzygy.etcd;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -22,24 +23,29 @@ import static org.junit.Assert.assertTrue;
  */
 public class MapFileBackAndForthTest {
 
-    private StringBuffer readFrom;
     private EtcdConnector etcd;
     private Map<String, Object> structure;
+    private String readFrom;
 
     @Before
     public void determineBaseDirectory() throws IOException {
         etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/", "/syzygy/junit/");
         Assume.assumeNotNull(etcd);
 
+        readFrom = findTestResourcesDirectory();
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        structure = mapper.readValue(new File(readFrom+"structure.yml"), Map.class);
+    }
+
+    protected static String findTestResourcesDirectory() {
         File cur = new File(".");
-        readFrom = new StringBuffer();
+        StringBuffer readFrom = new StringBuffer();
         if ( ! cur.getAbsolutePath().contains("syzygy-etcd")) {
             // IntelliJ
             readFrom.append("syzygy-etcd/");
         }
         readFrom.append("src/test/resources/");
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        structure = mapper.readValue(new File(readFrom.toString()+"structure.yml"), Map.class);
+        return readFrom.toString();
     }
 
     @After
@@ -69,6 +75,7 @@ public class MapFileBackAndForthTest {
         map.put("a", "value a");
         map.put("b", "value b");
         assertTrue(etcd.store("somemap", map));
+        assertEquals(2, etcd.numberOfChildElements("somemap"));
 
         Map<String, String> read = (Map<String, String>) etcd.valueBy("somemap");
         assertNotNull(read);
@@ -80,4 +87,10 @@ public class MapFileBackAndForthTest {
         assertTrue(etcd.remove("somemap"));
     }
 
+    @Test
+    public void testSyzygyRead() {
+        SyzygyLoader config = SyzygyLoader.loadConfigurationFile(new File(readFrom+"/syzygy.yaml"));
+
+
+    }
 }

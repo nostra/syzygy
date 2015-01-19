@@ -4,7 +4,7 @@ import io.fabric8.etcd.api.EtcdClient;
 import io.fabric8.etcd.api.EtcdException;
 import io.fabric8.etcd.api.Response;
 import io.fabric8.etcd.core.EtcdClientImpl.Builder;
-import io.fabric8.etcd.reader.gson.GsonResponseReader;
+import io.fabric8.etcd.reader.jackson.JacksonResponseReader;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -80,7 +80,7 @@ public class EtcdConnectorTest {
 
 
         String url = "http://127.0.0.1:4001/v2/"; // System.getProperty("etcd.url");
-        client = new Builder().baseUri(new URI(url)).responseReader(new GsonResponseReader()).build();
+        client = new Builder().baseUri(new URI(url)).responseReader(new JacksonResponseReader()).build();
         client.start();
         try {
             client.delete().dir().recursive().forKey("key");

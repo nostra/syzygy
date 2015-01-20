@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -238,4 +239,18 @@ public class EtcdConnector {
         return this;
     }
 
+    public Set<String> keys(String name) {
+        Set<String> keys = new HashSet<>();
+        try {
+            Set<Node> nodes = client.getData().forKey(prefix +"/"+name ).getNode().getNodes();
+            final int skipPrefix = prefix.length()+name.length()+1; // +1 due to ending slash
+            for ( Node n : nodes ) {
+                keys.add(n.getKey().substring(skipPrefix));
+            }
+        } catch (Exception e) {
+            log.debug("Directory for "+prefix+" does (probably) exist. Masked exception: "+e);
+        }
+
+        return keys;
+    }
 }

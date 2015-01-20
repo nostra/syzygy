@@ -46,7 +46,7 @@ public class SyzygyEtcdConfig implements SyzygyConfig {
 
     @Override
     public Set<String> keys() {
-        throw new SyzygyException("Not implemented yet.");
+        return etcd.keys(getName());
     }
 
     public static SyzygyConfig connectAs(EtcdConnector etcd, String name) {

@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -105,6 +106,14 @@ public class MapFileBackAndForthTest {
     }
 
     @Test
+    public void testLoadKeys() {
+        etcd.store("key1", "a");
+        etcd.store("key2", "b");
+        etcd.store("key3", "c");
+        Set<String> keys = etcd.keys("");
+    }
+
+    @Test
     public void testSyzygyRead() {
         SyzygyConfig
                 config = SyzygyLoader.loadConfigurationFile(new File(readFrom+"/syzygy.yaml")).configurationWithName(
@@ -129,8 +138,10 @@ public class MapFileBackAndForthTest {
         assertEquals(((Map) syzygymap.get("innermap")).get("innerkey"),
                 ((Map) etcdmap.get("innermap")).get("innerkey"));
 
-        //    assertEquals(config.keys(), syzetcd.keys());
+        Set<String> syzgyKeys = config.keys();
+        syzgyKeys.remove(SyzygyConfig.SYZYGY_CFG_FILE);
+        assertEquals(syzgyKeys, syzetcd.keys());
 
-        //assertTrue("Remove the complete structure", etcd.removeMap(config.getName()));
+        assertTrue("Remove the complete structure", etcd.removeMap(config.getName()));
     }
 }

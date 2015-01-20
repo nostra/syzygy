@@ -134,7 +134,7 @@ public class EtcdConnector {
     }
 
     /**
-     * Use with caution, as this will recursively remove your values
+     * Use with caution, as this will <b>recursively remove your values</b>
      */
     public boolean removeMap(String somemap) {
         if ( !isDirectory(somemap)) {

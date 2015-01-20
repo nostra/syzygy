@@ -111,6 +111,26 @@ public class MapFileBackAndForthTest {
                 "structure");
         FromSyzygyToEtcd.mapSyzygyInto(config, etcd);
         assertEquals("top.level.config.value",  etcd.valueBy( config.getName()+"/config.key"));
-        assertTrue(etcd.removeMap(config.getName()));
+
+        SyzygyConfig syzetcd = SyzygyEtcdConfig.connectAs( etcd, config.getName());
+        assertEquals("top.level.config.value",  syzetcd.lookup("config.key"));
+        for ( String key: config.keys() ) {
+            Object syzygy = config.lookup(key, Object.class);
+            Object etcdy = config.lookup(key, Object.class);
+            assertNotNull(syzygy);
+            assertNotNull(etcdy);
+            assertEquals(syzygy.getClass().getName(), etcdy.getClass().getName());
+        }
+        Map syzygymap = config.lookup("www.rb.no", Map.class);
+        Map etcdmap = config.lookup("www.rb.no", Map.class);
+        assertEquals(syzygymap.size(), etcdmap.size());
+        assertEquals("innervalue",
+                ((Map) etcdmap.get("innermap")).get("innerkey"));
+        assertEquals(((Map) syzygymap.get("innermap")).get("innerkey"),
+                ((Map) etcdmap.get("innermap")).get("innerkey"));
+
+        //    assertEquals(config.keys(), syzetcd.keys());
+
+        //assertTrue("Remove the complete structure", etcd.removeMap(config.getName()));
     }
 }

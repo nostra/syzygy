@@ -36,7 +36,7 @@ public class SyzygyEtcdConfig implements SyzygyConfig {
         if  (obj == null ) {
             return null;
         }
-        if ( obj.getClass().isAssignableFrom(clazz)) {
+        if ( clazz.isAssignableFrom(obj.getClass())) {
             return (T) obj;
         }
         // TODO If integer, or some other supported type, convert it.
@@ -46,7 +46,8 @@ public class SyzygyEtcdConfig implements SyzygyConfig {
 
     @Override
     public Set<String> keys() {
-        return etcd.keys(getName());
+        // Plus / as a wrapped config really lives in a map
+        return etcd.keys(getName()+"/");
     }
 
     public static SyzygyConfig connectAs(EtcdConnector etcd, String name) {

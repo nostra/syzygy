@@ -3,18 +3,22 @@ package no.api.syzygy.etcd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import no.api.syzygy.SyzygyConfig;
+import no.api.syzygy.loaders.SyzygyFileConfig;
 import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -107,10 +111,15 @@ public class MapFileBackAndForthTest {
 
     @Test
     public void testLoadKeys() {
-        etcd.store("key1", "a");
-        etcd.store("key2", "b");
-        etcd.store("key3", "c");
+        assertTrue(etcd.store("key1", "a"));
+        assertTrue(etcd.store("key2", "b"));
+        assertTrue(etcd.store("key3", "c"));
         Set<String> keys = etcd.keys("");
+        assertEquals(3, keys.size());
+        assertTrue( "Expecting key set to contain deterministic name. It did not. Set: "+keys, keys.contains("key2"));
+        assertTrue(etcd.remove("key1"));
+        assertTrue(etcd.remove("key2"));
+        assertTrue(etcd.remove("key3"));
     }
 
     @Test
@@ -121,14 +130,19 @@ public class MapFileBackAndForthTest {
         FromSyzygyToEtcd.mapSyzygyInto(config, etcd);
         assertEquals("top.level.config.value",  etcd.valueBy( config.getName()+"/config.key"));
 
-        SyzygyConfig syzetcd = SyzygyEtcdConfig.connectAs( etcd, config.getName());
-        assertEquals("top.level.config.value",  syzetcd.lookup("config.key"));
+        SyzygyConfig syzygyEtcd = SyzygyEtcdConfig.connectAs( etcd, config.getName());
+        assertEquals(config.getName(),  syzygyEtcd.getName());
+        assertEquals("top.level.config.value", syzygyEtcd.lookup("config.key"));
         for ( String key: config.keys() ) {
             Object syzygy = config.lookup(key, Object.class);
-            Object etcdy = config.lookup(key, Object.class);
+            Object etcdy = syzygyEtcd.lookup(key, Object.class);
             assertNotNull(syzygy);
             assertNotNull(etcdy);
-            assertEquals(syzygy.getClass().getName(), etcdy.getClass().getName());
+            if ( syzygy instanceof Map && etcdy instanceof Map ) {
+                compareMaps( (Map)syzygy, (Map)etcdy);
+            } else {
+                assertEquals(syzygy.getClass().getName(), etcdy.getClass().getName());
+            }
         }
         Map syzygymap = config.lookup("www.rb.no", Map.class);
         Map etcdmap = config.lookup("www.rb.no", Map.class);
@@ -140,8 +154,43 @@ public class MapFileBackAndForthTest {
 
         Set<String> syzgyKeys = config.keys();
         syzgyKeys.remove(SyzygyConfig.SYZYGY_CFG_FILE);
-        assertEquals(syzgyKeys, syzetcd.keys());
+        assertEquals(syzgyKeys, syzygyEtcd.keys());
 
         assertTrue("Remove the complete structure", etcd.removeMap(config.getName()));
+    }
+
+    private void compareMaps(Map<String,Object> a, Map<String,Object> b) {
+        String[] akeys = a.keySet().toArray(new String[0]);
+        String[] bkeys = b.keySet().toArray(new String[0]);
+        Arrays.sort(akeys);
+        Arrays.sort(bkeys);
+        assertArrayEquals(akeys,bkeys);
+        for ( String key : akeys ) {
+            Object aobj = a.get(key);
+            Object bobj = a.get(key);
+            if ( aobj instanceof Map && bobj instanceof Map ) {
+                compareMaps((Map<String,Object>)aobj, (Map<String,Object>)bobj);
+            } else {
+                assertEquals(aobj, bobj);
+            }
+        }
+
+    }
+
+    @Test
+    @Ignore
+    public void testToFile() throws IOException {
+        //
+        // WIP
+        //
+        SyzygyConfig config = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/syzygy.yaml")).configurationWithName(
+                "structure");
+        assertEquals("structure", config.getName() );
+        FromSyzygyToEtcd.mapSyzygyInto(config, etcd);
+        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("/tmp/test.tt"), ((SyzygyFileConfig)config).getMap());
+        Map map = etcd.getMap();
+        assertNotNull(map);
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("/tmp/test_1.tt"), map);
     }
 }

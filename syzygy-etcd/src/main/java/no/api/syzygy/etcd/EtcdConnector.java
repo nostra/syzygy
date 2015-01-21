@@ -243,7 +243,7 @@ public class EtcdConnector {
         Set<String> keys = new HashSet<>();
         try {
             Set<Node> nodes = client.getData().forKey(prefix +"/"+name ).getNode().getNodes();
-            final int skipPrefix = prefix.length()+name.length()+1; // +1 due to ending slash
+            final int skipPrefix = prefix.length()+name.length();
             for ( Node n : nodes ) {
                 keys.add(n.getKey().substring(skipPrefix));
             }
@@ -252,5 +252,9 @@ public class EtcdConnector {
         }
 
         return keys;
+    }
+
+    public Map<String,Object> getMap() {
+        return (Map<String, Object>) valueBy("");
     }
 }

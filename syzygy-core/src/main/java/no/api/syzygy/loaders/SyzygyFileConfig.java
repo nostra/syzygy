@@ -50,7 +50,9 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
         return this;
     }
 
-    protected Map getMap() {
+
+    /** Temporarily public */
+    public Map getMap() {
         return Collections.unmodifiableMap(map);
     }
 

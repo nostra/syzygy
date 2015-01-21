@@ -183,7 +183,7 @@ public class EtcdConnector {
             // So /syzygy/somemap/abc should be named abc
             final int skipPrefix = prefix.length()+key.length()+1; // +1 due to ending slash
             Set<Node> nodes = response.getNode().getNodes();
-            log.debug("Prefix to remove when storing in map:  {}. Number of nodes in map: {}", prefix + key,
+            log.trace("Prefix to remove when storing in map:  {}. Number of nodes in map: {}", prefix + key,
                     nodes.size());
             for ( Node n : nodes ) {
                 // Map will have path /syzygy/somemap/key
@@ -191,7 +191,7 @@ public class EtcdConnector {
                                 ? 1
                                 : 0;
                 final String k = n.getKey().substring(skipPrefix + removeSlash);
-                log.debug("Got node: {} with map key {}", n.getKey(), k);
+                log.trace("Got node: {} with map key {}", n.getKey(), k);
                 if ( n.isDir() ) {
                     // Nested map
                     map.put(k, valueBy(key+"/"+k));

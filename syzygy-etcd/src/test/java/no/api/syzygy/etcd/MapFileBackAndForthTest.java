@@ -34,7 +34,6 @@ public class MapFileBackAndForthTest {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private EtcdConnector etcd;
-    private Map<String, Object> structure;
 
     private String readFrom;
 
@@ -45,8 +44,6 @@ public class MapFileBackAndForthTest {
         Assume.assumeNotNull(etcd);
 
         readFrom = findTestResourcesDirectory();
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        structure = mapper.readValue(new File(readFrom+"structure.yml"), Map.class);
     }
 
     protected static String findTestResourcesDirectory() {
@@ -70,6 +67,8 @@ public class MapFileBackAndForthTest {
 
     @Test
     public void justMakingSureToBeAbleToReadFile() throws IOException {
+        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+        Map<String, Object> structure = mapper.readValue(new File(readFrom+"structure.yml"), Map.class);
         assertEquals("top.level.config.value", structure.get("config.key"));
         Map<String, Object> map = (Map<String, Object>) structure.get("www.rb.no");
         assertEquals("value1 for rb", map.get("key1"));

@@ -1,6 +1,7 @@
 package no.api.syzygy.loaders;
 
 import no.api.pantheon.io.FileUtils;
+import no.api.syzygy.ConfigurationProvider;
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyDynamicLoader;
 import no.api.syzygy.SyzygyException;
@@ -209,13 +210,31 @@ public class SyzygyLoader {
     }
 
     private SyzygyConfig readFromBackend(String name) {
-        SyzygyDynamicLoader dynamic = tenativelyInstantiate(name);
+        SyzygyDynamicLoader dynamic = (SyzygyDynamicLoader) tenativelyInstantiate(name);
         if ( dynamic != null ) {
             return dynamic.createSyzygyConfigWith(topLevelConfig);
         }
-        String datadir = topLevelConfig.lookup(":datadir", String.class);
-        datadir = datadir == null ? "." : datadir;
-        return readHieraFromFile(datadir, name);
+        List<String> datadir = topLevelConfig.lookup(":datadir", List.class);
+        if ( datadir == null ) {
+            // Same directory as syzygy.yaml
+            return readHieraFromFile(".", name);
+        }
+        // The data source elements are read consecutively. It is an usage error if the same name occurs
+        // in both types of configuration
+        for ( String dir : datadir ) {
+            SyzygyConfig sc;
+
+            ConfigurationProvider reader = (ConfigurationProvider) tenativelyInstantiate(dir);
+            if ( reader != null ) {
+                sc = reader.findConfigurationFrom(topLevelConfig, name);
+            } else {
+                sc = readHieraFromFile(dir, name);
+            }
+            if ( sc != null ) {
+                return sc;
+            }
+        }
+        throw new SyzygyException("No configuration to found for "+name);
     }
 
     /**
@@ -280,11 +299,11 @@ public class SyzygyLoader {
     }
 
     /**
-     * @return Instance of SyzygyDynamicLoader if <code>potentialClass</code> can be instantiated
+     * @return Instance of SyzygyDynamicLoader potentionalClass if <code>potentialClass</code> can be instantiated
      */
-    private SyzygyDynamicLoader tenativelyInstantiate(String potentialClass) {
+    private Object tenativelyInstantiate(String potentialClass) {
         try {
-            return (SyzygyDynamicLoader) Class.forName(potentialClass).newInstance();
+            return Class.forName(potentialClass).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ignored ) { // NOSONAR Acceptable
             // Ignored
         }

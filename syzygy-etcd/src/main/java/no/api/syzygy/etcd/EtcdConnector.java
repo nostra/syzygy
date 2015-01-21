@@ -149,7 +149,12 @@ public class EtcdConnector {
         try {
             Response data = client.getData().forKey(prefix+key);
             if ( data.getNode().isDir() ) {
-                return removeDirectory( key, false );
+                if ( keys(key).size() == 0 ) {
+                    return removeDirectory( key, false );
+                } else {
+                    log.warn("N");
+                    return false;
+                }
             }
             response = client.delete().forKey(prefix+key);
         } catch (Exception e) {
@@ -178,11 +183,15 @@ public class EtcdConnector {
             // So /syzygy/somemap/abc should be named abc
             final int skipPrefix = prefix.length()+key.length()+1; // +1 due to ending slash
             Set<Node> nodes = response.getNode().getNodes();
-            log.trace("Prefix to remove when storing in map:  {}. Number of nodes in map: {}", prefix + key, nodes.size());
+            log.debug("Prefix to remove when storing in map:  {}. Number of nodes in map: {}", prefix + key,
+                    nodes.size());
             for ( Node n : nodes ) {
                 // Map will have path /syzygy/somemap/key
-                final String k = n.getKey().substring(skipPrefix);
-                log.trace("Got node: {} with map key {}", n.getKey(), k);
+                int removeSlash = n.getKey().endsWith("/")
+                                ? 1
+                                : 0;
+                final String k = n.getKey().substring(skipPrefix + removeSlash);
+                log.debug("Got node: {} with map key {}", n.getKey(), k);
                 if ( n.isDir() ) {
                     // Nested map
                     map.put(k, valueBy(key+"/"+k));
@@ -195,7 +204,11 @@ public class EtcdConnector {
         return data.getNode().getValue();
     }
 
-    private boolean removeDirectory(String key, boolean recursive ) {
+    /**
+     * Use with caution. With a wrong key / reference, you might remove the
+     * wrong dataset.
+     */
+    public boolean removeDirectory(String key, boolean recursive ) {
         Response response = null;
         try {
             DeleteDataBuilder deleter = client.delete();
@@ -254,7 +267,7 @@ public class EtcdConnector {
         return keys;
     }
 
-    public Map<String,Object> getMap() {
-        return (Map<String, Object>) valueBy("");
+    public Map<String,Object> getMap(String name) {
+        return (Map<String, Object>) valueBy(name);
     }
 }

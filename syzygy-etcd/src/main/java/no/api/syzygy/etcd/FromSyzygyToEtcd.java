@@ -17,7 +17,7 @@ public class FromSyzygyToEtcd {
         this.etcdConnector = etcdConnector;
     }
 
-    public static void mapSyzygyInto(SyzygyConfig syzgyConfig, EtcdConnector etcdConnector) {
+    public static void storeConfigInto(SyzygyConfig syzgyConfig, EtcdConnector etcdConnector) {
         new FromSyzygyToEtcd( etcdConnector ).mapFrom( syzgyConfig );
     }
 

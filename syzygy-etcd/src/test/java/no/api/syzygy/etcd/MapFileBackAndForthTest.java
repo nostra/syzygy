@@ -8,9 +8,11 @@ import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -29,9 +31,13 @@ import static org.junit.Assert.assertTrue;
  */
 public class MapFileBackAndForthTest {
 
+    private Logger log = LoggerFactory.getLogger(this.getClass());
+
     private EtcdConnector etcd;
     private Map<String, Object> structure;
+
     private String readFrom;
+
 
     @Before
     public void determineBaseDirectory() throws IOException {
@@ -127,7 +133,7 @@ public class MapFileBackAndForthTest {
         SyzygyConfig
                 config = SyzygyLoader.loadConfigurationFile(new File(readFrom+"/syzygy.yaml")).configurationWithName(
                 "structure");
-        FromSyzygyToEtcd.mapSyzygyInto(config, etcd);
+        FromSyzygyToEtcd.storeConfigInto(config, etcd);
         assertEquals("top.level.config.value",  etcd.valueBy( config.getName()+"/config.key"));
 
         SyzygyConfig syzygyEtcd = SyzygyEtcdConfig.connectAs( etcd, config.getName());
@@ -178,19 +184,29 @@ public class MapFileBackAndForthTest {
     }
 
     @Test
-    @Ignore
     public void testToFile() throws IOException {
-        //
-        // WIP
-        //
         SyzygyConfig config = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/syzygy.yaml")).configurationWithName(
                 "structure");
-        assertEquals("structure", config.getName() );
-        FromSyzygyToEtcd.mapSyzygyInto(config, etcd);
+        assertEquals("structure", config.getName());
         ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("/tmp/test.tt"), ((SyzygyFileConfig)config).getMap());
-        Map map = etcd.getMap();
-        assertNotNull(map);
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File("/tmp/test_1.tt"), map);
+
+        ByteArrayOutputStream syzygyFileConfig = new ByteArrayOutputStream();
+        Map syzygyMap = new HashMap( ((SyzygyFileConfig)config).getMap() );
+        syzygyMap.remove(SyzygyConfig.SYZYGY_CFG_FILE);
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(syzygyFileConfig, syzygyMap);
+
+        FromSyzygyToEtcd.storeConfigInto(config, etcd);
+        Map mapBasedOnEtcdData = etcd.getMap(config.getName());
+        assertNotNull(mapBasedOnEtcdData);
+
+        compareMaps( syzygyMap, mapBasedOnEtcdData );
+        ByteArrayOutputStream etcdFileConfig = new ByteArrayOutputStream();
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(etcdFileConfig, mapBasedOnEtcdData);
+
+        log.debug("Syzgy as read from file looks like this:\n"+syzygyFileConfig.toString());
+        log.debug("\n\nWhereas syzgy as read from etcd looks like this:\n"+etcdFileConfig.toString());
+        // These will usually not be equal. That is OK: assertEquals(syzygyFileConfig.toString(), etcdFileConfig.toString());
+
+        assertTrue(etcd.removeDirectory(config.getName(), true));
     }
 }

@@ -84,7 +84,7 @@ public class EtcdConnector {
             if ( data.getNode().isDir() ) {
                 return data.getNode().getNodes().size();
             }
-        } catch (Exception ignore) {
+        } catch (EtcdException ignore) {
             log.debug("Ignoring exception, which just indicates that " + prefix + key + " is not a directory");
         }
 
@@ -109,7 +109,7 @@ public class EtcdConnector {
                 log.trace("Creating directory {} as it does not exist already.", prefix + key);
                 client.setData().dir().forKey(prefix+key);
             }
-        } catch (Exception e) {
+        } catch (EtcdException e) {
             log.trace("Ignoring error, as it probably just is that the directory already exists", e);
             // Confirmation that this is a directory.
             Response directory = client.getData().forKey(prefix+key);
@@ -157,7 +157,7 @@ public class EtcdConnector {
                 }
             }
             response = client.delete().forKey(prefix+key);
-        } catch (Exception e) {
+        } catch (EtcdException e) {
             log.error("Got exception removing key: "+prefix+key, e);
             return false;
         }
@@ -172,7 +172,7 @@ public class EtcdConnector {
         Response data = null;
         try {
             data = client.getData().forKey(prefix+key);
-        } catch (Exception e) {
+        } catch (EtcdException e) {
             log.warn("Got exception trying to read data with key " + prefix+key, e);
             return null;
         }
@@ -233,7 +233,7 @@ public class EtcdConnector {
             if ( data.getNode().isDir() ) {
                 return true;
             }
-        } catch (Exception ignore) {
+        } catch (EtcdException ignore) {
             log.trace("Ignoring exception, which just indicates that {} is not a directory", prefix + key);
         }
         return false;
@@ -245,7 +245,7 @@ public class EtcdConnector {
 
         try {
             client.setData().dir().forKey(prefix);
-        } catch (Exception e) {
+        } catch (EtcdException e) {
             log.debug("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
         }
 
@@ -260,7 +260,7 @@ public class EtcdConnector {
             for ( Node n : nodes ) {
                 keys.add(n.getKey().substring(skipPrefix));
             }
-        } catch (Exception e) {
+        } catch (EtcdException e) {
             log.debug("Directory for "+prefix+" does (probably) exist. Masked exception: "+e);
         }
 

@@ -6,7 +6,8 @@ import no.api.syzygy.SyzygyException;
 import java.util.Set;
 
 /**
- * Load a structure with etcd
+ * Mount an etcd structure as syzygy config. You would typically mount an
+ * etcd sub structure.
  */
 public class SyzygyEtcdConfig implements SyzygyConfig {
 
@@ -50,6 +51,9 @@ public class SyzygyEtcdConfig implements SyzygyConfig {
         return etcd.keys(getName()+"/");
     }
 
+    /**
+     * Mount a subdirectory from the current etcd structure with etcd
+     */
     public static SyzygyConfig connectAs(EtcdConnector etcd, String name) {
         return new SyzygyEtcdConfig(etcd, name);
     }

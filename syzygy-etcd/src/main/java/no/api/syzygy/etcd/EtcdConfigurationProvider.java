@@ -28,6 +28,12 @@ public class EtcdConfigurationProvider implements ConfigurationProvider {
         }
         EtcdConnector etcd = EtcdConnector.attach(etcdUrl, prefix);
 
-        return SyzygyEtcdConfig.connectAs( etcd, configurationName);
+        SyzygyConfig cfg = SyzygyEtcdConfig.connectAs(etcd, configurationName);
+        if (!cfg.keys().isEmpty()) {
+            log.debug("Configuration {} was found in etcd and returned", configurationName );
+            return cfg;
+        }
+        log.debug("Configuration {} was not found in etcd", configurationName );
+        return null;
     }
 }

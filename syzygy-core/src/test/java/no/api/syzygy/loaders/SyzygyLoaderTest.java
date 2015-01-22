@@ -29,6 +29,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 
 public class SyzygyLoaderTest {
@@ -188,5 +189,18 @@ public class SyzygyLoaderTest {
         assertEquals("Key2 in first", loader.lookup("key2"));
         assertEquals("Key3 only exists in second", loader.lookup("key3"));
         assertNull("Key4 does not exist", loader.lookup("key4"));
+    }
+
+    @Test
+    public void testThatWrongConfigBalks() {
+        try {
+            loader = SyzygyLoader.loadConfigurationFile(
+                    new File(HieradirectoryHelper.findTestDirectoryReference("twoconfigdirs")
+                            +"/erroneous.yaml"));
+            loader.validate();
+            fail("And exception should have been thrown here.");
+        } catch (Exception ignore ) {}
+
+
     }
 }

@@ -223,8 +223,10 @@ public class SyzygyLoader {
             }
             return cfg;
         }
+
         // The data source elements are read consecutively. It is an usage error if the same name occurs
         // in both types of configuration
+        SyzygyConfig found = null;
         for ( String dir : datadir ) {
             SyzygyConfig sc;
 
@@ -235,13 +237,16 @@ public class SyzygyLoader {
                 sc = readHieraFromFile(dir, name);
             }
             if ( sc != null ) {
-                return sc;
+                if ( found != null ) {
+                    throw new SyzygyException("The configuration name {} is duplicated in configurations. This is not allowed. Configurations: "+datadir);
+                }
+                found = sc;
             }
         }
-        if ( shouldStopOnError() ) {
+        if ( found == null && shouldStopOnError() ) {
             throw new SyzygyException("No configuration to found for "+name);
         }
-        return null;
+        return found;
     }
 
     /**

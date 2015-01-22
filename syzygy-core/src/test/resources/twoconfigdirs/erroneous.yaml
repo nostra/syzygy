@@ -1,0 +1,7 @@
+---
+:datadir:
+  - first
+  - second
+:hierarchy:
+  - wrong
+stop_if_error: true

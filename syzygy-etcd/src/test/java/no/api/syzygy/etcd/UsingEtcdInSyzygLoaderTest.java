@@ -29,9 +29,6 @@ public class UsingEtcdInSyzygLoaderTest {
     public void determineBaseDirectory() throws IOException {
         etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/", "/syzygy/junit/etcdmap/");
         Assume.assumeNotNull(etcd);
-
-        assertTrue(etcd.store("key1", "etcd_a"));
-        assertTrue(etcd.store("key3", "etcd_c"));
         readFrom = MapFileBackAndForthTest.findTestResourcesDirectory();
     }
 
@@ -48,10 +45,19 @@ public class UsingEtcdInSyzygLoaderTest {
     @Test
     @Ignore
     public void testValues() {
-        SyzygyLoader loader = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/etcdsyzygy/syzygy.yaml"));
-        assertEquals("etcd_a", loader.lookup("key1"));
-        assertEquals("fallback value 2", loader.lookup("key2"));
-        assertEquals("etcd_c", loader.lookup("key3"));
-        assertEquals("fallback value 4", loader.lookup("key4"));
+        //
+        // WIP
+        //
+        assertTrue(etcd.store("key1", "etcd_a"));
+        assertTrue(etcd.store("key3", "etcd_c"));
+
+        SyzygyLoader syzygy = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/etcdsyzygy/syzygy.yaml"));
+        assertEquals("etcd_a", syzygy.lookup("key1"));
+        assertEquals("fallback value 2", syzygy.lookup("key2"));
+        assertEquals("etcd_c", syzygy.lookup("key3"));
+        assertEquals("fallback value 4", syzygy.lookup("key4"));
+
+        assertTrue(etcd.remove("key1"));
+        assertTrue(etcd.remove("key3"));
     }
 }

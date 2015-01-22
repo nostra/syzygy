@@ -38,9 +38,6 @@ public class UsingEtcdInSyzygLoaderTest {
         }
     }
 
-    /**
-     * Work in progress - seems like only etcd version of readers is used.
-     */
     @Test
     public void testValues() {
         assertTrue(etcd.store("key1", "etcd_a"));

@@ -67,6 +67,9 @@ public class EtcdConnector {
         return null;
     }
 
+    /**
+     * Stop the etcd client.
+     */
     public void stop() {
         int numberOfChildren = numberOfChildElements(""); // "" becomes the prefix itself
         if ( numberOfChildren == 0 ) {
@@ -103,6 +106,10 @@ public class EtcdConnector {
         return true;
     }
 
+    /**
+     * This method is intended for junit test use only. It is destructive, and if
+     * it fails, your data may be in an incorrect state
+     */
     public boolean store( String key, Map<String, Object> map) {
         try {
             if ( !isDirectory(key)) {

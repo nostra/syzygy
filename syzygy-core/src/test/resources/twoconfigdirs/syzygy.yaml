@@ -1,0 +1,8 @@
+---
+:datadir:
+  - first
+  - second
+:hierarchy:
+  - fileinfirst
+  - fileinsecond
+stop_if_error: true

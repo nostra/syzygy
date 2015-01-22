@@ -4,7 +4,6 @@ import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,11 +42,7 @@ public class UsingEtcdInSyzygLoaderTest {
      * Work in progress - seems like only etcd version of readers is used.
      */
     @Test
-    @Ignore
     public void testValues() {
-        //
-        // WIP
-        //
         assertTrue(etcd.store("key1", "etcd_a"));
         assertTrue(etcd.store("key3", "etcd_c"));
 
@@ -59,5 +54,12 @@ public class UsingEtcdInSyzygLoaderTest {
 
         assertTrue(etcd.remove("key1"));
         assertTrue(etcd.remove("key3"));
+    }
+
+    @Test
+    public void testFilePart() {
+        SyzygyLoader syzygy = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/etcdsyzygy/fileproblem.yaml"));
+        assertEquals("fallback value 2", syzygy.lookup("key2"));
+        assertEquals("fallback value 4", syzygy.lookup("key4"));
     }
 }

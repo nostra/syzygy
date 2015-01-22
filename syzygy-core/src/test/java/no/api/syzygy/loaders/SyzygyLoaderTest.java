@@ -177,4 +177,16 @@ public class SyzygyLoaderTest {
         assertNotNull(convict.lookup("shall_be_integer", Integer.class));
         assertEquals("Expecting the file size to be deterministic", 5, loader.configurationNames().size());
     }
+
+    @Test
+    public void testLoaderWithMultipleDirectories() {
+        loader = SyzygyLoader.loadConfigurationFile(
+                new File(HieradirectoryHelper.findTestDirectoryReference("twoconfigdirs")
+                +"/syzygy.yaml"));
+        loader.validate();
+        assertEquals("Key1 in first", loader.lookup("key1"));
+        assertEquals("Key2 in first", loader.lookup("key2"));
+        assertEquals("Key3 only exists in second", loader.lookup("key3"));
+        assertNull("Key4 does not exist", loader.lookup("key4"));
+    }
 }

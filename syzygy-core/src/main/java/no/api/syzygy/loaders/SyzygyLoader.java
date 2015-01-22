@@ -217,16 +217,20 @@ public class SyzygyLoader {
         List<String> datadir = topLevelConfig.lookup(":datadir", List.class);
         if ( datadir == null ) {
             // Same directory as syzygy.yaml
-            return readHieraFromFile(".", name);
+             SyzygyConfig cfg = readHieraFromFile(".", name);
+            if ( cfg == null && shouldStopOnError()) {
+                throw new SyzygyException("Could not find a file called neither "+name+".yaml, "+name+".json nor a class with name "+name+".");
+            }
+            return cfg;
         }
         // The data source elements are read consecutively. It is an usage error if the same name occurs
         // in both types of configuration
         for ( String dir : datadir ) {
             SyzygyConfig sc;
 
-            ConfigurationProvider reader = (ConfigurationProvider) tenativelyInstantiate(dir);
-            if ( reader != null ) {
-                sc = reader.findConfigurationFrom(topLevelConfig, name);
+            ConfigurationProvider dynamicConfiguration = (ConfigurationProvider) tenativelyInstantiate(dir);
+            if ( dynamicConfiguration != null ) {
+                sc = dynamicConfiguration.findConfigurationFrom(topLevelConfig, name);
             } else {
                 sc = readHieraFromFile(dir, name);
             }
@@ -234,7 +238,10 @@ public class SyzygyLoader {
                 return sc;
             }
         }
-        throw new SyzygyException("No configuration to found for "+name);
+        if ( shouldStopOnError() ) {
+            throw new SyzygyException("No configuration to found for "+name);
+        }
+        return null;
     }
 
     /**
@@ -253,9 +260,6 @@ public class SyzygyLoader {
             extension = ".json";
         }
         if ( ! FileUtils.doesFileExist(filename+extension)) {
-            if ( shouldStopOnError()) {
-                throw new SyzygyException("Could not find a file called neither "+name+".yaml, "+name+".json nor a class with name "+name+".");
-            }
             return null;
         }
         SyzygyConfig cfg = new SyzygyFileConfig(name).load(filename + extension);

@@ -45,6 +45,35 @@ The content of the files can have 3 different formats:
 
 Basically, everything that is supported by jackson is supported by syzygy.
 
+### Etcd configuration
+
+By adding the configuration class `EtcdConfigurationProvider`, you can
+configure an etcd entry point. The following is an example with etcd connection
+added.
+
+[source,yaml]
+---
+:datadir:
+  - hieradata
+  - no.api.syzygy.etcd.EtcdConfigurationProvider
+:hierarchy:
+  - inetcd
+  - infile
+stop_if_error: true
+etcdUrl : "http://127.0.0.1:4001/v2/"
+etcdPrefix : "/syzygy/somewhere/"
+
+The configuration *inetcd* can be found in etcd, and *infile* in the directory
+hieradata. When finding a name configuration, the file system is consulted first,
+as it is first in the directory list.
+
+Note the configuration which is specific for etcd:
+
+* etcdUrl: Where to connect to etcd. Defaulting to localhost
+* etcdPrefix: The prefix within etcd. Defaults to `syzygy`. The
+  configuration from hierarchy would be added to the path, so in the
+  example, the hierarch starts with `/syzygy/somewhere/inetcd/
+
 ### yaml configuration example
 
 Yaml is the format you would know already from dropwizard configuration:

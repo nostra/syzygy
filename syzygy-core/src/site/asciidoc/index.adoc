@@ -78,7 +78,7 @@ Note the configuration which is specific for etcd:
   example, the hierarch starts with `/syzygy/somewhere/inetcd/
 
 NOTE:: It may be that the EtcdConfigurationProvider element gets exchanged
-with a simple loader.  
+with a regular dynamic loader.  
 
 ### yaml configuration example
 

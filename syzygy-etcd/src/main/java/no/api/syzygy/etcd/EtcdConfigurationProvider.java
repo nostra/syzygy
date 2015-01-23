@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ *  This load will get the configuration name. It will take that name, and
+ *  try to mount it as a separate syzgyy configuration.
  */
 public class EtcdConfigurationProvider implements ConfigurationProvider {
     private static final Logger log = LoggerFactory.getLogger(EtcdConfigurationProvider.class);

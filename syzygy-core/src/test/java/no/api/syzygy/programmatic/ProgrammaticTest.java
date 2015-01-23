@@ -39,4 +39,11 @@ public class ProgrammaticTest {
             fail("Error should have been thrown");
         } catch (SyzygyException expected ) {}
     }
+
+    @Test
+    public void testName() {
+        SyzygyLoader loader = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/dummy.yaml"));
+        assertEquals(1, loader.configurationNames().size());
+        assertEquals("Expecting configuration name to be deterministic.", "config_a", loader.configurationNames().get(0));
+    }
 }

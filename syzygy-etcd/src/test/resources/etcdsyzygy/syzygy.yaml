@@ -4,5 +4,5 @@
 :datadir:
   - no.api.syzygy.etcd.EtcdConfigurationProvider
   - yamlfiles
-"etcdUrl" : "http://127.0.0.1:4001/v2/"
-"etcdPrefix" : "/syzygy/junit/"
+etcdUrl : "http://127.0.0.1:4001/v2/"
+etcdPrefix : "/syzygy/junit/"

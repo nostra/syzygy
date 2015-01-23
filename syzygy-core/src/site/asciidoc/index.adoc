@@ -45,6 +45,9 @@ The content of the files can have 3 different formats:
 
 Basically, everything that is supported by jackson is supported by syzygy.
 
+You may refer to a java implementation, as in the `SomeImplementation`
+example. More about the correct format for this later.
+
 ### Etcd configuration
 
 By adding the configuration class `EtcdConfigurationProvider`, you can
@@ -73,6 +76,9 @@ Note the configuration which is specific for etcd:
 * etcdPrefix: The prefix within etcd. Defaults to `syzygy`. The
   configuration from hierarchy would be added to the path, so in the
   example, the hierarch starts with `/syzygy/somewhere/inetcd/
+
+NOTE:: It may be that the EtcdConfigurationProvider element gets exchanged
+with a simple loader.  
 
 ### yaml configuration example
 
@@ -122,9 +128,9 @@ Example:
 ---
 :hierarchy:
   - special
-  - no.api.syzygy.DirectoryIntoMap
+  - no.api.syzygy.DirectoryIntoMap#refkey
   - fallback
-directory.to.map: overrides
+refkey.directory.to.map: overrides
 stop_if_error: 'true'
 
 Explanation: The class `DirectoryIntoMap` will load all files from

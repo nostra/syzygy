@@ -1,6 +1,6 @@
 :hierarchy:
-  - no.api.syzygy.loaders.DirectoryIntoMap
+  - no.api.syzygy.loaders.DirectoryIntoMap#dir
   - fallback
 
-directory.to.map: overrides
+dir.directory.to.map: overrides
 stop_if_error: true

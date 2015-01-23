@@ -212,7 +212,7 @@ public class SyzygyLoader {
     private SyzygyConfig readFromBackend(String name) {
         SyzygyDynamicLoader dynamic = (SyzygyDynamicLoader) tenativelyInstantiate(name);
         if ( dynamic != null ) {
-            return dynamic.createSyzygyConfigWith(topLevelConfig);
+            return dynamic.createSyzygyConfigWith(name.substring(name.indexOf("#") + 1), topLevelConfig);
         }
         List<String> datadir = topLevelConfig.lookup(":datadir", List.class);
         if ( datadir == null ) {
@@ -311,8 +311,12 @@ public class SyzygyLoader {
      * @return Instance of SyzygyDynamicLoader potentionalClass if <code>potentialClass</code> can be instantiated
      */
     private Object tenativelyInstantiate(String potentialClass) {
+        int hash = potentialClass.indexOf("#");
+        String realclass = hash != -1
+                        ? potentialClass.substring(0, hash)
+                        : potentialClass;
         try {
-            return Class.forName(potentialClass).newInstance();
+            return Class.forName(realclassn).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ignored ) { // NOSONAR Acceptable
             // Ignored
         }

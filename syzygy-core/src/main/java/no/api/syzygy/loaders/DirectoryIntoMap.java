@@ -22,18 +22,19 @@ public class DirectoryIntoMap implements SyzygyDynamicLoader {
     private static final Logger log = LoggerFactory.getLogger(DirectoryIntoMap.class);
 
     @Override
-    public SyzygyConfig createSyzygyConfigWith(SyzygyConfig loaderConfiguration) {
+    public SyzygyConfig createSyzygyConfigWith(String configurationString, SyzygyConfig loaderConfiguration) {
         String baseDirectory = new File( loaderConfiguration.lookup(SyzygyConfig.SYZYGY_CFG_FILE)).getParent();
-        String subdirectory = loaderConfiguration.lookup("directory.to.map");
+        String configKey = configurationString+".directory.to.map";
+        String subdirectory = loaderConfiguration.lookup(configKey);
         if ( subdirectory == null ) {
-            throw new SyzygyException("You need to specify 'directory.to.map' in the top level configuration, " +
+            throw new SyzygyException("You need to specify '"+configKey+"' in the top level configuration, " +
                     "i.e. in this file: "+loaderConfiguration.lookup(SyzygyConfig.SYZYGY_CFG_FILE));
         }
         File directoryToTraverse = new File(baseDirectory+File.separator+subdirectory);
         if ( !directoryToTraverse.exists() || !directoryToTraverse.isDirectory() ) {
             throw new SyzygyException("Directory given to traverse does not exist: "+directoryToTraverse);
         }
-        Map map = new HashMap();
+        Map<String, Map> map = new HashMap();
         for ( File file : directoryToTraverse.listFiles()) {
             SyzygyFileConfig cfg = new SyzygyFileConfig( stripExt( file.getName()) ).load(file);
             log.trace("Loaded " + file + " into configuration: " + cfg.getName() + ", got " + cfg.getMap().size() +

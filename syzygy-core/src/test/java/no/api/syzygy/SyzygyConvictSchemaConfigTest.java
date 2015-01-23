@@ -36,6 +36,7 @@ public class SyzygyConvictSchemaConfigTest {
         assertEquals("random", config.lookup("random"));
         assertEquals("from_plain", config.lookup("convict_will_be_overridden_by_plain"));
         assertEquals(Integer.valueOf(12345), config.lookup("insist_on_int", Integer.class));
+        assertEquals(3, config.configurationNames().size());
     }
 
     @Test

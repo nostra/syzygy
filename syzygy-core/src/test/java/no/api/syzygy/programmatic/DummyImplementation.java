@@ -12,12 +12,12 @@ import java.util.Set;
 public class DummyImplementation implements SyzygyDynamicLoader {
 
     @Override
-    public SyzygyConfig createSyzygyConfigWith(SyzygyConfig loaderConfiguration) {
+    public SyzygyConfig createSyzygyConfigWith(final String configurationString, SyzygyConfig loaderConfiguration) {
         return new SyzygyConfig() {
 
             @Override
             public String getName() {
-                return getClass().getName();
+                return configurationString;
             }
 
             @Override

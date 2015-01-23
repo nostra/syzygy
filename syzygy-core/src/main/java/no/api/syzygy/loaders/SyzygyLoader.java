@@ -316,7 +316,7 @@ public class SyzygyLoader {
                         ? potentialClass.substring(0, hash)
                         : potentialClass;
         try {
-            return Class.forName(realclassn).newInstance();
+            return Class.forName(realclass).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ignored ) { // NOSONAR Acceptable
             // Ignored
         }

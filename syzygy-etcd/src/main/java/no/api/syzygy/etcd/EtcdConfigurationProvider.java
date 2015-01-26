@@ -2,19 +2,21 @@ package no.api.syzygy.etcd;
 
 import no.api.syzygy.ConfigurationProvider;
 import no.api.syzygy.SyzygyConfig;
-import no.api.syzygy.loaders.SyzygyFileConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *  This load will get the configuration name. It will take that name, and
  *  try to mount it as a separate syzgyy configuration.
+ *  @deprecated It is a better idea to use the SyzygyDynamicLoader version of this.
  */
+@Deprecated
 public class EtcdConfigurationProvider implements ConfigurationProvider {
     private static final Logger log = LoggerFactory.getLogger(EtcdConfigurationProvider.class);
 
     @Override
-    public SyzygyConfig findConfigurationFrom(SyzygyFileConfig topLevelConfig, String configurationName) {
+    public SyzygyConfig findConfigurationFrom(SyzygyConfig topLevelConfig, String configurationName) {
+        log.error("This class is not intended to be used. It is currently kept due to development reasons");
         String etcdUrl = topLevelConfig.lookup("etcdUrl");
         String prefix = topLevelConfig.lookup("etcdPrefix");
         if ( etcdUrl == null ) {

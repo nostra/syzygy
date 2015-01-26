@@ -12,13 +12,16 @@ public class FromSyzygyToEtcd {
 
     private EtcdConnector etcdConnector;
 
+    /**
+     * NOTE that this is additive - it does not remove elements not present in etcd.
+     */
+    public static void storeConfigInto(SyzygyConfig syzgyConfig, EtcdConnector etcdConnector) {
+        new FromSyzygyToEtcd( etcdConnector ).mapFrom( syzgyConfig );
+    }
+
     public FromSyzygyToEtcd(EtcdConnector etcdConnector) {
 
         this.etcdConnector = etcdConnector;
-    }
-
-    public static void storeConfigInto(SyzygyConfig syzgyConfig, EtcdConnector etcdConnector) {
-        new FromSyzygyToEtcd( etcdConnector ).mapFrom( syzgyConfig );
     }
 
     private void mapFrom(SyzygyConfig syzgyConfig) {

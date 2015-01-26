@@ -58,27 +58,24 @@ added.
 ---
 :datadir:
   - hieradata
-  - no.api.syzygy.etcd.EtcdConfigurationProvider
 :hierarchy:
-  - inetcd
+  - no.api.syzygy.etcd.EtcdDynamicConfiguration#inetcd
   - infile
 stop_if_error: true
-etcdUrl : "http://127.0.0.1:4001/v2/"
-etcdPrefix : "/syzygy/somewhere/"
+inetcd_etcd_url : "http://127.0.0.1:4001/v2/"
+inetcd_etcd_prefix : "/syzygy/junit/"
 
 The configuration *inetcd* can be found in etcd, and *infile* in the directory
-hieradata. When finding a name configuration, the file system is consulted first,
-as it is first in the directory list.
+hieradata. Notice that `EtcdDynamicConfiguration` usually takes some configuration,
+which is given in the top level configuration file.
 
 Note the configuration which is specific for etcd:
 
-* etcdUrl: Where to connect to etcd. Defaulting to localhost
-* etcdPrefix: The prefix within etcd. Defaults to `syzygy`. The
+* TAG_etcd_url: Where to connect to etcd. Defaulting to localhost
+* TAG_inetcd_etcd_prefix: The prefix within etcd. Defaults to `syzygy`. The
   configuration from hierarchy would be added to the path, so in the
   example, the hierarch starts with `/syzygy/somewhere/inetcd/
 
-NOTE:: It may be that the EtcdConfigurationProvider element gets exchanged
-with a regular dynamic loader.  
 
 ### yaml configuration example
 

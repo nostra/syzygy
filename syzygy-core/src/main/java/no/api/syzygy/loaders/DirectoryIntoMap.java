@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Based on the <tt>directory.to.map</tt> configuration element, load
+ * Based on the <tt>directory_to_map</tt> configuration element, load
  * all files in sub directory. Intended for doing things like:
  * <code>
  *     syzygy.deepLookup("somekey", "www.ba.no")
@@ -24,7 +24,7 @@ public class DirectoryIntoMap implements SyzygyDynamicLoader {
     @Override
     public SyzygyConfig createSyzygyConfigWith(String configurationString, SyzygyConfig loaderConfiguration) {
         String baseDirectory = new File( loaderConfiguration.lookup(SyzygyConfig.SYZYGY_CFG_FILE)).getParent();
-        String configKey = configurationString+"_directory_to_map";
+        String configKey     = configurationString+"_directory_to_map";
         String subdirectory = loaderConfiguration.lookup(configKey);
         if ( subdirectory == null ) {
             throw new SyzygyException("You need to specify '"+configKey+"' in the top level configuration, " +
@@ -34,6 +34,7 @@ public class DirectoryIntoMap implements SyzygyDynamicLoader {
         if ( !directoryToTraverse.exists() || !directoryToTraverse.isDirectory() ) {
             throw new SyzygyException("Directory given to traverse does not exist: "+directoryToTraverse);
         }
+
         Map<String, Map> map = new HashMap();
         for ( File file : directoryToTraverse.listFiles()) {
             SyzygyFileConfig cfg = new SyzygyFileConfig( stripExt( file.getName()) ).load(file);

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -19,7 +20,7 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class UpdateEtcdWithFileContentsTets {
+public class UpdateEtcdWithFileContentsTest {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private EtcdConnector etcd;
@@ -43,7 +44,7 @@ public class UpdateEtcdWithFileContentsTets {
     }
 
     @Test
-    public void testUpdatedStructure() throws IOException {
+    public void testThatChangesInEtcdGetsReflected() throws IOException {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         Map<String, Object> map = mapper.readValue(new File(readFrom+"structure.yml"), Map.class);
         assertTrue(etcd.store("structure", map));
@@ -63,8 +64,21 @@ public class UpdateEtcdWithFileContentsTets {
         assertNull(syzygyConfig.lookup("www.rb.no/key5"));
         assertEquals("key1 update", syzygyConfig.lookup("www.rb.no/key1"));
 
-        // TODO ACTUALLY UPDATE THE STRUCTURE HERE
-
         assertTrue(etcd.removeDirectory("structure", true));
+    }
+
+    @Test
+    public void demonstrateHowStorageOfMapWillRemoveOtherData() {
+        Map<String, Object> map = new HashMap();
+        map.put("somekey", "somevalue");
+        etcd.store("structure", map );
+        SyzygyConfig syzygyConfig = SyzygyEtcdConfig.connectAs(etcd, "structure");
+        map = new HashMap();
+        map.put("different", "value");
+        etcd.store("structure", map );
+        assertEquals("This documents that storage of 2 maps on top of each other will yield both values",
+                     "somevalue", syzygyConfig.lookup("somekey"));
+        assertEquals("value", syzygyConfig.lookup("different"));
+        assertTrue(etcd.removeMap("structure"));
     }
 }

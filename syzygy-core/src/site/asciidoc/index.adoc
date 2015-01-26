@@ -127,11 +127,11 @@ Example:
   - special
   - no.api.syzygy.DirectoryIntoMap#refkey
   - fallback
-refkey.directory.to.map: overrides
+refkey_directory_to_map: overrides
 stop_if_error: 'true'
 
 Explanation: The class `DirectoryIntoMap` will load all files from
-the configuration `directory.to.map`. The "special" configuration will
+the configuration `_directory_to_map`. The "special" configuration will
 override all configuration. The `DirectoryIntoMap` values will override
 the "fallback" values. See:
  https://github.com/amedia/pantheon/blob/master/pantheon-syzygy/src/main/java/no/api/syzygy/DirectoryIntoMap.java

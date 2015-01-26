@@ -24,7 +24,7 @@ public class DirectoryIntoMap implements SyzygyDynamicLoader {
     @Override
     public SyzygyConfig createSyzygyConfigWith(String configurationString, SyzygyConfig loaderConfiguration) {
         String baseDirectory = new File( loaderConfiguration.lookup(SyzygyConfig.SYZYGY_CFG_FILE)).getParent();
-        String configKey = configurationString+".directory.to.map";
+        String configKey = configurationString+"_directory_to_map";
         String subdirectory = loaderConfiguration.lookup(configKey);
         if ( subdirectory == null ) {
             throw new SyzygyException("You need to specify '"+configKey+"' in the top level configuration, " +

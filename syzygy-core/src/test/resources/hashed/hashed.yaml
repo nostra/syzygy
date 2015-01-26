@@ -2,5 +2,5 @@
   - no.api.syzygy.loaders.DirectoryIntoMap#dir
   - fallback
 
-dir.directory.to.map: overrides
+dir_directory_to_map: overrides
 stop_if_error: true

@@ -13,6 +13,8 @@ public interface SyzygyDynamicLoader {
      *                            between two otherwise equal configuration sets.
      * @param loaderConfiguration The framework will send this in. It would be the
      *                            configuration of the top level configuration, i.e. <tt>syzygy.yaml</tt>
+     * @return Configuration as determined from parameters. Null if global parameter
+     * <tt>stop_if_error</tt> is false, and an error has occurred.
      */
     SyzygyConfig createSyzygyConfigWith( String configurationString, SyzygyConfig loaderConfiguration );
 }

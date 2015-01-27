@@ -2,6 +2,7 @@ package no.api.syzygy.etcd;
 
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyDynamicLoader;
+import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,14 @@ public class EtcdDynamicConfiguration implements SyzygyDynamicLoader {
             prefix = "/syzygy/";
         }
         EtcdConnector etcd = EtcdConnector.attach(etcdUrl, prefix);
+        if ( etcd == null ) {
+            Boolean stopIfError = loaderConfiguration.lookup("stop_if_error", Boolean.class );
+            if ( stopIfError != null && stopIfError.booleanValue() ) {
+                throw new SyzygyException("Cannot attach etcd, and as this configuration is marked as " +
+                        "'stop_if_error', exception is thrown.");
+            }
+            return null;
+        }
 
         return SyzygyEtcdConfig.connectAs(etcd, refkey);
     }

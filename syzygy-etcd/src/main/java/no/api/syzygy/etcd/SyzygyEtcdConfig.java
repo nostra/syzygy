@@ -17,6 +17,9 @@ public class SyzygyEtcdConfig implements SyzygyConfig {
     private final String name;
 
     public SyzygyEtcdConfig(EtcdConnector etcd, String name) {
+        if ( etcd == null ) {
+            throw new SyzygyException("Not allowing etcd be null");
+        }
         this.etcd = etcd;
         this.name = name;
     }

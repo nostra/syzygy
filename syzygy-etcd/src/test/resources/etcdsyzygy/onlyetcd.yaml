@@ -1,0 +1,4 @@
+:hierarchy:
+  - no.api.syzygy.etcd.EtcdDynamicConfiguration#etcdmap
+global_etcd_url : "http://127.0.0.1:4001/v2/"
+etcdmap_etcd_prefix : "/syzygy/junit/"

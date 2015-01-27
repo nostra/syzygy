@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -55,6 +56,12 @@ public class UsingEtcdInSyzygLoaderTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         SyzygyHelper.printConfigTo(syzygy.listAllProperties(), new OutputStreamWriter(baos));
         log.debug("\n" + baos.toString());
+
+        SyzygyLoader onlyEtcd = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/etcdsyzygy/onlyetcd.yaml"));
+        assertEquals("etcd_a", onlyEtcd.lookup("key1"));
+        assertNull(onlyEtcd.lookup("key2"));
+        assertEquals("etcd_c", onlyEtcd.lookup("key3"));
+
 
         assertTrue(etcd.remove("key1"));
         assertTrue(etcd.remove("key3"));

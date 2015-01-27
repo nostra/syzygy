@@ -3,5 +3,5 @@
   - fallback
 :datadir:
   - yamlfiles
-etcdmap_etcd_url : "http://127.0.0.1:4001/v2/"
+global_etcd_url : "http://127.0.0.1:4001/v2/"
 etcdmap_etcd_prefix : "/syzygy/junit/"

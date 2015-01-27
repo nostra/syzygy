@@ -62,7 +62,7 @@ added.
   - no.api.syzygy.etcd.EtcdDynamicConfiguration#inetcd
   - infile
 stop_if_error: true
-inetcd_etcd_url : "http://127.0.0.1:4001/v2/"
+global_etcd_url : "http://127.0.0.1:4001/v2/"
 inetcd_etcd_prefix : "/syzygy/junit/"
 
 The configuration *inetcd* can be found in etcd, and *infile* in the directory

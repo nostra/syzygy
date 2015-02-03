@@ -285,6 +285,9 @@ public class SyzygyLoader {
         }
     }
 
+    /**
+     * Defaulting to stop on error
+     */
     private Boolean shouldStopOnError() {
         Boolean stopIfError = topLevelConfig.lookup("stop_if_error", Boolean.class);
         return stopIfError == null || stopIfError.booleanValue();

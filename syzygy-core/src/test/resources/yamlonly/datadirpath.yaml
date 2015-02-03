@@ -1,0 +1,9 @@
+---
+:datadir:
+  - hieradata
+  - ../twoconfigdirs/first
+:hierarchy:
+# This does not look good, but it is legal (as of now):
+  - fileinfirst
+  - common     # Fallback level
+stop_if_error: true

@@ -3,6 +3,7 @@ package no.api.syzygy.etcd;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import no.api.syzygy.SyzygyConfig;
+import no.api.syzygy.SyzygyException;
 import no.api.syzygy.loaders.SyzygyFileConfig;
 import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
@@ -25,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -207,5 +209,18 @@ public class MapFileBackAndForthTest {
         // These will usually not be equal. That is OK: assertEquals(syzygyFileConfig.toString(), etcdFileConfig.toString());
 
         assertTrue(etcd.removeDirectory(config.getName(), true));
+    }
+
+    @Test
+    public void testThatListsAreUnsupported() {
+        SyzygyConfig config = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/readarray.yaml")).configurationWithName(
+                "array");
+        assertEquals("array", config.getName());
+        try {
+            FromSyzygyToEtcd.storeConfigInto(config, etcd);
+            fail("Did not expect to be able to read lists (currently)");
+        } catch (SyzygyException ignored ) {}
+
+
     }
 }

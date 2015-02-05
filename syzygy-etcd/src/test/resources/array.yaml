@@ -1,0 +1,6 @@
+# Basically just demonstrating that lists are currently unsupported.
+list:
+  - list item1
+  - list item2
+  - list item3
+  - list item4

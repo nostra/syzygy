@@ -13,8 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -277,4 +280,48 @@ public class EtcdConnector {
     public Map<String,Object> getMap(String name) {
         return (Map<String, Object>) valueBy(name);
     }
+
+    /**
+     * @param configName Configuration name / path. I.e. if you do a get in etcd on this name, you get
+     *                   a map as return value
+     */
+    public String syncMapInto(String configName, Map<String,Object> map) {
+        String[] akeys = keys(configName).toArray(new String[0]);
+        String[] bkeys = map.keySet().toArray(new String[0]);
+        Arrays.sort(akeys);
+        Arrays.sort(bkeys);
+
+        List keysToRemoveFromEtcd = Arrays.asList(akeys);
+        keysToRemoveFromEtcd.removeAll(Arrays.asList(bkeys));
+
+        List keysToAddToEtcd = new ArrayList( Arrays.asList(bkeys));
+        keysToAddToEtcd.removeAll(Arrays.asList(bkeys));
+
+        List justCheckThatContentsAreEqual = Arrays.asList(bkeys);
+        justCheckThatContentsAreEqual.removeAll( keysToAddToEtcd );
+
+        log.debug("Got "+keysToRemoveFromEtcd.size()+" keys to remove from etcd, "
+                +keysToAddToEtcd.size()+" keys to add, and "
+                +justCheckThatContentsAreEqual.size()+" which just needs to be checked.");
+
+        return null;
+    }
+    private void compareMaps(Map<String,Object> a, Map<String,Object> b) {
+        String[] akeys = a.keySet().toArray(new String[0]);
+        String[] bkeys = b.keySet().toArray(new String[0]);
+        Arrays.sort(akeys);
+        Arrays.sort(bkeys);
+        //assertArrayEquals(akeys,bkeys);
+        for ( String key : akeys ) {
+            Object aobj = a.get(key);
+            Object bobj = a.get(key);
+            if ( aobj instanceof Map && bobj instanceof Map ) {
+                compareMaps((Map<String,Object>)aobj, (Map<String,Object>)bobj);
+            } else {
+                //assertEquals(aobj, bobj);
+            }
+        }
+
+    }
+
 }

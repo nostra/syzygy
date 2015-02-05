@@ -6,7 +6,7 @@ import no.api.syzygy.SyzygyException;
 import java.util.Map;
 
 /**
- *
+ * WARNING: Not sure if we should continue to support this class
  */
 public class FromSyzygyToEtcd {
 
@@ -20,7 +20,6 @@ public class FromSyzygyToEtcd {
     }
 
     public FromSyzygyToEtcd(EtcdConnector etcdConnector) {
-
         this.etcdConnector = etcdConnector;
     }
 

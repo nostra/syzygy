@@ -9,6 +9,7 @@ import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -220,7 +222,43 @@ public class MapFileBackAndForthTest {
             FromSyzygyToEtcd.storeConfigInto(config, etcd);
             fail("Did not expect to be able to read lists (currently)");
         } catch (SyzygyException ignored ) {}
+    }
 
+    @Test
+    @Ignore
+    public void testSyncingSingleFile() {
+        String configName = "structure";
+        assertEquals("I want to start with a blank slate for this test. -1 means it does not exist",
+                -1, etcd.numberOfChildElements(configName));
+        SyzygyConfig config = SyzygyLoader
+                .loadConfigurationFile(new File(readFrom + "/syzygy.yaml"))
+                .configurationWithName("structure");
+        FromSyzygyToEtcd.storeConfigInto(config, etcd);
+        // The operations above have been demonstrated to work correctly in a different test.
 
+        // Now I want to make the configurations become different
+        assertTrue(etcd.remove(configName+"/www.rb.no/key5"));
+        assertTrue(etcd.store(configName+"/key_not_in_yaml", "value only in etcd"));
+        assertTrue(etcd.store(configName+"/www.ba.no/key1", "overridden key 1"));
+
+        Map map = ((SyzygyFileConfig) config).getMap();
+        assertNotNull(map);
+        assertTrue(!map.isEmpty());
+
+        assertNotNull(etcd.valueBy("key_not_in_yaml"));
+        assertNull(etcd.valueBy(configName + "/www.rb.no/key5"));
+
+        etcd.syncMapInto(configName, map);
+        // WRONG:  Got 4 keys to remove from etcd, 0 keys to add, and 4 which just needs to be checked.
+        // WORKING HERE
+
+        assertNull("After syncing, the value which was not in the map is gone", etcd.valueBy("key_not_in_yaml"));
+        assertNull("After syncing, deleted value is back", etcd.valueBy(configName + "/www.rb.no/key5"));
+
+        Map mapBasedOnEtcdData = etcd.getMap(config.getName());
+        compareMaps( map, mapBasedOnEtcdData );
+
+        //  etcdctl rm --recursive /syzygy/junit/structure/
+        assertTrue(etcd.removeDirectory(configName, true));
     }
 }

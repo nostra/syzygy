@@ -42,9 +42,12 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
     }
 
 
-    protected SyzygyFileConfig load(final File file ) {
+    /**
+     * Notice that this method might become protected again. Not decided
+     */
+    public SyzygyFileConfig load(final File file ) {
         map = load( file, new ObjectMapper(new YAMLFactory()));
-        log.debug("Loaded "+file+" and got "+map.size()+" items.");
+        log.debug("Loaded "+file+" and got "+map.size()+" items (on top level).");
         map.put(SYZYGY_CFG_FILE, FileUtils.canonicalPathOf(file));
         origin = file;
         return this;

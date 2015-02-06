@@ -302,7 +302,10 @@ public class EtcdConnector {
 
         log.debug("Got "+keysToRemoveFromEtcd.size()+" keys to remove from etcd, "
                 +keysToAddToEtcd.size()+" keys to add, and "
-                +justCheckThatContentsAreEqual.size()+" which just needs to be checked.");
+                +justCheckThatContentsAreEqual.size()+" which are equal in keys, and needs to be checked.");
+        log.debug("Keys to remove: "+keysToRemoveFromEtcd);
+        log.debug("Keys to remove: "+keysToAddToEtcd);
+        log.debug("Keys to remove: "+justCheckThatContentsAreEqual);
 
         return null;
     }

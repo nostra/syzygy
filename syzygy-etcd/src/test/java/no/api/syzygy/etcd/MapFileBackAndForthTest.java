@@ -245,7 +245,7 @@ public class MapFileBackAndForthTest {
         assertNotNull(map);
         assertTrue(!map.isEmpty());
 
-        assertNotNull(etcd.valueBy("key_not_in_yaml"));
+        assertNotNull(etcd.valueBy(configName+"key_not_in_yaml"));
         assertNull(etcd.valueBy(configName + "/www.rb.no/key5"));
 
         etcd.syncMapInto(configName, map);

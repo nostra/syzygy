@@ -54,7 +54,10 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
     }
 
 
-    /** Temporarily public */
+    /**
+     * Temporarily public
+     * @return Unmodifiable map
+     */
     public Map getMap() {
         return Collections.unmodifiableMap(map);
     }

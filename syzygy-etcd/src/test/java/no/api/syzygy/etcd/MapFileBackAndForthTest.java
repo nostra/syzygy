@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -248,7 +249,10 @@ public class MapFileBackAndForthTest {
         assertNotNull(etcd.valueBy(configName + "/key_not_in_yaml"));
         assertNull(etcd.valueBy(configName + "/www.rb.no/key5"));
 
-        etcd.syncMapInto(configName+"/", map);
+        List<String> result = etcd.syncMapInto(configName + "/", map);
+        for ( String str : result ) {
+            log.trace(str);
+        }
 
         assertNull("After syncing, the value which was not in the map is gone", etcd.valueBy(configName+"/key_not_in_yaml"));
         assertNotNull("After syncing, deleted value should be back", etcd.valueBy(configName + "/www.rb.no/key5"));

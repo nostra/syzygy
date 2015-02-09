@@ -136,9 +136,9 @@ public class MapFileBackAndForthTest {
                 config = SyzygyLoader.loadConfigurationFile(new File(readFrom+"/syzygy.yaml")).configurationWithName(
                 "structure");
         FromSyzygyToEtcd.storeConfigInto(config, etcd);
-        assertEquals("top.level.config.value",  etcd.valueBy( config.getName()+"/config.key"));
+        assertEquals("top.level.config.value", etcd.valueBy(config.getName() + "/config.key"));
 
-        SyzygyConfig syzygyEtcd = SyzygyEtcdConfig.connectAs( etcd, config.getName());
+        SyzygyConfig syzygyEtcd = SyzygyEtcdConfig.connectAs(etcd, config.getName());
         assertEquals(config.getName(),  syzygyEtcd.getName());
         assertEquals("top.level.config.value", syzygyEtcd.lookup("config.key"));
         for ( String key: config.keys() ) {
@@ -172,8 +172,8 @@ public class MapFileBackAndForthTest {
         String[] bkeys = b.keySet().toArray(new String[0]);
         Arrays.sort(akeys);
         Arrays.sort(bkeys);
-        assertArrayEquals("Expecting the following to be equal: \n"+Arrays.toString(akeys)+
-                                  " \n... and\n"+Arrays.toString(bkeys), akeys,bkeys);
+        assertArrayEquals("Expecting the following to be equal: \n" + Arrays.toString(akeys) +
+                " \n... and\n" + Arrays.toString(bkeys), akeys, bkeys);
         for ( String key : akeys ) {
             Object aobj = a.get(key);
             Object bobj = a.get(key);
@@ -262,5 +262,47 @@ public class MapFileBackAndForthTest {
         assertTrue(etcd.removeDirectory(configName, true));
     }
 
-    // TODO Create test where key is map in syzygy and value in etcd, and vice versa
+    /**
+     * Illegal to put a map where value exists
+     */
+    @Test
+    public void testValueInSyzygyValueInMap() {
+        String configName = "somemap";
+        assertEquals("I want to start with a blank slate for this test. -1 means it does not exist",
+                -1, etcd.numberOfChildElements(configName));
+        assertTrue(etcd.store(configName + "/key", "etcd_value"));
+
+        Map<String, Object> mapToCompare = new HashMap();
+        Map<String, Object> mapAsValue = new HashMap();
+        mapAsValue.put("keyInMap", "value");
+        mapToCompare.put("key", mapAsValue);
+
+        try {
+            etcd.syncMapInto(configName+"/", mapToCompare);
+            fail("Expecting exception if you put map where key previously exist");
+        } catch ( SyzygyException ignored ) {}
+
+        // Not true: assertEquals(mapAsValue.get("keyInMap"), etcd.valueBy(configName+"/key/keyInMap"));
+        assertTrue(etcd.removeDirectory(configName, true));
+    }
+
+    /**
+     * Illegal to put value where a map exists
+     */
+    @Test
+    public void testMapInSyzygyValueInMap() {
+        String configName = "somemap";
+        assertEquals("I want to start with a blank slate for this test. -1 means it does not exist",
+                -1, etcd.numberOfChildElements(configName));
+        assertTrue(etcd.store(configName + "/sub/key", "etcd_value"));
+        Map<String, Object> map = new HashMap();
+        map.put("sub", "conflicting value for sub");
+
+        try {
+            etcd.syncMapInto(configName+"/", map);
+            fail("Expecting exception if you put value where map previously");
+        } catch ( SyzygyException ignored ) {}
+        assertTrue(etcd.removeDirectory(configName, true));
+    }
+
 }

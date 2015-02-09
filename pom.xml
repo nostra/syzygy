@@ -72,6 +72,7 @@
     <modules>
         <module>syzygy-core</module>
         <module>syzygy-etcd</module>
+        <module>syzygy-service</module>
     </modules>
 
 </project>

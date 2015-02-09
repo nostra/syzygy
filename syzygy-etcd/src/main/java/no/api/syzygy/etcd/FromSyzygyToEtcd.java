@@ -6,7 +6,7 @@ import no.api.syzygy.SyzygyException;
 import java.util.Map;
 
 /**
- * WARNING: Not sure if we should continue to support this class
+ * WARNING: Intended to be used from junit tests
  */
 public class FromSyzygyToEtcd {
 
@@ -15,11 +15,11 @@ public class FromSyzygyToEtcd {
     /**
      * NOTE that this is additive - it does not remove elements not present in etcd.
      */
-    public static void storeConfigInto(SyzygyConfig syzgyConfig, EtcdConnector etcdConnector) {
+    protected static void storeConfigInto(SyzygyConfig syzgyConfig, EtcdConnector etcdConnector) {
         new FromSyzygyToEtcd( etcdConnector ).mapFrom( syzgyConfig );
     }
 
-    public FromSyzygyToEtcd(EtcdConnector etcdConnector) {
+    private FromSyzygyToEtcd(EtcdConnector etcdConnector) {
         this.etcdConnector = etcdConnector;
     }
 

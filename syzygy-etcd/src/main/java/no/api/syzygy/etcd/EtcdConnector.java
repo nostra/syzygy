@@ -183,7 +183,7 @@ public class EtcdConnector {
         try {
             data = client.getData().forKey(prefix+key);
         } catch (EtcdException e) {
-            log.warn("Got exception trying to read data with key {}. Masked exception is " + e, prefix+key );
+            log.debug("Got exception trying to read data with key {}. Masked exception is " + e, prefix+key );
             return null;
         }
         if ( data.getNode().isDir()) {
@@ -286,29 +286,77 @@ public class EtcdConnector {
      *                   a map as return value
      */
     public String syncMapInto(String configName, Map<String,Object> map) {
-        String[] akeys = keys(configName).toArray(new String[0]);
+        String namewithSlash = configName;
+        if ( !configName.endsWith("/")) {
+            namewithSlash += "/";
+        }
+        String[] akeys = keys(namewithSlash).toArray(new String[0]);
+        // TODO Is it correct to use the current etcd mount??
         String[] bkeys = map.keySet().toArray(new String[0]);
         Arrays.sort(akeys);
         Arrays.sort(bkeys);
 
-        List keysToRemoveFromEtcd = Arrays.asList(akeys);
+        List<String> keysToRemoveFromEtcd = new ArrayList(Arrays.asList(akeys));
         keysToRemoveFromEtcd.removeAll(Arrays.asList(bkeys));
 
-        List keysToAddToEtcd = new ArrayList( Arrays.asList(bkeys));
-        keysToAddToEtcd.removeAll(Arrays.asList(bkeys));
+        List<String> keysToAddToEtcd = new ArrayList( Arrays.asList(bkeys));
+        keysToAddToEtcd.removeAll(Arrays.asList(akeys));
 
-        List justCheckThatContentsAreEqual = Arrays.asList(bkeys);
+        List<String> justCheckThatContentsAreEqual = new ArrayList<>( Arrays.asList(bkeys));
         justCheckThatContentsAreEqual.removeAll( keysToAddToEtcd );
 
         log.debug("Got "+keysToRemoveFromEtcd.size()+" keys to remove from etcd, "
                 +keysToAddToEtcd.size()+" keys to add, and "
                 +justCheckThatContentsAreEqual.size()+" which are equal in keys, and needs to be checked.");
-        log.debug("Keys to remove: "+keysToRemoveFromEtcd);
-        log.debug("Keys to remove: "+keysToAddToEtcd);
-        log.debug("Keys to remove: "+justCheckThatContentsAreEqual);
+        log.debug("Keys to remove from etcd: "+keysToRemoveFromEtcd);
+        for ( String key: keysToRemoveFromEtcd ) {
+            boolean removed = remove(namewithSlash+key);
+            log.debug("  Removing "+key+" from etcd: "+removed);
+        }
+        log.debug("Keys to add to etcd: "+keysToAddToEtcd);
+        for ( String key: keysToAddToEtcd) {
+            boolean added = false;
+            Object obj = map.get(key);
+            if ( obj instanceof String ) {
+                added = store(namewithSlash+key, (String)obj);
+            } else {
+                throw new SyzygyException("Not supporting configuration of type "+obj.getClass().getName());
+            }
+            log.debug("  Adding "+key+" to etcd: "+added);
+        }
+
+        log.debug("Keys to check for equality: "+justCheckThatContentsAreEqual);
+        for ( String key: justCheckThatContentsAreEqual ) {
+            Object objectFromMap = map.get(key);
+            if ( isDirectory(namewithSlash+key) ) {
+                if ( !( objectFromMap instanceof Map)) {
+                    throw new SyzygyException("Etcd contains map for "+key+", whereas parameter map has " +
+                            "object of the following type: "+objectFromMap.getClass().getName());
+                }
+                // TODO Remember return value
+                log.debug("Recursing >>> "+namewithSlash + key + "/");
+                syncMapInto(namewithSlash + key + "/", (Map<String, Object>) objectFromMap);
+                log.debug("<<< Recursing");
+            } else {
+                if ( !(objectFromMap instanceof String)) {
+                    throw new SyzygyException(namewithSlash+key+" did not resolve to a directory. Expecting object " +
+                            "from map to be a string. It was not, it was "+objectFromMap.getClass().getName());
+                }
+                // TODO Possible problem with data type?
+                String fromMap = (String) objectFromMap;
+                Object inEtcd = valueBy(namewithSlash+key);
+                if ( !fromMap.equals(inEtcd)) {
+                    log.debug("Inequality of value for key: "+key+". Exchanging "+inEtcd+" with "+fromMap);
+                    store(namewithSlash+key, fromMap);
+                }
+            }
+
+        }
+
 
         return null;
     }
+
     private void compareMaps(Map<String,Object> a, Map<String,Object> b) {
         String[] akeys = a.keySet().toArray(new String[0]);
         String[] bkeys = b.keySet().toArray(new String[0]);

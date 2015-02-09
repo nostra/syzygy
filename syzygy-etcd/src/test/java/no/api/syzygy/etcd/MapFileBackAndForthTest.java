@@ -21,7 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -230,7 +236,7 @@ public class MapFileBackAndForthTest {
         // The operations above have been demonstrated to work correctly in a different test.
 
         // Now I want to make the configurations become different
-        assertTrue(etcd.remove(configName+"/www.rb.no/key5"));
+        assertTrue(etcd.remove(configName + "/www.rb.no/key5"));
         assertTrue(etcd.store(configName+"/key_not_in_yaml", "value only in etcd"));
         assertTrue(etcd.store(configName+"/www.ba.no/key1", "overridden key 1"));
 
@@ -239,27 +245,22 @@ public class MapFileBackAndForthTest {
         assertNotNull(map);
         assertTrue(!map.isEmpty());
 
-        assertNotNull(etcd.valueBy(configName+"/key_not_in_yaml"));
+        assertNotNull(etcd.valueBy(configName + "/key_not_in_yaml"));
         assertNull(etcd.valueBy(configName + "/www.rb.no/key5"));
 
-        etcd.syncMapInto(configName, map);
-        // WRONG:  Got 4 keys to remove from etcd, 0 keys to add, and 4 which just needs to be checked.
-        // WORKING HERE - path to keys need to be fixed
-        /*
-09:18:52 [DEBUG] [] [no.api.syzygy.etcd.EtcdConnector][syncMapInto][306] - Keys to remove: [/config.key, /key_not_in_yaml, /www.ba.no, /www.rb.no]
-09:18:52 [DEBUG] [] [no.api.syzygy.etcd.EtcdConnector][syncMapInto][307] - Keys to remove: []
-09:18:52 [DEBUG] [] [no.api.syzygy.etcd.EtcdConnector][syncMapInto]
-         */
+        etcd.syncMapInto(configName+"/", map);
 
-        assertNull("After syncing, the value which was not in the map is gone", etcd.valueBy("key_not_in_yaml"));
-        assertNull("After syncing, deleted value is back", etcd.valueBy(configName + "/www.rb.no/key5"));
+        assertNull("After syncing, the value which was not in the map is gone", etcd.valueBy(configName+"/key_not_in_yaml"));
+        assertNotNull("After syncing, deleted value should be back", etcd.valueBy(configName + "/www.rb.no/key5"));
 
 
         Map mapBasedOnEtcdData = etcd.getMap(config.getName());
 
-        // Would correctly fail with: key_not_in_yaml:         compareMaps( map, mapBasedOnEtcdData );
+        compareMaps( map, mapBasedOnEtcdData );
 
         //  etcdctl rm --recursive /syzygy/junit/structure/
         assertTrue(etcd.removeDirectory(configName, true));
     }
+
+    // TODO Create test where key is map in syzygy and value in etcd, and vice versa
 }

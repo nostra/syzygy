@@ -33,15 +33,20 @@ public class SyzygyApplication {
     }
 
     private void instructions() {
-        System.out.println("You need to supply 2 arguments: ");
-        System.out.println("  path/to/file.yaml");
+        System.out.println("You need to supply 3 arguments: ");
+        System.out.println("  path/to/file/to/transfer.yaml");
         System.out.println("  target URL for etcd");
-        System.out.println("  etcd mount point, usually filename. It gets prefixed with /syzygy/");
+        System.out.println("  etcd mount point, usually the filename. It gets prefixed with /syzygy/");
         System.out.println("");
-        System.out.println("Example:");
+        System.out.println("Example 1:");
         System.out.println("   path/to/config.yaml ");
         System.out.println("   http://127.0.0.1:4001/v2/ ");
         System.out.println("   config");
+        System.out.println("");
+        System.out.println("Example:");
+        System.out.println("   newspaper/specific.yaml ");
+        System.out.println("   http://127.0.0.1:4001/v2/ ");
+        System.out.println("   www.rb.no/default");
     }
 
     private List<String> doMojo(String pathToFile, String URLToEtcd, String mountName) {

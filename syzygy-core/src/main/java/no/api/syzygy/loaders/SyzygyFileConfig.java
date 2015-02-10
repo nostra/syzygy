@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,11 +56,13 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
 
 
     /**
-     * Temporarily public
-     * @return Unmodifiable map
+     * Currently not intended to be used from clients
+     * @return Unmodifiable map without internal element(s)
      */
     public Map getMap() {
-        return Collections.unmodifiableMap(map);
+        Map m = new HashMap(map);
+        m.remove(SYZYGY_CFG_FILE);
+        return Collections.unmodifiableMap(m);
     }
 
     protected File getOrigin() {

@@ -313,7 +313,7 @@ public class EtcdConnector {
         log.debug("Keys to remove from etcd: " + keysToRemoveFromEtcd);
         for ( String key: keysToRemoveFromEtcd ) {
             boolean removed = remove(namewithSlash+key);
-            report.add("Removing " + key + " from etcd: " + removed);
+            report.add("Removed " + key + " from etcd successfully: " + removed);
         }
         report.addAll( addToEtcd(map, namewithSlash, keysToAddToEtcd));
 
@@ -350,7 +350,7 @@ public class EtcdConnector {
                 String fromMap = (String) objectFromMap;
                 Object inEtcd = valueBy(pathSlash+key);
                 if ( !fromMap.equals(inEtcd)) {
-                    report.add("Inequality of value for key: " + key + ". Exchanging " + inEtcd + " with " + fromMap);
+                    report.add(key +" updated, going from " + inEtcd + " to " + fromMap);
                     store(pathSlash+key, fromMap);
                 }
             }
@@ -362,7 +362,7 @@ public class EtcdConnector {
     private List<String> spaceAll(List<String> strings) {
         List<String> result = new ArrayList<>();
         for ( String string: strings ) {
-            result.add("  "+string);
+            result.add("    "+string);
         }
         return result;
     }
@@ -380,7 +380,7 @@ public class EtcdConnector {
             } else {
                 throw new SyzygyException("Not supporting configuration of type "+obj.getClass().getName());
             }
-            report.add("Added " + key + " to etcd: " + added);
+            report.add("Added " + key + " to etcd successfully: " + added);
         }
         return report;
     }

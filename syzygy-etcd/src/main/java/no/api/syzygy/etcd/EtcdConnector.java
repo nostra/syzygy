@@ -162,7 +162,6 @@ public class EtcdConnector {
                 if ( keys(key).size() == 0 ) {
                     return removeDirectory( key, false );
                 } else {
-                    log.warn("N");
                     return false;
                 }
             }

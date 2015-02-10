@@ -56,6 +56,8 @@ public class SyzygyEtcdConfig implements SyzygyConfig {
 
     /**
      * Mount a subdirectory from the current etcd structure with etcd
+     * @param etcd Connected etcd instance. It may have a prefix
+     * @param name Last path element, and name of this connection
      */
     public static SyzygyConfig connectAs(EtcdConnector etcd, String name) {
         return new SyzygyEtcdConfig(etcd, name);

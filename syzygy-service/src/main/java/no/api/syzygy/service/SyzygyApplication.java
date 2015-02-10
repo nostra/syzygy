@@ -1,13 +1,10 @@
 package no.api.syzygy.service;
 
-import no.api.syzygy.etcd.EtcdConnector;
-import no.api.syzygy.loaders.SyzygyFileConfig;
+import no.api.syzygy.etcd.SynchronizationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 public class SyzygyApplication {
     private static final Logger log = LoggerFactory.getLogger(SyzygyApplication.class);
@@ -16,7 +13,7 @@ public class SyzygyApplication {
         switch (args.length) {
             case 3:
                 try {
-                    List<String> result = new SyzygyApplication().doMojo(args[0],args[1],args[2]);
+                    List<String> result = SynchronizationHelper.performSync(args[0], args[1], args[2]);
                     for ( String str : result ) {
                         log.info(str);
                     }
@@ -49,18 +46,5 @@ public class SyzygyApplication {
         System.out.println("   www.rb.no/default");
     }
 
-    private List<String> doMojo(String pathToFile, String URLToEtcd, String mountName) {
-        SyzygyFileConfig sfc = new SyzygyFileConfig(mountName).load(new File(pathToFile));
-        Map<String, Object> syzygyMap = sfc.getMap();
-        EtcdConnector etcd = null;
-        try {
-            etcd = EtcdConnector.attach(URLToEtcd, "/syzygy/");
-            return etcd.syncMapInto(mountName + "/", syzygyMap);
-        } finally {
-            if (etcd != null) {
-                etcd.stop();
-            }
-        }
 
-    }
 }

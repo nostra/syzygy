@@ -8,7 +8,7 @@
     </appender>
     <logger name="com" level="INFO"/>
     <logger name="net" level="INFO"/>
-    <logger name="no" level="DEBUG"/>
+    <logger name="no" level="INFO"/>
     <logger name="org" level="INFO"/>
     <root level="ALL">
         <appender-ref ref="console"/>

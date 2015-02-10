@@ -311,7 +311,13 @@ public class EtcdConnector {
 
         log.debug("Keys to remove from etcd: " + keysToRemoveFromEtcd);
         for ( String key: keysToRemoveFromEtcd ) {
-            boolean removed = remove(namewithSlash+key);
+            boolean removed = false;
+            if ( isDirectory(namewithSlash+key)) {
+                // NB: When syncing, recursive is true. Might be found to be too drastic. Doc in tests.
+                removed = removeDirectory(namewithSlash+key, true);
+            } else {
+                removed = remove(namewithSlash+key);
+            }
             report.add("Removed " + key + " from etcd successfully: " + removed);
         }
         report.addAll( addToEtcd(map, namewithSlash, keysToAddToEtcd));

@@ -15,3 +15,13 @@ etcd documentation
 
 * https://github.com/coreos/etcd
 * https://github.com/coreos/etcd/blob/master/Documentation/api.md
+
+Syncronization
+--------------
+
+Command line after building project::
+
+  java -Dlogback.configurationFile=syzygy-service/src/test/resources/logback.xml \
+       -jar syzygy-service/target/syzygy-service-0.0.2-SNAPSHOT.jar \
+       syzygy-etcd/src/test/resources/structure.yml http://127.0.0.1:4001/v2/ \
+       structure

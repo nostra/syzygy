@@ -290,11 +290,13 @@ public class EtcdConnector {
         long benchmarkMs = System.currentTimeMillis();
         try {
             result = syncMapIntoInternal(configName, map);
-        } catch ( Exception e ) {
-            result.add("Unexpected exception caught: "+e);
-            log.error("Did not expect to get any exceptions", e);
+            // TODO: Swallow exceptions or not...?
+        //} catch ( Exception e ) {
+        //    result.add("Unexpected exception caught: "+e);
+        //    log.error("Did not expect to get any exceptions", e);
+        } finally {
+            result.add("Synchronization finished in "+ BenchmarkString.benchmarkFromMs(System.currentTimeMillis()-benchmarkMs));
         }
-        result.add("Synchronization finished in "+ BenchmarkString.benchmarkFromMs(System.currentTimeMillis()-benchmarkMs));
         return result;
     }
 

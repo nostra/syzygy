@@ -1,6 +1,7 @@
 package no.api.syzygy.etcd;
 
 import no.api.syzygy.SyzygyConfig;
+import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -35,6 +37,7 @@ public class SynchronizationHelperTest {
 
     @After
     public void tearDown() {
+        //
         etcd.removeDirectory("synced", true);
     }
 
@@ -72,5 +75,9 @@ public class SynchronizationHelperTest {
         SynchronizationHelper.performSync(readFrom+"synctest/sublevel/sublevel.yaml", SYZYGY_URL, "junit/synced/sublevel");
 
         assertEquals("Looking into the sublevel by nesting classes", sublevel.lookup("key1"), toplevel.lookup("sublevel", Map.class ).get("key1"));
+
+        SyzygyLoader syzygy = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/synctest/syzygy.yaml"));
+
+        assertEquals("sublevel value 1", syzygy.lookup("key1"));
     }
 }

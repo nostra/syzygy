@@ -7,6 +7,7 @@ import io.fabric8.etcd.api.Response;
 import io.fabric8.etcd.core.EtcdClientImpl.Builder;
 import io.fabric8.etcd.dsl.DeleteDataBuilder;
 import io.fabric8.etcd.reader.jackson.JacksonResponseReader;
+import no.api.pantheon.support.BenchmarkString;
 import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -285,6 +286,19 @@ public class EtcdConnector {
      *                   a map as return value
      */
     public List<String> syncMapInto(String configName, Map<String,Object> map) {
+        List<String> result = new ArrayList<>();
+        long benchmarkMs = System.currentTimeMillis();
+        try {
+            result = syncMapIntoInternal(configName, map);
+        } catch ( Exception e ) {
+            result.add("Unexpected exception caught: "+e);
+            log.error("Did not expect to get any exceptions", e);
+        }
+        result.add("Synchronization finished in "+ BenchmarkString.benchmarkFromMs(System.currentTimeMillis()-benchmarkMs));
+        return result;
+    }
+
+    public List<String> syncMapIntoInternal(String configName, Map<String,Object> map) {
         List<String> report = new ArrayList<>();
         String namewithSlash = configName;
         if ( !configName.endsWith("/")) {

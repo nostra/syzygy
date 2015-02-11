@@ -13,7 +13,7 @@
 
 Need to add top level configuration file.
 
-Use current hieradata inpired yaml-based file, or should it
+Use current hieradata inspired yaml-based file, or should it
 take more pages out of the convict book?
 
 

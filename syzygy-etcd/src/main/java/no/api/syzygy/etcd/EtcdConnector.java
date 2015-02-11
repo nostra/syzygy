@@ -12,8 +12,11 @@ import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,7 +64,7 @@ public class EtcdConnector {
                     "We are sharing access to the etcd structure, and need to stay within /syzygy/");
         }
         try {
-            EtcdConnector etcd = new EtcdConnector(url, prefix);
+            EtcdConnector etcd = new EtcdConnector(resolveRedirect( url ), prefix);
 
             return etcd.makeReady();
         } catch (Exception e) { // NOSONAR Wide net catch is OK
@@ -69,6 +72,29 @@ public class EtcdConnector {
         }
 
         return null;
+    }
+
+    /**
+     * @return The parameter if no redirect is found, or the redirect URL
+     */
+    private static String resolveRedirect(String url) {
+        String result = null;
+        try {
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setUseCaches(false);
+            conn.setReadTimeout(5000);
+            conn.setConnectTimeout(2000);
+            conn.setInstanceFollowRedirects(false);
+            result = conn.getHeaderField("Location");
+        } catch (IOException e) {
+            log.error("Got exception, which masked is: ("+e
+                              +")- just returning the faulty URL. Will fail somewhere else with: "+url );
+            return url;
+        }
+
+        return result == null
+                ? url
+                : result;
     }
 
     /**
@@ -250,6 +276,7 @@ public class EtcdConnector {
     }
 
     private EtcdConnector makeReady() {
+
         // Just doing a query in order to get exception if etcd is not running
         client.getData().forKey("/");
 

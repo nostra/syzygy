@@ -25,8 +25,6 @@ public class SyzygyApplication {
             default:
                 app.instructions();
         }
-        log.info("Execution finished");
-
     }
 
     private void instructions() {

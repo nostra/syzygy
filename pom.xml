@@ -11,11 +11,11 @@
     <groupId>no.api.syzygy</groupId>
     <artifactId>syzygy</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <scm>
         <connection>scm:git:ssh://git@github.com/amedia/syzygy.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/amedia/syzygy.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>syzygy-0.0.3</tag>
   </scm>
 
     <properties>

@@ -2,7 +2,6 @@ package no.api.syzygy.etcd;
 
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.loaders.SyzygyLoader;
-import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,11 +34,6 @@ public class SynchronizationHelperTest {
         readFrom = MapFileBackAndForthTest.findTestResourcesDirectory();
     }
 
-    @After
-    public void tearDown() {
-        //
-        etcd.removeDirectory("synced", true);
-    }
 
     /**
      * java -Dlogback.configurationFile=syzygy-service/src/test/resources/logback.xml -jar
@@ -79,5 +73,8 @@ public class SynchronizationHelperTest {
         SyzygyLoader syzygy = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/synctest/syzygy.yaml"));
 
         assertEquals("sublevel value 1", syzygy.lookup("key1"));
+
+        // Cleanup
+        etcd.removeDirectory("synced", true);
     }
 }

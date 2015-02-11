@@ -11,6 +11,10 @@ import java.util.Map;
  */
 public final class SynchronizationHelper {
 
+    private SynchronizationHelper() {
+        // Intentional
+    }
+
     /**
      * To be used from some synchronizing application
      * @param pathToFile Path to the file to synchronize

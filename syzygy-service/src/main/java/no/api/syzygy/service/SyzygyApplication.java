@@ -19,7 +19,7 @@ public class SyzygyApplication {
                     }
                 } catch (Exception e ) {
                     log.error("Execution ended with exception.", e);
-                    System.exit(1);
+                    System.exit(1); // NOSONAR: Yes, we want to get an exit code when error.
                 }
                 break;
             default:

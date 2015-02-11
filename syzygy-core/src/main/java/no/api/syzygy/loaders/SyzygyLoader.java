@@ -302,10 +302,8 @@ public class SyzygyLoader {
             return false;
         }
         Object first = cfg.lookup((String) cfg.keys().iterator().next(), Object.class);
-        if ( first instanceof Map) {
-            if ( ((Map)first).get("default") != null ) {
-                return true;
-            }
+        if ( first instanceof Map && ((Map)first).get("default") != null ) {
+            return true;
         }
         return false;
     }

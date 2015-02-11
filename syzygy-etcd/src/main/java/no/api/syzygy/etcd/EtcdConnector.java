@@ -160,7 +160,7 @@ public class EtcdConnector {
         try {
             Response data = client.getData().forKey(prefix+key);
             if ( data.getNode().isDir() ) {
-                if ( keys(key).size() == 0 ) {
+                if (keys(key).isEmpty()) {
                     return removeDirectory( key, false );
                 } else {
                     return false;

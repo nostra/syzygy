@@ -1,14 +1,19 @@
 package no.api.syzygy.service;
 
+import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 import no.api.syzygy.etcd.SynchronizationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class SyzygyApplication {
+public class SyzygyApplication extends Application<SyzygyConfiguration> {
     private static final Logger log = LoggerFactory.getLogger(SyzygyApplication.class);
-    public static void main(String[] args) {
+
+
+    public static void main(String[] args) throws Exception {
         SyzygyApplication app = new SyzygyApplication();
         switch (args.length) {
             case 3:
@@ -22,8 +27,10 @@ public class SyzygyApplication {
                     System.exit(1); // NOSONAR: Yes, we want to get an exit code when error.
                 }
                 break;
-            default:
+            case 0:
                 app.instructions();
+            default:
+                new SyzygyApplication().run(args);
         }
     }
 
@@ -44,5 +51,14 @@ public class SyzygyApplication {
         System.out.println("   www.rb.no/default"); // NOSONAR
     }
 
+    @Override
+    public void initialize(Bootstrap<SyzygyConfiguration> bootstrap) {
+
+    }
+
+    @Override
+    public void run(SyzygyConfiguration configuration, Environment environment) throws Exception {
+
+    }
 
 }

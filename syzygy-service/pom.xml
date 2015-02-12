@@ -16,6 +16,26 @@
         </dependency>
 
         <dependency>
+            <groupId>no.api.atomizer.header</groupId>
+            <artifactId>atomizer-header-dw</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-views-freemarker</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-metrics-graphite</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.api.pantheon</groupId>
+            <artifactId>pantheon-logging</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

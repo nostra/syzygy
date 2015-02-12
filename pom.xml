@@ -56,6 +56,18 @@
             </dependency>
 
             <dependency>
+                <groupId>no.api.pantheon</groupId>
+                <artifactId>pantheon-logging</artifactId>
+                <version>${pantheon.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.api.atomizer.header</groupId>
+                <artifactId>atomizer-header-dw</artifactId>
+                <version>${atomizer.header.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>no.api.syzygy</groupId>
                 <artifactId>syzygy-service</artifactId>
                 <version>${project.version}</version>

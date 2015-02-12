@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 /**
  *
  */
-@Path("/atomizer/")
+@Path("/syzygy/")
 @Produces(MediaType.TEXT_HTML)
 public class IndexPageResource {
 

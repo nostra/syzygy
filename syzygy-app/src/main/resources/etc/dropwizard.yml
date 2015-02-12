@@ -36,7 +36,7 @@ logging:
       archivedLogFilenamePattern: /var/log/app/syzygy/syzygy-%d.log.gz
       archivedFileCount: 5
 
-syzygyHeaderConfig:
+atomizerHeaderConfig:
   appName: 'syzygy'
   fallbackMaxAge: 200
   fallbackChannelMaxAge: 86400

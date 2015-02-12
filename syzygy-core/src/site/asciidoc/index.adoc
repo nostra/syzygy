@@ -133,8 +133,8 @@ stop_if_error: 'true'
 Explanation: The class `DirectoryIntoMap` will load all files from
 the configuration `_directory_to_map`. The "special" configuration will
 override all configuration. The `DirectoryIntoMap` values will override
-the "fallback" values. See:
- https://github.com/amedia/pantheon/blob/master/pantheon-syzygy/src/main/java/no/api/syzygy/DirectoryIntoMap.java
+the "fallback" values. See: +
+ https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/loaders/DirectoryIntoMap.java
 
 ## Query through the SyzygyLoader interface
 

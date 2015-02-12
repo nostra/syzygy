@@ -25,7 +25,7 @@ public class EtcdDynamicConfiguration implements SyzygyDynamicLoader {
         }
         String prefix = loaderConfiguration.lookup(refkey+"_etcd_prefix");
         if ( etcdUrl == null ) {
-            etcdUrl = "http://127.0.0.1:4001/v2/";
+            etcdUrl = "http://127.0.0.1:4001/v2/";  // NOSONAR
             log.warn("Expected to find etcd url from "+refkey+"_etcd_url config element. Using fallback: "+etcdUrl );
         }
         if ( prefix != null && !prefix.startsWith("/syzygy")) {

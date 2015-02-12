@@ -36,6 +36,14 @@
             </dependency>
 
             <dependency>
+                <groupId>no.api.maven-projects</groupId>
+                <artifactId>api-import-dropwizard7</artifactId>
+                <version>${import.and.super.pom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>no.api.syzygy</groupId>
                 <artifactId>syzygy-etcd</artifactId>
                 <version>${project.version}</version>
@@ -44,6 +52,12 @@
             <dependency>
                 <groupId>no.api.syzygy</groupId>
                 <artifactId>syzygy-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.api.syzygy</groupId>
+                <artifactId>syzygy-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -73,6 +87,7 @@
         <module>syzygy-core</module>
         <module>syzygy-etcd</module>
         <module>syzygy-service</module>
+        <module>syzygy-app</module>
     </modules>
 
 </project>

@@ -1,8 +1,13 @@
 package no.api.syzygy.service;
 
+import com.google.common.base.Strings;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.views.ViewBundle;
+import no.api.atomizer.header.BasicHeader;
+import no.api.atomizer.header.HeaderManagerCreator;
+import no.api.pantheon.logging.JsonLogger;
 import no.api.syzygy.etcd.SynchronizationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,12 +58,21 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
 
     @Override
     public void initialize(Bootstrap<SyzygyConfiguration> bootstrap) {
+        bootstrap.addBundle(new ViewBundle());
 
     }
 
     @Override
-    public void run(SyzygyConfiguration configuration, Environment environment) throws Exception {
-
+    public void run(SyzygyConfiguration config, Environment environment) throws Exception {
+        final HeaderManagerCreator hmcreator = new HeaderManagerCreator(config.getAtomizerHeaderConfig(),
+                new BasicHeader("Access-Control-Allow-Origin", "*"),
+                new BasicHeader("Access-Control-Allow-Headers", "Content-Type"));
+        if (!Strings.isNullOrEmpty(config.getJsonLogPath())) {
+            log.info("Logging json events to {}", config.getJsonLogPath());
+            final JsonLogger jsonLogger = new JsonLogger(config.getJsonLogPath());
+            jsonLogger.attach();
+        }
+        environment.jersey().register(new SyzygyPingResource(19087));
     }
 
 }

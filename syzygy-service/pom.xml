@@ -36,6 +36,11 @@
         </dependency>
 
         <dependency>
+            <groupId>no.api.pantheon</groupId>
+            <artifactId>pantheon-dropwizard</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

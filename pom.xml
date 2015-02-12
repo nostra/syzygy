@@ -62,6 +62,12 @@
             </dependency>
 
             <dependency>
+                <groupId>no.api.pantheon</groupId>
+                <artifactId>pantheon-dropwizard</artifactId>
+                <version>${pantheon.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>no.api.atomizer.header</groupId>
                 <artifactId>atomizer-header-dw</artifactId>
                 <version>${atomizer.header.version}</version>

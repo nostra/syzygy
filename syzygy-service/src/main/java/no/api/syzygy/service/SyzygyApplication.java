@@ -9,6 +9,7 @@ import no.api.atomizer.header.BasicHeader;
 import no.api.atomizer.header.HeaderManagerCreator;
 import no.api.pantheon.logging.JsonLogger;
 import no.api.syzygy.etcd.SynchronizationHelper;
+import no.api.syzygy.service.resource.SyzygyPingResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +74,8 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
             jsonLogger.attach();
         }
         environment.jersey().register(new SyzygyPingResource(19087));
+
+        environment.jersey().register(new DropwizardExceptionManager(hmcreator, "/atomizer"));
     }
 
 }

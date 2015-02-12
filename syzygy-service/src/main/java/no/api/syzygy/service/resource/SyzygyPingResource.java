@@ -1,4 +1,4 @@
-package no.api.syzygy.service;
+package no.api.syzygy.service.resource;
 
 import no.api.pantheon.dropwizard.admin.DropWizardPingResource;
 

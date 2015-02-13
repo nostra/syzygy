@@ -2,6 +2,7 @@ package no.api.syzygy.service;
 
 import com.google.common.base.Strings;
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
@@ -61,7 +62,7 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
     @Override
     public void initialize(Bootstrap<SyzygyConfiguration> bootstrap) {
         bootstrap.addBundle(new ViewBundle());
-
+        bootstrap.addBundle(new AssetsBundle("/favicon.ico"));
     }
 
     @Override
@@ -74,8 +75,10 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
             final JsonLogger jsonLogger = new JsonLogger(config.getJsonLogPath());
             jsonLogger.attach();
         }
+
         environment.jersey().register(new SyzygyPingResource(19087));
         environment.jersey().register(new IndexPageResource( hmcreator ));
+        environment.healthChecks().register("alwayshealthy", new AlwaysHealthy());
 
         environment.jersey().register(new DropwizardExceptionManager(hmcreator, "/atomizer"));
     }

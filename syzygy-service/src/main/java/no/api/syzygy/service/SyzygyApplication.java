@@ -62,6 +62,7 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
     @Override
     public void initialize(Bootstrap<SyzygyConfiguration> bootstrap) {
         bootstrap.addBundle(new ViewBundle());
+        bootstrap.addCommand(new Cmd());
         bootstrap.addBundle(new AssetsBundle("/favicon.ico"));
     }
 

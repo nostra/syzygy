@@ -24,7 +24,7 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
     public static void main(String[] args) throws Exception {
         SyzygyApplication app = new SyzygyApplication();
         switch (args.length) {
-            case 3:
+            case -1:
                 try {
                     List<String> result = SynchronizationHelper.performSync(args[0], args[1], args[2]);
                     for ( String str : result ) {
@@ -35,7 +35,7 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
                     System.exit(1); // NOSONAR: Yes, we want to get an exit code when error.
                 }
                 break;
-            case 0:
+            case -2:
                 app.instructions();
             default:
                 new SyzygyApplication().run(args);

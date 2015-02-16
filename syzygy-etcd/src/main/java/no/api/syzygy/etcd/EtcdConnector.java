@@ -65,10 +65,7 @@ public class EtcdConnector {
         }
         EtcdConnector result = new EtcdConnector(url, prefix);
         result.start();
-        if ( result.isAlive() ) {
-            return result;
-        }
-        return null;
+        return result;
     }
 
     /**
@@ -102,9 +99,13 @@ public class EtcdConnector {
             // Already stopped
             return;
         }
-        int numberOfChildren = numberOfChildElements(""); // "" becomes the prefix itself
-        if ( numberOfChildren == 0 ) {
-            removeDirectory("", false);
+        try {
+            int numberOfChildren = numberOfChildElements(""); // "" becomes the prefix itself
+            if ( numberOfChildren == 0 ) {
+                removeDirectory("", false);
+            }
+        } catch (RuntimeException e ) {
+            log.debug("Ignoring cleanup exceptions, as it probably is stopped etcd daemon", e );
         }
         client.stop();
         client = null;
@@ -120,8 +121,8 @@ public class EtcdConnector {
             client.start();
             try {
                 client.setData().dir().forKey(prefix);
-            } catch (EtcdException e) {
-                log.debug("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
+            } catch (Exception e) { // NOSONAR: Wide net is OK
+                //log.debug("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
             }
 
         } catch (URISyntaxException e) {

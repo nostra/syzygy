@@ -322,7 +322,7 @@ public class EtcdConnector {
                 keys.add(n.getKey().substring(skipPrefix));
             }
         } catch (EtcdException e) {
-            log.debug("Directory for "+prefix+" does (probably) exist. Masked exception: "+e);
+            log.debug("Masked exception: "+e);
         }
 
         return keys;

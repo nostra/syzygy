@@ -5,8 +5,6 @@ import no.api.syzygy.etcd.EtcdConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Set;
-
 /**
  *
  */
@@ -28,8 +26,8 @@ public class CheckEtcd extends HealthCheck {
             etcd.start();
         }
         try {
-            Set<String> keys = etcd.keys("app/syzygy/stop");
-            if ( !keys.isEmpty() ) {
+            String stop = (String) etcd.valueBy("app/syzygy/stop");
+            if ( stop != null ) {
                 isUp = logChange(false);
                 return Result.unhealthy("If insert the key /syzygy/app/syzygy/stop, this app will stop - and it " +
                                                 "has. Remove key to start it again");
@@ -45,7 +43,7 @@ public class CheckEtcd extends HealthCheck {
 
     private boolean logChange(boolean upOrNot) {
         if ( isUp != upOrNot ) {
-            log.info("Going from status up="+isUp+" to status up="+upOrNot);
+            log.info("Going from status up=" + isUp + " to status up=" + upOrNot);
         }
         return upOrNot;
     }

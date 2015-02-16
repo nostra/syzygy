@@ -45,4 +45,7 @@ atomizerHeaderConfig:
   maxCacheChannelFieldLength: 2048
   channel: ''
 
+etcdUrl: 'http://127.0.0.1:4001/v2/'
+etcdPrefix: '/syzygy/'
+
 jsonLogPath: /var/log/app/syzygy/jsonevent.logg

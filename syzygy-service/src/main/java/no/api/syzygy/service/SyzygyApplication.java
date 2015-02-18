@@ -76,6 +76,10 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
             final JsonLogger jsonLogger = new JsonLogger(config.getJsonLogPath());
             jsonLogger.attach();
         }
+        if ( config.getEtcdUrl() == null ) {
+            // Need to fail explicitly, as "ignoreUnknown" kills required='true'
+            throw new RuntimeException("Missing etcd configuration");
+        }
 
         environment.jersey().register(new SyzygyPingResource(19087));
         environment.jersey().register(new IndexPageResource( hmcreator ));

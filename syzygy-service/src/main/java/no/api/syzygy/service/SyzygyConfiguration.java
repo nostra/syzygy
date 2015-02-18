@@ -15,13 +15,21 @@ public class SyzygyConfiguration extends Configuration {
     @JsonProperty(required = false)
     private String jsonLogPath;
 
-    public String getJsonLogPath() {
-        return jsonLogPath;
-    }
+    @JsonProperty(required = true)
+    @Valid
+    private String etcdUrl;
 
     @JsonProperty
     @Valid
     private DropwizardAtomizerConfig atomizerHeaderConfig;
+
+    public String getJsonLogPath() {
+        return jsonLogPath;
+    }
+
+    public String getEtcdUrl() {
+        return etcdUrl;
+    }
 
     public DropwizardAtomizerConfig getAtomizerHeaderConfig() {
         return atomizerHeaderConfig;

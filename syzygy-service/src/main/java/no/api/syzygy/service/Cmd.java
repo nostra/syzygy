@@ -24,22 +24,30 @@ public class Cmd extends EnvironmentCommand<SyzygyConfiguration> {
     @Override
     public void configure(Subparser subparser) {
         log.warn("Configure method");
-        //subparser.addArgument("-f", "--file").help("Full path to yamlfile to transfer.");
-        //subparser.addArgument("-t", "--target").help("etcd mount point, usually the filename. It gets prefixed with /syzygy/");
-        subparser.setDefault("bah", "hoho");
+        subparser.addArgument("file").nargs("?")
+                .help("Synchronize a yaml or json file to etcd");
+
     }
 
+    /**
+     * Start with:
+     * etcdsync syzygy-app/src/main/resources/etc/dropwizard.yml
+     */
     @Override
     protected void run(Environment environment, Namespace namespace, SyzygyConfiguration config) {
-    //protected void run(Bootstrap<SyzygyConfiguration> bootstrap, Namespace namespace, SyzygyConfiguration config) {
         if (!Strings.isNullOrEmpty(config.getJsonLogPath())) {
             log.info("Logging json events to {}", config.getJsonLogPath());
             final JsonLogger jsonLogger = new JsonLogger(config.getJsonLogPath());
             jsonLogger.attach();
         }
-        log.warn("Running! Whee! NS:" + namespace.getString("t"));
+        log.warn("Running! Whee! NS:" + namespace.getString("file"));
         log.info("This line is on info level. Json log path: "+config.getJsonLogPath());
         log.debug("This line is on debug level");
+        if ( config.getEtcdUrl() == null ) {
+            // Need to fail explicitly, as "ignoreUnknown" kills required='true'
+            throw new RuntimeException("Missing etcd configuration");
+        }
+
     }
 
 

@@ -62,7 +62,7 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
     @Override
     public void initialize(Bootstrap<SyzygyConfiguration> bootstrap) {
         bootstrap.addBundle(new ViewBundle());
-        bootstrap.addCommand(new Cmd());
+        bootstrap.addCommand(new SyncEtcdWithFileCommand());
         bootstrap.addBundle(new AssetsBundle("/favicon.ico"));
     }
 
@@ -75,10 +75,6 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
             log.info("Logging json events to {}", config.getJsonLogPath());
             final JsonLogger jsonLogger = new JsonLogger(config.getJsonLogPath());
             jsonLogger.attach();
-        }
-        if ( config.getEtcdUrl() == null ) {
-            // Need to fail explicitly, as "ignoreUnknown" kills required='true'
-            throw new RuntimeException("Missing etcd configuration");
         }
 
         environment.jersey().register(new SyzygyPingResource(19087));

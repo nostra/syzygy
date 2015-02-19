@@ -14,19 +14,23 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class Cmd extends EnvironmentCommand<SyzygyConfiguration> {
-    private static final Logger log = LoggerFactory.getLogger(Cmd.class);
+public class SyncEtcdWithFileCommand extends EnvironmentCommand<SyzygyConfiguration> {
+    private static final Logger log = LoggerFactory.getLogger(SyncEtcdWithFileCommand.class);
 
-    protected Cmd() {
-        super(new DummyApp(),"etcdsync", "Synchronize a file to etcd");
+    protected SyncEtcdWithFileCommand() {
+        super(new DummyApp(),"etcdsync", "Synchronize a yaml or json file to etcd");
     }
 
     @Override
     public void configure(Subparser subparser) {
-        log.warn("Configure method");
-        subparser.addArgument("file").nargs("?")
-                .help("Synchronize a yaml or json file to etcd");
+        subparser.addArgument("-m","--mount").required(true)
+                .help("The etcd mount point, usually the filename. It gets prefixed with /syzygy/");
+        subparser.addArgument("-f", "--file").required(true)
+                .help("Reference to the dropwizard configuration");
+        subparser.addArgument("somefile.yml").nargs("?")
+                .help("The file you want to synchronize");
 
+// Synchronize a yaml or json file to etcd
     }
 
     /**
@@ -41,11 +45,12 @@ public class Cmd extends EnvironmentCommand<SyzygyConfiguration> {
             jsonLogger.attach();
         }
         log.warn("Running! Whee! NS:" + namespace.getString("file"));
-        log.info("This line is on info level. Json log path: "+config.getJsonLogPath());
+        log.info("This line is on info level. Json log path: " + config.getJsonLogPath());
         log.debug("This line is on debug level");
+        log.info("etcdUrl; " + config.getEtcdUrl());
         if ( config.getEtcdUrl() == null ) {
             // Need to fail explicitly, as "ignoreUnknown" kills required='true'
-            throw new RuntimeException("Missing etcd configuration");
+            //throw new SyzygyException("Missing etcd configuration");
         }
 
     }

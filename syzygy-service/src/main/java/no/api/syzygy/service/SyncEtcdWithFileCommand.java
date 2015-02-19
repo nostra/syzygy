@@ -37,7 +37,10 @@ public class SyncEtcdWithFileCommand extends EnvironmentCommand<SyzygyConfigurat
 
     /**
      * Start with:
-     * etcdsync syzygy-app/src/main/resources/etc/dropwizard.yml
+     * <pre>
+     * alias file_to_etcd='rm -f *-service/target/original* ; java -jar *-service/target/*-service-*-SNAPSHOT.jar'
+     * file_to_etcd etcdsync -m demo -f syzygy-app/src/main/resources/etc/dropwizard.yml ~/scrap/demo.yaml
+     * </pre>
      */
     @Override
     protected void run(Environment environment, Namespace namespace, SyzygyConfiguration config) {

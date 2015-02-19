@@ -4,7 +4,7 @@ import io.fabric8.etcd.api.EtcdClient;
 import io.fabric8.etcd.api.EtcdException;
 import io.fabric8.etcd.api.Node;
 import io.fabric8.etcd.api.Response;
-import io.fabric8.etcd.core.EtcdClientImpl.Builder;
+import io.fabric8.etcd.core.EtcdClientImpl;
 import io.fabric8.etcd.dsl.DeleteDataBuilder;
 import io.fabric8.etcd.reader.jackson.JacksonResponseReader;
 import no.api.pantheon.support.BenchmarkString;
@@ -32,14 +32,14 @@ public class EtcdConnector {
 
     private static final Logger log = LoggerFactory.getLogger(EtcdConnector.class);
 
-    private final EtcdClient client;
+    private EtcdClient client = null;
     private final String prefix;
+    private final String etcdUrl;
 
-    private EtcdConnector(String url, String prefix) throws URISyntaxException {
+    private EtcdConnector(String url, String prefix) {
         // We are working within a subdirectory of etcd. Intentionally using variable and not constant
         this.prefix = prefix;
-        client = new Builder().baseUri(new URI(url)).responseReader(new JacksonResponseReader()).build();
-        client.start();
+        this.etcdUrl = url;
     }
 
     /**
@@ -63,21 +63,15 @@ public class EtcdConnector {
             log.warn("Unexpected prefix: "+prefix+". Note that this may mess up for linpro if this is not intentional. " +
                     "We are sharing access to the etcd structure, and need to stay within /syzygy/");
         }
-        try {
-            EtcdConnector etcd = new EtcdConnector(resolveRedirect( url ), prefix);
-
-            return etcd.makeReady();
-        } catch (Exception e) { // NOSONAR Wide net catch is OK
-            log.error("Got exception", e);
-        }
-
-        return null;
+        EtcdConnector result = new EtcdConnector(url, prefix);
+        result.start();
+        return result;
     }
 
     /**
      * @return The parameter if no redirect is found, or the redirect URL
      */
-    private static String resolveRedirect(String url) {
+    private String resolveRedirect(String url) {
         String result = null;
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
@@ -101,11 +95,51 @@ public class EtcdConnector {
      * Stop the etcd client.
      */
     public void stop() {
-        int numberOfChildren = numberOfChildElements(""); // "" becomes the prefix itself
-        if ( numberOfChildren == 0 ) {
-            removeDirectory("", false);
+        if ( client == null ) {
+            // Already stopped
+            return;
+        }
+        try {
+            int numberOfChildren = numberOfChildElements(""); // "" becomes the prefix itself
+            if ( numberOfChildren == 0 ) {
+                removeDirectory("", false);
+            }
+        } catch (RuntimeException e ) {
+            log.debug("Ignoring cleanup exceptions, as it probably is stopped etcd daemon", e );
         }
         client.stop();
+        client = null;
+    }
+
+    public void start() {
+        if ( isAlive() ) {
+            log.info("Not starting again, as I already have an instance which is alive");
+            return;
+        }
+        try {
+            client = new EtcdClientImpl.Builder().baseUri(new URI(resolveRedirect( etcdUrl ))).responseReader(new JacksonResponseReader()).build();
+            client.start();
+            try {
+                client.setData().dir().forKey(prefix);
+            } catch (Exception e) { // NOSONAR: Wide net is OK
+                //log.debug("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
+            }
+
+        } catch (URISyntaxException e) {
+            log.error("Got exception", e);
+        }
+    }
+
+    public boolean isAlive() {
+        if ( client != null ) {
+            try {
+                client.getData().forKey("/");
+                return true;
+            } catch (Exception ignore ) { // NOSONAR Wide net is OK
+
+            }
+        }
+        return false;
     }
 
     /**
@@ -275,20 +309,10 @@ public class EtcdConnector {
         return false;
     }
 
-    private EtcdConnector makeReady() {
 
-        // Just doing a query in order to get exception if etcd is not running
-        client.getData().forKey("/");
-
-        try {
-            client.setData().dir().forKey(prefix);
-        } catch (EtcdException e) {
-            log.debug("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
-        }
-
-        return this;
-    }
-
+    /**
+     * This is basically an <code>ls</code> in the directory indicated by <code>name</code>
+     */
     public Set<String> keys(String name) {
         Set<String> keys = new HashSet<>();
         try {
@@ -298,7 +322,7 @@ public class EtcdConnector {
                 keys.add(n.getKey().substring(skipPrefix));
             }
         } catch (EtcdException e) {
-            log.debug("Directory for "+prefix+" does (probably) exist. Masked exception: "+e);
+            log.debug("Masked exception: "+e);
         }
 
         return keys;

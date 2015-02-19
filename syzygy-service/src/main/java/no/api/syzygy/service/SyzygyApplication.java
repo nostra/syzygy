@@ -9,6 +9,9 @@ import io.dropwizard.views.ViewBundle;
 import no.api.atomizer.header.BasicHeader;
 import no.api.atomizer.header.HeaderManagerCreator;
 import no.api.pantheon.logging.JsonLogger;
+import no.api.syzygy.etcd.EtcdConnector;
+import no.api.syzygy.etcd.SynchronizationHelper;
+import no.api.syzygy.service.admin.CheckEtcd;
 import no.api.syzygy.service.resource.IndexPageResource;
 import no.api.syzygy.service.resource.SyzygyPingResource;
 import org.slf4j.Logger;
@@ -40,9 +43,12 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
             jsonLogger.attach();
         }
 
+        EtcdConnector etcd = EtcdConnector.attach(config.getEtcdUrl(), config.getEtcdPrefix());
+        etcd.start();
+
         environment.jersey().register(new SyzygyPingResource(19087));
         environment.jersey().register(new IndexPageResource( hmcreator ));
-        environment.healthChecks().register("alwayshealthy", new AlwaysHealthy());
+        environment.healthChecks().register("etcdCheck", new CheckEtcd(etcd));
 
         environment.jersey().register(new DropwizardExceptionManager(hmcreator, "/atomizer"));
     }

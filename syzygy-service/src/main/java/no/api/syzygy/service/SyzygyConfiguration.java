@@ -13,6 +13,10 @@ import javax.validation.Valid;
 public class SyzygyConfiguration extends Configuration {
     @JsonProperty(required = false)
     private String jsonLogPath;
+    @JsonProperty(required = true)
+    private String etcdUrl;
+    @JsonProperty(required = false)
+    private String etcdPrefix;
 
     @JsonProperty(required = true)
     @Valid
@@ -32,5 +36,13 @@ public class SyzygyConfiguration extends Configuration {
 
     public DropwizardAtomizerConfig getAtomizerHeaderConfig() {
         return atomizerHeaderConfig;
+    }
+
+    public String getEtcdUrl() {
+        return etcdUrl;
+    }
+
+    public String getEtcdPrefix() {
+        return etcdPrefix;
     }
 }

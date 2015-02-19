@@ -22,13 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -45,7 +39,7 @@ public class MapFileBackAndForthTest {
     @Before
     public void determineBaseDirectory() throws IOException {
         etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/", "/syzygy/junit/");
-        Assume.assumeNotNull(etcd);
+        Assume.assumeTrue(etcd.isAlive());
 
         readFrom = findTestResourcesDirectory();
     }
@@ -126,6 +120,15 @@ public class MapFileBackAndForthTest {
         Set<String> keys = etcd.keys("");
         assertEquals(3, keys.size());
         assertTrue( "Expecting key set to contain deterministic name. It did not. Set: "+keys, keys.contains("key2"));
+
+        // Testing start / stop
+        etcd.stop();
+        etcd.stop();
+        assertFalse(etcd.isAlive());
+        etcd.start();
+        etcd.start();
+        assertTrue(etcd.isAlive());
+
         assertTrue(etcd.remove("key1"));
         assertTrue(etcd.remove("key2"));
         assertTrue(etcd.remove("key3"));

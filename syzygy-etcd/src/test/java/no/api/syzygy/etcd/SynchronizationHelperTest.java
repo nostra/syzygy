@@ -30,7 +30,7 @@ public class SynchronizationHelperTest {
     @Before
     public void determineBaseDirectory() throws IOException {
         etcd = EtcdConnector.attach(SYZYGY_URL, "/syzygy/junit/");
-        Assume.assumeNotNull(etcd);
+        Assume.assumeTrue(etcd.isAlive());
 
         readFrom = MapFileBackAndForthTest.findTestResourcesDirectory();
     }
@@ -38,7 +38,7 @@ public class SynchronizationHelperTest {
     @After
     public void cleanup() {
         // Cleanup
-        if ( etcd != null ) {
+        if ( etcd.isAlive() ) {
             etcd.removeDirectory("synced", true);
         }
 

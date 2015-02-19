@@ -47,3 +47,4 @@ atomizerHeaderConfig:
 
 jsonLogPath: /var/log/app/syzygy/jsonevent.logg
 etcdUrl: 'http://127.0.0.1:4001/v2/'
+# etcdUrl: 'http://127.0.0.1:2379/v2/'

@@ -243,7 +243,7 @@ public class EtcdConnector {
         try {
             data = client.getData().forKey(prefix+key);
         } catch (EtcdException e) {
-            log.debug("Got exception trying to read data with key {}. Masked exception is " + e, prefix+key );
+            log.trace("Got exception trying to read data with key {}. Masked exception is " + e, prefix+key );
             return null;
         }
         if ( data.getNode().isDir()) {

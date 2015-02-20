@@ -4,6 +4,7 @@ package no.api.syzygy.loaders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import no.api.syzygy.HieradirectoryHelper;
+import no.api.syzygy.MapWrapped;
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyException;
 import no.api.syzygy.SyzygyHelper;
@@ -23,13 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 
 public class SyzygyLoaderTest {
@@ -200,7 +195,15 @@ public class SyzygyLoaderTest {
             loader.validate();
             fail("And exception should have been thrown here.");
         } catch (Exception ignore ) {}
+    }
 
+    @Test
+    public void testWrapToMap() {
+        Map map = MapWrapped.wrapWithMap(loader);
 
+        assertEquals("value from common", map.get("key2"));
+        assertEquals("from specific", map.get("key1"));
+        assertNotNull("Expecting element to exist", map.get("array2"));
+        assertEquals("overridden array, one key", ((Map)map.get("array2")).get( "key2" ));
     }
 }

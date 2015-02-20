@@ -21,5 +21,8 @@ public interface SyzygyConfig {
 
     <T> T lookup(String key, Class<T> clazz);
 
+    /**
+     * Key set which is defined by this configuration
+     */
     Set<String> keys();
 }

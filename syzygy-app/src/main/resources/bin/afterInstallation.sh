@@ -11,8 +11,8 @@ cd ${executeDirectory}
 
 # Top level directory
 cd ..
-rm -f app/*-app-*.jar
-rm -f app/slf4j-api-*.jar
+rm -f app/*-app*.jar
+rm -f app/slf4j-api*.jar
 rm -f */placeholder.txt
 
 echo "###############################"

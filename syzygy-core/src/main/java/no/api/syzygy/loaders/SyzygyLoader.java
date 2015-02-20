@@ -125,6 +125,7 @@ public class SyzygyLoader {
      * Does not (at the moment) reload top level config. Reloads all sub-elements.
      */
     public void flush() {
+        log.info("Flushing hierarchy. Notice that top level configuration (i.e. the loader's configuration) is NOT reloaded.");
         reloadHierarchy();
     }
 

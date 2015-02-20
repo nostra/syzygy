@@ -1,5 +1,5 @@
 # http://dropwizard.github.io/dropwizard/manual/configuration.html
-# gaiaURL: http://v3local.osl2.api.kunder.linpro.no/gaia
+gaiaURL: http://v3local.osl2.api.kunder.linpro.no/gaia
 # gaiaURL: http://localhost:9050/gaia
 
 server:
@@ -47,7 +47,4 @@ atomizerHeaderConfig:
 
 etcdUrl: 'http://127.0.0.1:4001/v2/'
 etcdPrefix: '/syzygy/'
-
 jsonLogPath: /var/log/app/syzygy/jsonevent.logg
-etcdUrl: 'http://127.0.0.1:4001/v2/'
-# etcdUrl: 'http://127.0.0.1:2379/v2/'

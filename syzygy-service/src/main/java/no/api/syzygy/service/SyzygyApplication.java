@@ -8,9 +8,10 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import no.api.atomizer.header.BasicHeader;
 import no.api.atomizer.header.HeaderManagerCreator;
+import no.api.gaia.client.GaiaClient;
+import no.api.pantheon.dropwizard.metrics.GraphiteReporterBuilder;
 import no.api.pantheon.logging.JsonLogger;
 import no.api.syzygy.etcd.EtcdConnector;
-import no.api.syzygy.etcd.SynchronizationHelper;
 import no.api.syzygy.service.admin.CheckEtcd;
 import no.api.syzygy.service.resource.IndexPageResource;
 import no.api.syzygy.service.resource.SyzygyPingResource;
@@ -42,15 +43,29 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
             final JsonLogger jsonLogger = new JsonLogger(config.getJsonLogPath());
             jsonLogger.attach();
         }
+        GaiaClient gaia = null;
+        if ( config.getGaiaURL() != null ) {
+            gaia = new GaiaClient(config.getGaiaURL());
+        }
+
 
         EtcdConnector etcd = EtcdConnector.attach(config.getEtcdUrl(), config.getEtcdPrefix());
         etcd.start();
 
         environment.jersey().register(new SyzygyPingResource(19087));
         environment.jersey().register(new IndexPageResource( hmcreator ));
-        environment.healthChecks().register("etcdCheck", new CheckEtcd(etcd));
+        environment.healthChecks().register("etcdCheck", new CheckEtcd(etcd, environment.metrics()));
 
         environment.jersey().register(new DropwizardExceptionManager(hmcreator, "/atomizer"));
+
+        if ( gaia != null ) {
+            GraphiteReporterBuilder.createFor(environment.metrics())
+                    .active(gaia.getConfigProperty("graphite.active"))
+                    .hostName(gaia.getConfigProperty("graphite.host.name"))
+                    .port(gaia.getConfigProperty("graphite.port"))
+                    .startScheduledReporterFor("syzygy");
+        }
+
     }
 
 }

@@ -25,6 +25,13 @@ public class SyzygyConfiguration extends Configuration {
     @Valid
     private DropwizardAtomizerConfig atomizerHeaderConfig;
 
+    @JsonProperty
+    private String gaiaURL;
+
+    public String getGaiaURL() {
+        return gaiaURL;
+    }
+
     public String getJsonLogPath() {
         return jsonLogPath;
     }

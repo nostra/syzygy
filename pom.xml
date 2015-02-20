@@ -56,6 +56,12 @@
             </dependency>
 
             <dependency>
+                <groupId>no.api.gaia</groupId>
+                <artifactId>gaia-client</artifactId>
+                <version>${gaia.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>no.api.pantheon</groupId>
                 <artifactId>pantheon-logging</artifactId>
                 <version>${pantheon.version}</version>

@@ -149,6 +149,7 @@ find configured values:
   map. This is functionally similar to ApiPropertes#lookup(key, publication );
 * `void flush()` : Reload config (but currently not parent config)
 * `void validate` : Validate all elements against convict definition.
+* `Set<String> keys()` : The composite collection of keys
 
 ### Listing used variables
 

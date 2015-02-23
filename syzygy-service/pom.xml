@@ -104,6 +104,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>no.api.maven-plugins</groupId>
+                <artifactId>api-version-plugin</artifactId>
+                <configuration>
+                    <forceCreation>true</forceCreation>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

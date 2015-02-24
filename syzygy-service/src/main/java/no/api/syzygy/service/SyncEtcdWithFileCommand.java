@@ -58,6 +58,8 @@ public class SyncEtcdWithFileCommand extends EnvironmentCommand<SyzygyConfigurat
             final JsonLogger jsonLogger = new JsonLogger(config.getJsonLogPath());
             jsonLogger.attach();
         }
+        // TODO Somewhat interesting that we need gaia to start syzygy... Maybe gaiaproperties should be
+        // the first to be moved?
         GaiaClient gaia = null;
         if ( config.getGaiaURL() != null ) {
             gaia = new GaiaClient(config.getGaiaURL());

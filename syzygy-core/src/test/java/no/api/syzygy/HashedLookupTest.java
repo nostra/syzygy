@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -41,23 +43,24 @@ public class HashedLookupTest {
 
     @Test
     public void testDifferenceBetweenDeepAndMapLookup() {
-        assertNull("This value will become null, as you _first_ find the overriden hashmap, and _then_ " +
+        assertNull("This value will become null, as you _first_ find the overridden hashmap, and _then_ " +
                 "tries to find the key within in.", syzygy.lookup("www.rb.no", Map.class).get("key1"));
         assertEquals("This lookup works better, as it will take both map and override into consideration",
-                "value1 for rb", syzygy.deepLookup("key1", "www.rb.no"));
+                "value1 for rb (in fallback)", syzygy.deepLookup("key1", "www.rb.no"));
 
 
     }
 
     @Test
     public void testMappedLookup() {
-        assertEquals("value1 for rb", syzygy.deepLookup("key1", "www.rb.no"));
+        assertEquals("key1 does not exist in overridden file",
+                "value1 for rb (in fallback)", syzygy.deepLookup("key1", "www.rb.no"));
         assertNull(syzygy.deepLookup("key2", "www.rb.no"));
         assertEquals("value2 for ba", syzygy.deepLookup("key2", "www.ba.no"));
         assertEquals("Value should be chosen from top level", "Not overridden", syzygy.deepLookup("key3", "www.ba.no"));
         assertEquals("Value should be chosen from top level", "top.level.config.value", syzygy.lookup("config.key"));
-        assertEquals("Value should be chosen from overridden element", "config overridden by rb", syzygy.deepLookup("config.key",
-                "www.rb.no"));
+        assertEquals("Value should be chosen from overridden element", "config overridden by rb (in fallback)",
+                syzygy.deepLookup("config.key","www.rb.no"));
     }
 
     @Test

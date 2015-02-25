@@ -1,7 +1,7 @@
 config.key: 'top.level.config.value'
 www.rb.no:
-  config.key: 'config overridden by rb'
-  key1: 'value1 for rb'
+  config.key: 'config overridden by rb (in fallback)'
+  key1: 'value1 for rb (in fallback)'
   key5: 'This value will be overridden (i.e. never hit)'
 www.ba.no:
   key1: 'value1 for ba'

@@ -63,9 +63,9 @@ public class EtcdConnector {
             log.warn("Unexpected prefix: "+prefix+". Note that this may mess up for linpro if this is not intentional. " +
                     "We are sharing access to the etcd structure, and need to stay within /syzygy/");
         }
-        EtcdConnector result = new EtcdConnector(url, prefix);
-        result.start();
-        return result;
+        EtcdConnector connector = new EtcdConnector(url, prefix);
+        connector.start();
+        return connector;
     }
 
     /**

@@ -74,7 +74,7 @@ Note the configuration which is specific for etcd:
 * TAG_etcd_url: Where to connect to etcd. Defaulting to localhost
 * TAG_inetcd_etcd_prefix: The prefix within etcd. Defaults to `syzygy`. The
   configuration from hierarchy would be added to the path, so in the
-  example, the hierarch starts with `/syzygy/somewhere/inetcd/
+  example, the hierarchy starts with `/syzygy/somewhere/inetcd/
 
 
 ### yaml configuration example

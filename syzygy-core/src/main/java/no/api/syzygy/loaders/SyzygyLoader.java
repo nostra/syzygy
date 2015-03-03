@@ -41,7 +41,7 @@ public class SyzygyLoader {
         SyzygyLoader loader =
                 new SyzygyLoader(
                         new SyzygyFileConfig(config.getName())
-                                .load(FileUtils.canonicalPathOf(config))
+                                .load(config.getPath())
         );
         return loader.reloadHierarchy();
     }

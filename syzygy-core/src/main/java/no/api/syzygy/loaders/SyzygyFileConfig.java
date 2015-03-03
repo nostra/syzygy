@@ -2,7 +2,6 @@ package no.api.syzygy.loaders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import no.api.pantheon.io.FileUtils;
 import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +48,7 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
     public SyzygyFileConfig load(final File file ) {
         map = load( file, new ObjectMapper(new YAMLFactory()));
         log.debug("Loaded "+file+" and got "+map.size()+" items (on top level).");
-        map.put(SYZYGY_CFG_FILE, FileUtils.canonicalPathOf(file));
+        map.put(SYZYGY_CFG_FILE, file.getPath());
         origin = file;
         return this;
     }

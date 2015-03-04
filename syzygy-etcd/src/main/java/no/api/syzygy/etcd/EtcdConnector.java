@@ -117,7 +117,9 @@ public class EtcdConnector {
             return;
         }
         try {
-            client = new EtcdClientImpl.Builder().baseUri(new URI(resolveRedirect( etcdUrl ))).responseReader(new JacksonResponseReader()).build();
+            String url = resolveRedirect(etcdUrl);
+            log.info("Connecting to etcd on: "+url);
+            client = new EtcdClientImpl.Builder().baseUri(new URI(url)).responseReader(new JacksonResponseReader()).build();
             client.start();
             try {
                 client.setData().dir().forKey(prefix);

@@ -21,7 +21,7 @@
     <properties>
         <!-- Yes, we need this property -->
         <site.name />
-        <fabric8.version>2.0.29</fabric8.version>
+        <fabric8.version>2.0.30</fabric8.version>
     </properties>
 
 

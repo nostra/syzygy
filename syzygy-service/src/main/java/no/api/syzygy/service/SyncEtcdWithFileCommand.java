@@ -127,11 +127,11 @@ public class SyncEtcdWithFileCommand extends EnvironmentCommand<SyzygyConfigurat
     private static class DummyApp extends Application<SyzygyConfiguration> {
         @Override
         public void initialize(Bootstrap<SyzygyConfiguration> bootstrap) {
-            log.debug("Dummy init");
+            //log.debug("Dummy init");
         }
         @Override
         public void run(SyzygyConfiguration configuration, Environment environment) {
-            log.debug("Dummy run");
+            // log.debug("Dummy run");
         }
     }
 }

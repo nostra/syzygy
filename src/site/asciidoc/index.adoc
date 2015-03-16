@@ -1,0 +1,3 @@
+# Syzygy
+
+Main doc in syzygy-core.

@@ -4,7 +4,7 @@
     <parent>
         <groupId>no.api.maven-projects</groupId>
         <artifactId>v3-super-pom</artifactId>
-        <version>2.333</version>
+        <version>3.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

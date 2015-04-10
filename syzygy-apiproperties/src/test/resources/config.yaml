@@ -1,0 +1,6 @@
+key1: 'value 1'
+www.oa.no:
+  key1: 'value 1 for www.oa.no'
+
+hadeland.net:
+  key1: 'value 1 for alias domain'

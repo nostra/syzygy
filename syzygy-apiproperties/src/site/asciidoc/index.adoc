@@ -1,0 +1,4 @@
+Syzygy api-properties dependency package
+========================================
+
+Phasing out api-properties with syzgyy data

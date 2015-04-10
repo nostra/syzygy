@@ -62,6 +62,12 @@
             </dependency>
 
             <dependency>
+                <groupId>no.api</groupId>
+                <artifactId>properties</artifactId>
+                <version>${apiproperties.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>no.api.pantheon</groupId>
                 <artifactId>pantheon-logging</artifactId>
                 <version>${pantheon.version}</version>
@@ -110,6 +116,7 @@
     <modules>
         <module>syzygy-core</module>
         <module>syzygy-etcd</module>
+        <module>syzygy-apiproperties</module>
         <module>syzygy-service</module>
         <module>syzygy-app</module>
     </modules>

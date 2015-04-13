@@ -121,7 +121,7 @@ public class SyzygyLoader {
      * for a single configuration set, the mapped value will be used.
      * @param key Which key to look up
      * @param nameOfMap Typically www.rb.no (or similar)
-     * @return First element found as string
+     * @return First element found as string. If overriding map is not found, use plain lookup as fallback
      */
     public String deepLookup(String key, String nameOfMap) {
         SyzygyPayload<String> result = lookupFor(key, String.class, nameOfMap);

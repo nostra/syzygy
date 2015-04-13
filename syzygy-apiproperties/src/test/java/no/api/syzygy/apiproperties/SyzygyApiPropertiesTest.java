@@ -9,7 +9,10 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -50,9 +53,8 @@ public class SyzygyApiPropertiesTest {
         assertEquals("Syzygy loookup error", "value 1 for alias domain", syzygy.deepLookup("key1", "hadeland.net"));
         ApiProperty aliasProperty = apiproperties.getProperty("key1", 59);
         assertNotNull(aliasProperty);
-        //assertEquals("Property loookup error", "value 1 for alias domain", aliasProperty.getValue());
-        assertEquals("When this runs red, and ERROR has been corrected", "value 1", aliasProperty.getValue());
-        // TODO prefix aliases with www. and mobil. - see gaia
+        assertEquals("value 1 for alias domain", aliasProperty.getValue());
+        assertEquals("value 1", apiproperties.getProperty("key1", 41 ).getValue());
 
         assertNull(apiproperties.getGlobalProperty("www.dn.no"));
         assertNull(apiproperties.getProperty("key1", 0));

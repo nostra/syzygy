@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -76,13 +77,21 @@ public class SyzygyApiProperties implements ApiPropertiesManager {
             log.error("Could not resolve publication with id "+pubId+", returning null as property");
             return null;
         }
+        // Have to re-implement deepLookup due to logic regarding domain aliases
         for ( String firstHit : domainListFrom( publicatication )) {
-            String value = syzygy.deepLookup(key, firstHit);
-            log.info("Got "+firstHit);
-            if ( value != null ) {
-                log.info("... and it got property value "+value);
-                return new SyzygyProperty(key, value);
+            Map<String, String> map = syzygy.lookup(firstHit, Map.class);
+            if ( map != null ) {
+                String value = map.get(key);
+                log.info("Got "+firstHit);
+                if ( value != null ) {
+                    log.info("... and it got property value "+value);
+                    return new SyzygyProperty(key, value);
+                }
             }
+        }
+        String value = syzygy.lookup(key);
+        if ( value != null ) {
+            return new SyzygyProperty(key, value);
         }
         return null;
     }

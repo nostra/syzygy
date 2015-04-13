@@ -101,14 +101,14 @@ public class SyzygyApiProperties implements ApiPropertiesManager {
     }
 
     @Override
-    public boolean hasProperty(String Key, Integer pubId, String sectionId) {
-        log.error("hasProperty("+Key+", "+pubId+", "+sectionId+") is not supported");
+    public boolean hasProperty(String key, Integer pubId, String sectionId) {
+        log.error("hasProperty("+key+", "+pubId+", "+sectionId+") is not supported");
         return false;
     }
 
     @Override
-    public ApiProperty getProperty(String Key, Integer pubId, String sectionId) {
-        log.error("getProperty("+Key+", "+pubId+", "+sectionId+") is not supported");
+    public ApiProperty getProperty(String key, Integer pubId, String sectionId) {
+        log.error("getProperty("+key+", "+pubId+", "+sectionId+") is not supported");
         return null;
     }
 

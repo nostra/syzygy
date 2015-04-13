@@ -38,7 +38,7 @@ public class SyzygyApiProperties implements ApiPropertiesManager {
             if ( syzygyFile.exists() ) {
                 instance = new SyzygyApiProperties(  SyzygyLoader.loadConfigurationFile(syzygyFile), publications);
             } else {
-                throw new ApiPropertiesException("Cannot find syzygy configuration file.");
+                throw new ApiPropertiesException("Cannot find syzygy configuration file in "+syzygyFile);
             }
         }
         return instance;
@@ -89,7 +89,7 @@ public class SyzygyApiProperties implements ApiPropertiesManager {
                 }
             }
         }
-        String value = syzygy.lookup(key);
+            String value = syzygy.lookup(key);
         if ( value != null ) {
             return new SyzygyProperty(key, value);
         }

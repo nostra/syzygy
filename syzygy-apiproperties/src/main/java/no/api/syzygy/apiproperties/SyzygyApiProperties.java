@@ -1,10 +1,10 @@
 package no.api.syzygy.apiproperties;
 
-import no.api.properties.api.ApiPropertiesException;
 import no.api.properties.api.ApiPropertiesManager;
 import no.api.properties.api.ApiProperty;
 import no.api.properties.api.ApiPublication;
 import no.api.properties.api.ApiPublicationManager;
+import no.api.syzygy.SyzygyException;
 import no.api.syzygy.loaders.SyzygyLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class SyzygyApiProperties implements ApiPropertiesManager {
             if ( syzygyFile.exists() ) {
                 instance = new SyzygyApiProperties(  SyzygyLoader.loadConfigurationFile(syzygyFile), publications);
             } else {
-                throw new ApiPropertiesException("Cannot find syzygy configuration file in "+syzygyFile);
+                throw new SyzygyException("Cannot find syzygy configuration file in "+syzygyFile);
             }
         }
         return instance;

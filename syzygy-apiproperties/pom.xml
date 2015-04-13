@@ -24,7 +24,14 @@
         <dependency>
             <groupId>no.api</groupId>
             <artifactId>properties</artifactId>
+            <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>no.api.pantheon</groupId>
+            <artifactId>pantheon-core</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

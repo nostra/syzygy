@@ -4,7 +4,7 @@
     <parent>
         <groupId>no.api.maven-projects</groupId>
         <artifactId>v3-super-pom</artifactId>
-        <version>3.1</version>
+        <version>3.3</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -22,6 +22,8 @@
         <!-- Yes, we need this property -->
         <site.name />
         <fabric8.version>2.0.40</fabric8.version>
+        <apiproperties.version>1.1.4-SNAPSHOT</apiproperties.version>
+        <pantheon.version>3.0.18-SNAPSHOT</pantheon.version>
     </properties>
 
 

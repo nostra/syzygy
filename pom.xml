@@ -23,7 +23,7 @@
         <site.name />
         <fabric8.version>2.0.40</fabric8.version>
         <apiproperties.version>1.1.4-SNAPSHOT</apiproperties.version>
-        <pantheon.version>3.0.18-SNAPSHOT</pantheon.version>
+        <pantheon.version>3.0.18</pantheon.version>
     </properties>
 
 

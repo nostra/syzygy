@@ -22,8 +22,9 @@
         <!-- Yes, we need this property -->
         <site.name />
         <fabric8.version>2.0.40</fabric8.version>
-        <apiproperties.version>1.1.4-SNAPSHOT</apiproperties.version>
-        <pantheon.version>3.0.18</pantheon.version>
+        <!-- Remove override of pantheon when parent pom is in 3.4 -->
+        <apiproperties.version>1.1.4</apiproperties.version>
+        <pantheon.version>3.0.19</pantheon.version>
     </properties>
 
 

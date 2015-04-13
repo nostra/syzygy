@@ -78,6 +78,12 @@
 
             <dependency>
                 <groupId>no.api.pantheon</groupId>
+                <artifactId>pantheon-publication</artifactId>
+                <version>${pantheon.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.api.pantheon</groupId>
                 <artifactId>pantheon-dropwizard</artifactId>
                 <version>${pantheon.version}</version>
             </dependency>

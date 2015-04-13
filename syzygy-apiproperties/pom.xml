@@ -32,6 +32,11 @@
             <artifactId>pantheon-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.api.pantheon</groupId>
+            <artifactId>pantheon-publication</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

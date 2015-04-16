@@ -15,8 +15,6 @@ and
 The heart of these systems is support for overriding a "common" or
 "default" setting.
 
-WARNING: Current java implementation might be pending changes.
-
 ## Configuration file
 
 The normal way of configurating syzygy, is to create a configuration file,

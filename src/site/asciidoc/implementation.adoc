@@ -9,7 +9,6 @@
 ### Syzygy configuration file
 
 The configuration file lists up the depending files in the sequence of checking.
-This is the opposite direction of hieradata.
 
 Example file:
 
@@ -30,7 +29,7 @@ file the specific file.
 ### TODO
 
 * The convict script and definitions are only active in the
-  actual convict instance. Create an implicit meta format
+  actual convict instance. Create an implicit meta format. (Is still still true??)
 
 * Support for getting configuration from java classes. *Answer*: Dynamic loader
 

@@ -6,8 +6,7 @@
 :icons: font
 :source-highlighter: prettify
 
-* TODO: Need a discussion about distribution technology
-
+WARNING: Document can be considered to be legacy
 
 ### Create new *configuration system java interface*.
 
@@ -75,8 +74,7 @@ Edit yaml file in github?
 * Castor has a dependency to wp-mapper-0.0.x. This needs to be followed up,
   and phased out / replaced.
 
-### Plan for phasing out api-properties. Some properties need to continue to
-  live due to relax.
+### Plan for phasing out api-properties. Some properties need to continue to live due to relax.
 * Implement api-properties replacement in syzygy
 * Follow up projects using api-properties,
    and replace dependency.

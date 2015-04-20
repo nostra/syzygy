@@ -39,7 +39,73 @@ Additionally, it can be a bit hard to know where a value actually comes from.
 Replacing `api-properties` with gaia. You need to change some wiring in your spring
 configuration.
 
-TODO Details??
+First step is to remote the old api-properties setup in the main pom file, *and* the child poms:
+
+[source,xml]
+-----
+<dependency>
+    <groupId>no.api</groupId>
+    <artifactId>properties</artifactId>
+    <version>${apiproperties.version}</version>
+</dependency>
+-----
+
+Add:
+
+[source,xml]
+-----
+<dependency>
+    <groupId>no.api.gaia</groupId>
+    <artifactId>gaia-apiproperties</artifactId>
+    <version>${gaia.version}</version>
+</dependency>
+-----
+
+Then the fun begins. You have to prune away all old references to api-properties.
+Do:
+
+[source,bash]
+mvn dependency:tree | grep "api:properties"
+
+For each entry you find, you need to exclude the api-properties element:
+
+[source,xml]
+-----
+<dependency>
+    <groupId>no.api.relax</groupId>
+    <artifactId>relax-director-provider</artifactId>
+    <version>${relax.version}</version>
+    <exclusions>
+        <exclusion>
+            <groupId>no.api</groupId>
+            <artifactId>properties</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+-----
+
+Rinse and repeat, until all references to api-properties has been removed.
+
+Find the *wp.xml* file, and change the spring configuration for api-properties
+to `classpath:/META-INF/gaia-apiproperties.xml`.
+
+Add JNDI configuration to jetty.xml, so you are able to do `mvn jetty:run`
+
+[source,xml]
+-----
+<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
+    <Arg>gaiaUrl</Arg>
+    <Arg type="java.lang.String">http://localhost:9050/gaia</Arg>
+</New>
+-----
+
+You need to have jetty-plus and jetty-annotation support in your webapp for JNDI to
+work. In your -app project, you need to add the JNDI configuration to the
+api-properties.xml file.
+
+Finally, when deploying, you need to have the JNDI element in ikea too. See example
+from kraken to see how this is configured. (This is better than to describe it here,
+in case this description becomes stale.)
 
 ## syzygy
 

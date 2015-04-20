@@ -1,0 +1,20 @@
+// -*- Doc -*-
+
+## Migration from api-properties
+
+:toc:
+:icons: font
+:source-highlighter: prettify
+
+The situation as of 20/4--2015, is that the ApiProperties object, and interfaces
+have been moved to `pantheon-core`. The Publication related material has been
+moved to `pantheon-publication`. This helps you to move away from the api-properties
+as a library.
+
+Your choices are:
+
+## gaia-client
+
+## gaia-apiproperties
+
+## syzygy-apiproperties

@@ -1,6 +1,6 @@
 // -*- Doc -*-
 
-## Migration from api-properties
+# Migration from api-properties
 
 :toc:
 :icons: font
@@ -11,10 +11,41 @@ have been moved to `pantheon-core`. The Publication related material has been
 moved to `pantheon-publication`. This helps you to move away from the api-properties
 as a library.
 
-Your choices are:
+Quick summary of your choices:
+
+[cols="2*"]
+|===
+|gaia-client             | A REST based client setup, which is what all the dropwizard applications currently use
+|gaia-apiproperties      | A drop-in replacement for api-properties, which communicates over gaia-client
+|syzygy                  | Next-generation configuration system. Use it directly, if you do not want other gaia features.
+|syzygy-apiproperties    | Drop-in replacement for api-properties, which use syzygy only as backend
+|===
+
+In more, detail, your choices are:
 
 ## gaia-client
 
+Gaia-client reads first from syzgyy, and then from api-properties in order to provide
+a value over the REST interface. The default choice, but it does not help you migrate
+away from `wp.xml` / `wp-override.xml`
+
+When you are working on your local dev setup, the annoyance is that you need
+ẗo have gaia running in order to get access to the values.
+
+Additionally, it can be a bit hard to know where a value actually comes from.
+
 ## gaia-apiproperties
 
+Replacing `api-properties` with gaia. You need to change some wiring in your spring
+configuration.
+
+TODO Details??
+
+## syzygy
+
+The next generation configuration system. Currently, mainly relevant when it provides an
+interface to etcd.
+
 ## syzygy-apiproperties
+
+Configuration without gaia. Drop-in configuration of xml files.

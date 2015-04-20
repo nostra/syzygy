@@ -1,12 +1,11 @@
 <project xmlns="http://maven.apache.org/DECORATION/1.6.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
-    <!-- Please do not modify this file. Modify the super-pom -->
     <body>
     <menu ref="modules" />
     <menu name="User guide">
         <item href="index.html" name="Index" />
-        <item href="implementation.html" name="Implementation" />
+        <item href="migration.html" name="Migration" />
         <item href="preparation.html" name="Preparation" />
         <item href="roadmap.html" name="Roadmap" />
     </menu>

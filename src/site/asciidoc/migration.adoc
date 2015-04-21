@@ -101,7 +101,8 @@ Add JNDI configuration to jetty.xml, so you are able to do `mvn jetty:run`
 
 You need to have jetty-plus and jetty-annotation support in your webapp for JNDI to
 work. In your -app project, you need to add the JNDI configuration to the
-api-properties.xml file.
+api-properties.xml file. This necessitates the jetty-plus configuration, and
+annotations (for unclear reasons).
 
 Finally, when deploying, you need to have the JNDI element in ikea too. See example
 from kraken to see how this is configured. (This is better than to describe it here,

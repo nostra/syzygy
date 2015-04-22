@@ -8,6 +8,7 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import no.api.atomizer.header.BasicHeader;
 import no.api.atomizer.header.HeaderManagerCreator;
+import no.api.atomizer.header.dw.DropwizardExceptionManager;
 import no.api.gaia.client.GaiaClient;
 import no.api.pantheon.dropwizard.metrics.GraphiteReporterBuilder;
 import no.api.pantheon.logging.JsonLogger;

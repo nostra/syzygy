@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="" type="no.api.syzygy.service.view.IndexView" -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +10,33 @@
     </style>
 </head>
 <body>
-<p>This is currently just a static page.</p>
+<section>
+    <table>
+        <#list payloadList as payload>
+        <tr>
+            <td>${payload.getName()}</td>
+            <td>${payload.getValue()}</td>
+            <td>${payload.getHits()}</td>
+        </tr>
+            <#if payload.getDoc()??>
+            <tr>
+            <td colspan="4">
+            ${payload.getDoc()!"No doc"}
+            </td></tr>
+            </#if>
+        <tr>
+            <td colspan="4">
+                <pre>
+<#list payload.getPath() as path>${path}</#list>
+                </pre>
+            </td>
+        </tr>
+        </#list>
+    </table>
+
+
+
+    </pre>
+</section>
 </body>
 </html>

@@ -21,7 +21,7 @@ import java.util.Set;
  * Load and retain syzygy configuration
  */
 public class SyzygyLoader {
-    private Logger log = LoggerFactory.getLogger(SyzygyLoader.class);
+    private static Logger log = LoggerFactory.getLogger(SyzygyLoader.class);
 
     private List<SyzygyConfig> configsets;
 
@@ -32,6 +32,19 @@ public class SyzygyLoader {
     private SyzygyLoader(SyzygyFileConfig topLevelConfig) {
         // In order to reload on this level, support exchanging the top level config with new config.
         this.topLevelConfig = topLevelConfig;
+    }
+
+    /**
+     * Default way of loading syzygy configuration for users of this API
+     * @return Configuration, after finding it from the V3_CONFIG_HOME, or statically in /etc/api
+     */
+    public static SyzygyLoader loadConfigurationFromEtcApi() {
+        File syzygyFile = new File(System.getProperty("V3_CONFIG_HOME", "/etc/api")+"/syzygy/syzygy.yaml");
+        if ( syzygyFile.exists() ) {
+            return SyzygyLoader.loadConfigurationFile(syzygyFile);
+        } else {
+            throw new SyzygyException("Cannot find syzygy configuration file in "+syzygyFile);
+        }
     }
 
     public static SyzygyLoader loadConfigurationFile( File config ) {

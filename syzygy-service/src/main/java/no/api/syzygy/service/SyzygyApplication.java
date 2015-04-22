@@ -13,6 +13,7 @@ import no.api.gaia.client.GaiaClient;
 import no.api.pantheon.dropwizard.metrics.GraphiteReporterBuilder;
 import no.api.pantheon.logging.JsonLogger;
 import no.api.syzygy.etcd.EtcdConnector;
+import no.api.syzygy.loaders.SyzygyLoader;
 import no.api.syzygy.service.admin.CheckEtcd;
 import no.api.syzygy.service.resource.IndexPageResource;
 import no.api.syzygy.service.resource.SyzygyPingResource;
@@ -54,7 +55,7 @@ public class SyzygyApplication extends Application<SyzygyConfiguration> {
         etcd.start();
 
         environment.jersey().register(new SyzygyPingResource(19087));
-        environment.jersey().register(new IndexPageResource( hmcreator ));
+        environment.jersey().register(new IndexPageResource( hmcreator, SyzygyLoader.loadConfigurationFromEtcApi()));
         environment.healthChecks().register("etcdCheck", new CheckEtcd(etcd, environment.metrics()));
 
         environment.jersey().register(new DropwizardExceptionManager(hmcreator, "/atomizer"));

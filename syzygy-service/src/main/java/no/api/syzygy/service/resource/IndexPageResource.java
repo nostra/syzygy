@@ -2,6 +2,7 @@ package no.api.syzygy.service.resource;
 
 import com.codahale.metrics.annotation.Metered;
 import no.api.atomizer.header.HeaderManagerCreator;
+import no.api.syzygy.loaders.SyzygyLoader;
 import no.api.syzygy.service.view.IndexView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +24,11 @@ public class IndexPageResource {
 
     private final HeaderManagerCreator hmcreator;
 
-    public IndexPageResource(HeaderManagerCreator hmcreator) {
+    private final SyzygyLoader syzygy;
+
+    public IndexPageResource(HeaderManagerCreator hmcreator, SyzygyLoader syzygy) {
         this.hmcreator = hmcreator;
+        this.syzygy = syzygy;
     }
 
 
@@ -33,6 +37,6 @@ public class IndexPageResource {
     public IndexView getIndex(@Context HttpServletRequest req, @QueryParam("token") String token,
             @Context HttpServletResponse response ) {
         hmcreator.createWithNoCache().addHeadersTo(response);
-        return new IndexView();
+        return new IndexView( syzygy.listAllProperties() );
     }
 }

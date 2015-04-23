@@ -285,7 +285,6 @@ public class SyzygyLoader {
      *
      * @link http://docs.oracle.com/javase/8/docs/api/java/net/URI.html
      * @return Read config, or null if errors are ignored
-     * TODO Does not properly support URI, as it reads with fileUtils.
      */
     private SyzygyConfig readHieraFromFile(String datadir, String name) {
         final String scheme = topLevelConfig.getOrigin().getScheme();

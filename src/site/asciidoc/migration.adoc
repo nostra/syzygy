@@ -6,6 +6,9 @@
 :icons: font
 :source-highlighter: prettify
 
+This document can also be found in github, if this version does not render nicely
+enough: https://github.com/amedia/syzygy/blob/master/src/site/asciidoc/migration.adoc
+
 The situation as of 20/4--2015, is that the ApiProperties object, and interfaces
 have been moved to `pantheon-core`. The Publication related material has been
 moved to `pantheon-publication`. This helps you to move away from the api-properties

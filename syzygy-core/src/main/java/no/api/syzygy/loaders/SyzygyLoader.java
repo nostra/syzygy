@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -278,11 +282,17 @@ public class SyzygyLoader {
 
     /**
      * Reading config file. Can read in yaml and json. The latter in json format and convict.js format.
+     *
+     * @link http://docs.oracle.com/javase/8/docs/api/java/net/URI.html
      * @return Read config, or null if errors are ignored
      * TODO Does not properly support URI, as it reads with fileUtils.
      */
     private SyzygyConfig readHieraFromFile(String datadir, String name) {
-        String origin = topLevelConfig.getOrigin().getPath();
+        final String scheme = topLevelConfig.getOrigin().getScheme();
+        log.info("Scheme:             "+topLevelConfig.getOrigin().getScheme());
+        log.info("SchemeSpecificPart: "+topLevelConfig.getOrigin().getSchemeSpecificPart());
+        log.info("Fragment:           "+topLevelConfig.getOrigin().getFragment());
+        String origin = topLevelConfig.getOrigin().getSchemeSpecificPart();
         int until = origin.lastIndexOf("/");
         if ( until == -1 ) {
             until = origin.length();
@@ -291,23 +301,39 @@ public class SyzygyLoader {
                 origin.substring(0, until)
                 + File.separator+datadir+File.separator+name;
         String extension = ".yaml";
-        if ( ! FileUtils.doesFileExist(filename+extension)) {
+        if ( ! uriExistsAndCanBeRead(scheme, filename + extension)) {
             extension = ".yml";
         }
-        if ( ! FileUtils.doesFileExist(filename+extension)) {
+        if ( ! uriExistsAndCanBeRead(scheme, filename + extension)) {
             extension = ".json";
         }
-        if ( ! FileUtils.doesFileExist(filename+extension)) {
+        if ( ! uriExistsAndCanBeRead(scheme, filename + extension)) {
             log.warn("Could not find file "+filename+extension+", and returns null for this configuration");
             return null;
         }
-        SyzygyConfig cfg = new SyzygyFileConfig(name).load(filename + extension);
+        SyzygyConfig cfg = null;
+        try {
+            cfg = new SyzygyFileConfig(name).load(new URI( scheme, filename + extension, null));
+        } catch (URISyntaxException e) {
+            throw new SyzygyException("Create URI element out of scheme "+scheme+" and "+filename + extension, e);
+        }
         if ( isConfigConvictSchema( cfg )) {
             cfg = new SyzygyConvictSchemaConfig(name).load(filename + extension );
             // Not very elegant to cast right after initialization. Disregarding this ATM
             appendToDocumentation((SyzygyConvictSchemaConfig) cfg);
         }
         return cfg;
+    }
+
+    private boolean uriExistsAndCanBeRead(String scheme, String filename) {
+        if ( "file".equalsIgnoreCase( scheme )) {
+            return FileUtils.doesFileExist(filename);
+        }
+        try (InputStream is = new URI(scheme, filename, null).toURL().openStream()) {
+            return is.read() != -1;
+
+        } catch (URISyntaxException | IOException ignored) {} // NO_SONAR This is expected, as we will often look up non-existing paths
+        return false;
     }
 
     private void appendToDocumentation(SyzygyConvictSchemaConfig cfg) {

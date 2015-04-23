@@ -32,7 +32,9 @@ typically named `syzygy.yaml`:
 stop_if_error: true
 
 This says you store your data in `hieradata`. Otherwise, the files are assumed to
-be stored in same directory as the configuration file.
+be stored in same directory as the configuration file. Note that the hieradata
+directory is relative to the  syzygy.yaml  file, which means that if you fetch it
+over HTTP, the address will be relative to that HTTP address.
 
 The content of the files can have 3 different formats:
 

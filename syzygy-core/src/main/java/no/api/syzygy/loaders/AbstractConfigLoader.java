@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.Map;
 
 /**
@@ -33,9 +36,19 @@ public abstract class AbstractConfigLoader implements SyzygyConfig {
     }
 
     protected Map load(final File file, ObjectMapper mapper ) {
-        String yaml = PantheonFileReader.createInstance().readIntoString( file );
+        return load( file.toURI(), mapper);
+    }
+
+    protected Map load(final URI uri, ObjectMapper mapper ) {
+        String yaml = null;
+        try (InputStream is = uri.toURL().openStream()) {
+
+            yaml = PantheonFileReader.createInstance().readIntoString( new InputStreamReader( is ));
+        } catch ( IOException e) {
+            throw new SyzygyException("Got exception trying to read "+uri, e);
+        }
         if ( yaml == null ) {
-            throw new SyzygyException("Did manage to read any data from "+file+". This is unexpected.");
+            throw new SyzygyException("Did manage to read any data from "+uri+". This is unexpected.");
         }
         Map map = null;
         try {

@@ -279,10 +279,16 @@ public class SyzygyLoader {
     /**
      * Reading config file. Can read in yaml and json. The latter in json format and convict.js format.
      * @return Read config, or null if errors are ignored
+     * TODO Does not properly support URI, as it reads with fileUtils.
      */
     private SyzygyConfig readHieraFromFile(String datadir, String name) {
+        String origin = topLevelConfig.getOrigin().getPath();
+        int until = origin.lastIndexOf("/");
+        if ( until == -1 ) {
+            until = origin.length();
+        }
         String filename =
-                FileUtils.canonicalPathOf(topLevelConfig.getOrigin().getParentFile())
+                origin.substring(0, until)
                 + File.separator+datadir+File.separator+name;
         String extension = ".yaml";
         if ( ! FileUtils.doesFileExist(filename+extension)) {
@@ -292,6 +298,7 @@ public class SyzygyLoader {
             extension = ".json";
         }
         if ( ! FileUtils.doesFileExist(filename+extension)) {
+            log.warn("Could not find file "+filename+extension+", and returns null for this configuration");
             return null;
         }
         SyzygyConfig cfg = new SyzygyFileConfig(name).load(filename + extension);

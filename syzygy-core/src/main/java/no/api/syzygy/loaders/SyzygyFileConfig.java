@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +22,7 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
 
     private Map map;
 
-    private File origin;
+    private URI origin;
 
     public SyzygyFileConfig(String name) {
         super(name);
@@ -31,10 +32,17 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
     /**
      * For internal use only. Used to hardwire configuration of hierarchical elements.
      */
-    protected SyzygyFileConfig(String name, Map map, File origin) {
+    protected SyzygyFileConfig(String name, Map map, URI origin) {
         super(name);
         this.map = map;
         this.origin = origin;
+    }
+
+    /**
+     * For internal use only. Used to hardwire configuration of hierarchical elements.
+     */
+    protected SyzygyFileConfig(String name, Map map, File origin) {
+        this( name, map, origin.toURI());
     }
 
     protected SyzygyFileConfig load(final String filename ) {
@@ -42,14 +50,17 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
     }
 
 
+    public SyzygyFileConfig load(final File file ) {
+        return load( file.toURI() );
+    }
     /**
      * Notice that this method might become protected again. Not decided
      */
-    public SyzygyFileConfig load(final File file ) {
-        map = load( file, new ObjectMapper(new YAMLFactory()));
-        log.debug("Loaded "+file+" and got "+map.size()+" items (on top level).");
-        map.put(SYZYGY_CFG_FILE, file.getPath());
-        origin = file;
+    public SyzygyFileConfig load(final URI uri ) {
+        map = load( uri, new ObjectMapper(new YAMLFactory()));
+        log.debug("Loaded "+uri+" and got "+map.size()+" items (on top level).");
+        map.put(SYZYGY_CFG_FILE, uri.getPath());
+        origin = uri;
         return this;
     }
 
@@ -64,7 +75,7 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
         return Collections.unmodifiableMap(m);
     }
 
-    protected File getOrigin() {
+    protected URI getOrigin() {
         return origin;
     }
 

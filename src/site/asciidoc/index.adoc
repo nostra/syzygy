@@ -134,7 +134,7 @@ override all configuration. The `DirectoryIntoMap` values will override
 the "fallback" values. See: +
  https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/loaders/DirectoryIntoMap.java
 
-## Query through the SyzygyLoader interface
+## Query through the SyzygyLoader
 
 The interface has some entry points which can be used to
 find configured values:
@@ -142,7 +142,8 @@ find configured values:
 * `static SyzygyLoader loadConfigurationFile( File config )` : How you instantiate Syzygy (presently)
 * `String lookup(String key)` : Regular query for string value
 * `<T> T lookup(String key, Class<T> clazz)` : Lookup for key with a special class - typically a map
-* `List<SyzygyPayload> listAllProperties()` : https://github.com/amedia/pantheon/blob/master/pantheon-syzygy/src/main/java/no/api/syzygy/SyzygyPayload.java
+* `List<SyzygyPayload> listAllProperties()` :
+https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/loaders/SyzygyLoader.java
 * `String deepLookup(String key, String nameOfMap)` : For each configuration file, first try lookup in
   map. This is functionally similar to ApiPropertes#lookup(key, publication );
 * `void flush()` : Reload config (but currently not parent config)
@@ -153,7 +154,7 @@ find configured values:
 
 By combining the listAllProperties, can you find all properties, and whether they are used.
 Example of output from
-https://github.com/amedia/pantheon/blob/master/pantheon-syzygy/src/test/java/no/api/syzygy/SyzygyLoaderTest.java#L127
+https://github.com/amedia/syzygy/blob/master/syzygy-core/src/test/java/no/api/syzygy/loaders/SyzygyLoaderTest.java#133
 
 
    convict     1            key4                                         key4_value

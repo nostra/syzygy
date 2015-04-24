@@ -3,12 +3,9 @@ Syzygy
 
 Configuration system aiming to replace cetera and api-properties.
 
-This is work in progress, and some of it needs research / testing.
-
+Documentation: https://github.com/amedia/syzygy/tree/master/src/site/asciidoc
 
 Epic: http://apidev.atlassian.net/browse/DEVOPS-346
-
-Currently, much of the main code reside in pantheon. This will be moved RSN.
 
 etcd documentation
 ------------------

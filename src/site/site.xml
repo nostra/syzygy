@@ -4,6 +4,7 @@
     <body>
     <menu name="User guide">
         <item href="index.html" name="Index" />
+        <item href="amedia.html" name="Compared to wp" />
         <item href="migration.html" name="Migration" />
         <item href="preparation.html" name="Preparation" />
         <item href="roadmap.html" name="Roadmap" />

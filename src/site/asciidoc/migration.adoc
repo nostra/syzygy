@@ -1,4 +1,4 @@
-// -*- Doc -*-
+// -*- adoc -*-
 
 # Migration from api-properties
 
@@ -9,12 +9,14 @@
 This document can also be found in github, if this version does not render nicely
 enough: https://github.com/amedia/syzygy/blob/master/src/site/asciidoc/migration.adoc
 
+
 The situation as of 20/4--2015, is that the ApiProperties object, and interfaces
 have been moved to `pantheon-core`. The Publication related material has been
 moved to `pantheon-publication`. This helps you to move away from the api-properties
 as a library.
 
-Quick summary of your choices:
+
+## Quick summary of your choices:
 
 [cols="2*"]
 |===
@@ -28,7 +30,7 @@ In more, detail, your choices are:
 
 ## gaia-client
 
-Gaia-client reads first from syzgyy, and then from api-properties in order to provide
+Gaia-client reads *first* from syzgyy, and then from api-properties in order to provide
 a value over the REST interface. The default choice, but it does not help you migrate
 away from `wp.xml` / `wp-override.xml`
 

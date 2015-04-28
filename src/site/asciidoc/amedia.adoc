@@ -13,7 +13,7 @@ You are *recommended to add new and updated configuration to syzygy*
 and *only* to syzygy -- if practically feasible, of course.
 
 As explained in
-link:migration[the migration document], the natural choice for REST interface
+link:migration.adoc[the migration document], the natural choice for REST interface
 is Gaia.
 
 ## Linpro configuration of syzygy

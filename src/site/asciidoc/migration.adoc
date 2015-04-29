@@ -116,8 +116,9 @@ in case this description becomes stale.)
 ## syzygy
 
 The next generation configuration system. Currently, mainly relevant when it provides an
-interface to etcd.
+interface to etcd. It is available over gaia.
 
 ## syzygy-apiproperties
 
-Configuration without gaia. Drop-in configuration of xml files.
+Configuration without gaia. Drop-in replacement of api-properties. Gets configured
+by use of `/etc/api/syzygy/syzygy.yaml` only. Currently used in gaia.

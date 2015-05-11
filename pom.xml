@@ -4,7 +4,7 @@
     <parent>
         <groupId>no.api.maven-projects</groupId>
         <artifactId>v3-super-pom</artifactId>
-        <version>3.9</version>
+        <version>3.16</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -59,12 +59,6 @@
                 <groupId>no.api.gaia</groupId>
                 <artifactId>gaia-client</artifactId>
                 <version>${gaia.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.api</groupId>
-                <artifactId>properties</artifactId>
-                <version>${apiproperties.version}</version>
             </dependency>
 
             <dependency>

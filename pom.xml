@@ -22,6 +22,7 @@
         <!-- Yes, we need this property -->
         <site.name />
         <fabric8.version>2.0.45</fabric8.version>
+        <springframework.version>${springframework.4.x.version}</springframework.version>
     </properties>
 
 
@@ -95,6 +96,36 @@
                 <groupId>no.api.pantheon</groupId>
                 <artifactId>pantheon-core</artifactId>
                 <version>${pantheon.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${springframework.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${springframework.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${springframework.version}</version>
             </dependency>
 
             <dependency>

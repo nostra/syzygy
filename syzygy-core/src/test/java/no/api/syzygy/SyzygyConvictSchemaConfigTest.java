@@ -3,14 +3,13 @@ package no.api.syzygy;
 import no.api.syzygy.loaders.SyzygyConvictSchemaConfig;
 import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class SyzygyConvictSchemaConfigTest {
 
@@ -30,14 +29,12 @@ public class SyzygyConvictSchemaConfigTest {
     }
 
     @Test
-    @Ignore
     public void testConvictFormatInYaml() {
-        /* Ignored as it is work in progress */
         SyzygyConvictSchemaConfig onefile =
                 (SyzygyConvictSchemaConfig) SyzygyConvictSchemaConfig.readConvict(basedir + File.separator + "yamlconvict.yaml");
         assertEquals("example (yaml) default", onefile.lookup("example"));
         assertEquals("Example (yaml) doc.", onefile.doc("example"));
-        assertEquals("key_1_from_yaml_convict", onefile.doc("convict_key_1"));
+        assertEquals("key_1_from_yaml_convict", onefile.lookup("convict_key_1"));
     }
 
     @Test

@@ -1,0 +1,6 @@
+example:
+  doc: 'Example (yaml) doc.'
+  format: '*'
+  default": 'example (yaml) default'
+convict_key_1:
+  default: 'key_1_from_yaml_convict'

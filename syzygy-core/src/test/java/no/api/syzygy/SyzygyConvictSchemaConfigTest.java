@@ -3,6 +3,7 @@ package no.api.syzygy;
 import no.api.syzygy.loaders.SyzygyConvictSchemaConfig;
 import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,6 +27,17 @@ public class SyzygyConvictSchemaConfigTest {
                 (SyzygyConvictSchemaConfig) SyzygyConvictSchemaConfig.readConvict(basedir + File.separator + "convict.json");
         assertEquals("default_value", onefile.lookup("example"));
         assertEquals("Example doc.", onefile.doc("example"));
+    }
+
+    @Test
+    @Ignore
+    public void testConvictFormatInYaml() {
+        /* Ignored as it is work in progress */
+        SyzygyConvictSchemaConfig onefile =
+                (SyzygyConvictSchemaConfig) SyzygyConvictSchemaConfig.readConvict(basedir + File.separator + "yamlconvict.yaml");
+        assertEquals("example (yaml) default", onefile.lookup("example"));
+        assertEquals("Example (yaml) doc.", onefile.doc("example"));
+        assertEquals("key_1_from_yaml_convict", onefile.doc("convict_key_1"));
     }
 
     @Test

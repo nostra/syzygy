@@ -124,7 +124,7 @@ public class EtcdConnector {
             try {
                 client.setData().dir().forKey(prefix);
             } catch (Exception e) { // NOSONAR: Wide net is OK
-                //log.debug("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
+                log.trace("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
             }
 
         } catch (URISyntaxException e) {
@@ -138,7 +138,7 @@ public class EtcdConnector {
                 client.getData().forKey("/");
                 return true;
             } catch (Exception ignore ) { // NOSONAR Wide net is OK
-
+                log.trace("Not alive. Masked exception: "+ignore);
             }
         }
         return false;

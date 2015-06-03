@@ -93,7 +93,22 @@ public class SyncEtcdWithFileCommand extends EnvironmentCommand<SyzygyConfigurat
         } finally {
             timer.stop();
         }
+        startHaltingDaemon();
+    }
 
+    private void startHaltingDaemon() {
+        Thread exitThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(150);
+                } catch (InterruptedException ignore) { }
+                System.err.println("Work around: Exiting explicitly, as processes don't want to stop by themselves");
+                System.exit(1); // NOSONAR
+            }
+        });
+        exitThread.setDaemon(true);
+        exitThread.start();
     }
 
     private void writeToOutputFile(String outputFile, List<String> result) {

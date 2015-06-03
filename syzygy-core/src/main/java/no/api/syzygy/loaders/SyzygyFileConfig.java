@@ -1,7 +1,5 @@
 package no.api.syzygy.loaders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Representation of config from a yaml or json file.
+ * Representation of config read from a yaml or json file.
  */
 public class SyzygyFileConfig extends AbstractConfigLoader {
     private static final Logger log = LoggerFactory.getLogger(SyzygyFileConfig.class);
@@ -57,7 +55,7 @@ public class SyzygyFileConfig extends AbstractConfigLoader {
      * Notice that this method might become protected again. Not decided
      */
     public SyzygyFileConfig load(final URI uri ) {
-        map = load( uri, new ObjectMapper(new YAMLFactory()));
+        map = load( uri, createObjectMapper());
         log.debug("Loaded "+uri+" and got "+map.size()+" items (on top level).");
         map.put(SYZYGY_CFG_FILE, uri.getPath());
         origin = uri;

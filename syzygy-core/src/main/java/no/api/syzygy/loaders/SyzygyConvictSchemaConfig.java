@@ -1,7 +1,5 @@
 package no.api.syzygy.loaders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import no.api.pantheon.lang.Numeric;
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyException;
@@ -27,7 +25,7 @@ public class SyzygyConvictSchemaConfig extends AbstractConfigLoader {
     }
 
     protected SyzygyConfig load(final String filename ) {
-        map = load( filename, new ObjectMapper(new YAMLFactory()));
+        map = load( filename, createObjectMapper());
         return this;
     }
 

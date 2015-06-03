@@ -1,6 +1,8 @@
 package no.api.syzygy.loaders;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import no.api.pantheon.io.PantheonFileReader;
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyException;
@@ -52,6 +54,9 @@ public abstract class AbstractConfigLoader implements SyzygyConfig {
         }
         Map map = null;
         try {
+            // Validate: readTree will throw exception if not valid
+            mapper.readTree(yaml);
+
             map = mapper.readValue(yaml, Map.class);
         } catch (IOException e) {
             log.error("Got exception.", e);
@@ -63,4 +68,9 @@ public abstract class AbstractConfigLoader implements SyzygyConfig {
         return map;
     }
 
+    protected ObjectMapper createObjectMapper() {
+        return new ObjectMapper(new YAMLFactory())
+                .enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY)
+                .enable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
+    }
 }

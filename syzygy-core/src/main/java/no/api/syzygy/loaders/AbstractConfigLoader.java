@@ -71,6 +71,8 @@ public abstract class AbstractConfigLoader implements SyzygyConfig {
     protected ObjectMapper createObjectMapper() {
         return new ObjectMapper(new YAMLFactory())
                 .enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY)
-                .enable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
+                .enable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE)
+                .enable(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS)
+                .enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
     }
 }

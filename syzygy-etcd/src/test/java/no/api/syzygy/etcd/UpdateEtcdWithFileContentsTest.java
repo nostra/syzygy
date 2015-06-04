@@ -33,7 +33,7 @@ public class UpdateEtcdWithFileContentsTest {
         etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/", "/syzygy/junit/");
         Assume.assumeTrue(etcd.isAlive());
 
-        readFrom = MapFileBackAndForthTest.findTestResourcesDirectory();
+        readFrom = DirectoryHelper.findTestResourcesDirectory();
     }
 
     @After

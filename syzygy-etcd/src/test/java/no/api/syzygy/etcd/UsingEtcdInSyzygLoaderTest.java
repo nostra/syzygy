@@ -32,7 +32,7 @@ public class UsingEtcdInSyzygLoaderTest {
     public void determineBaseDirectory() throws IOException {
         etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/", "/syzygy/junit/etcdmap/");
         Assume.assumeTrue(etcd.isAlive());
-        readFrom = MapFileBackAndForthTest.findTestResourcesDirectory();
+        readFrom = DirectoryHelper.findTestResourcesDirectory();
     }
 
     @After

@@ -41,18 +41,7 @@ public class MapFileBackAndForthTest {
         etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/", "/syzygy/junit/");
         Assume.assumeTrue(etcd.isAlive());
 
-        readFrom = findTestResourcesDirectory();
-    }
-
-    protected static String findTestResourcesDirectory() {
-        File cur = new File(".");
-        StringBuffer readFrom = new StringBuffer();
-        if ( ! cur.getAbsolutePath().contains("syzygy-etcd")) {
-            // IntelliJ
-            readFrom.append("syzygy-etcd/");
-        }
-        readFrom.append("src/test/resources/");
-        return readFrom.toString();
+        readFrom = DirectoryHelper.findTestResourcesDirectory();
     }
 
     @After

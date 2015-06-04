@@ -32,7 +32,7 @@ public class SynchronizationHelperTest {
         etcd = EtcdConnector.attach(SYZYGY_URL, "/syzygy/junit/");
         Assume.assumeTrue(etcd.isAlive());
 
-        readFrom = MapFileBackAndForthTest.findTestResourcesDirectory();
+        readFrom = DirectoryHelper.findTestResourcesDirectory();
     }
 
     @After

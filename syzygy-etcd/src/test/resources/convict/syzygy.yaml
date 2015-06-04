@@ -5,4 +5,4 @@
   - no.api.syzygy.etcd.EtcdDynamicConfiguration#convict
 stop_if_error: true
 global_etcd_url : "http://127.0.0.1:4001/v2/"
-convict_etcd_prefix : "/syzygy/junit/"
+convict_etcd_prefix : "/syzygy/junit/etcdmap/"

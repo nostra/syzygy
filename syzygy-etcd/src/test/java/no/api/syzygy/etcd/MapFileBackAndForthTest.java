@@ -103,11 +103,12 @@ public class MapFileBackAndForthTest {
 
     @Test
     public void testLoadKeys() {
+        int numkeys = etcd.keys("").size();
         assertTrue(etcd.store("key1", "a"));
         assertTrue(etcd.store("key2", "b"));
         assertTrue(etcd.store("key3", "c"));
         Set<String> keys = etcd.keys("");
-        assertEquals(3, keys.size());
+        assertEquals(numkeys+3, keys.size());
         assertTrue( "Expecting key set to contain deterministic name. It did not. Set: "+keys, keys.contains("key2"));
 
         // Testing start / stop
@@ -121,6 +122,7 @@ public class MapFileBackAndForthTest {
         assertTrue(etcd.remove("key1"));
         assertTrue(etcd.remove("key2"));
         assertTrue(etcd.remove("key3"));
+        assertEquals(numkeys, etcd.keys("").size());
     }
 
     @Test

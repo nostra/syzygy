@@ -1,7 +1,6 @@
 package no.api.syzygy.etcd;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyHelper;
 import no.api.syzygy.SyzygyPayload;
 import no.api.syzygy.loaders.SyzygyLoader;
@@ -81,8 +80,7 @@ public class UsingEtcdInSyzygLoaderTest {
         Map convictMap = new ObjectMapper().readValue(new File(readFrom + File.separator + "convict/convict.json"), Map.class);
         assertTrue(convictMap.size() > 0);
 
-        SyzygyConfig syzygyConfig = SyzygyEtcdConfig.connectAs(etcd, "convict");
-        etcd.store("convict", convictMap );
+        assertTrue(etcd.store("convict", convictMap));
 
         SyzygyLoader syzygy = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/convict/syzygy.yaml"));
 

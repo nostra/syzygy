@@ -70,15 +70,15 @@ public class UpdateEtcdWithFileContentsTest {
     @Test
     public void demonstrateHowStorageOfMapWillRemoveOtherData() {
         Map<String, Object> map = new HashMap();
-        map.put("somekey", "somevalue");
+        map.put("somekey", "some value in map #1");
         etcd.store("structure", map );
         SyzygyConfig syzygyConfig = SyzygyEtcdConfig.connectAs(etcd, "structure");
         map = new HashMap();
-        map.put("different", "value");
+        map.put("different", "value in map #2");
         etcd.store("structure", map );
         assertEquals("This documents that storage of 2 maps on top of each other will yield both values",
-                     "somevalue", syzygyConfig.lookup("somekey"));
-        assertEquals("value", syzygyConfig.lookup("different"));
+                     "some value in map #1", syzygyConfig.lookup("somekey"));
+        assertEquals("value in map #2", syzygyConfig.lookup("different"));
         assertTrue(etcd.removeMap("structure"));
     }
 }

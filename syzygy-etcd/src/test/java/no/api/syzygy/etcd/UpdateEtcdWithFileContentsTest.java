@@ -68,7 +68,7 @@ public class UpdateEtcdWithFileContentsTest {
     }
 
     @Test
-    public void demonstrateHowStorageOfMapWillRemoveOtherData() {
+    public void demonstrateHowStorageOfMapWillRetainData() {
         Map<String, Object> map = new HashMap();
         map.put("somekey", "some value in map #1");
         etcd.store("structure", map );

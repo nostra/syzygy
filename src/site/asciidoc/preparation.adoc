@@ -7,10 +7,12 @@
 
 == Preliminary notes for configuration project **syzygy**.
 
+WARNING: This document is to be considered to be a *legacy* document.
+
 === Functionality summary
 
 The basis for the functionality is **inspired** by hieradata.
-The configuration files might be compatible, but this is not 
+The configuration files might be compatible, but this is not
 a goal.
 
 Suggested lookup sequence:
@@ -32,8 +34,8 @@ The proper place in syzygy; Same as wp-override.xml.template today.
 **Note** that there might be a wish for allowing the following construction:
 Activate Dr.Front for Nordlys on snap6 only.
 
-`${CONFIGSET}` is intended to be used in order for developers to share project 
-config. For instance, all developers that work on _garuda_ needs this and that 
+`${CONFIGSET}` is intended to be used in order for developers to share project
+config. For instance, all developers that work on _garuda_ needs this and that
 config, which might as well be put in `garuda.yaml` configuration set.
 Which configuration set to use, is (possibly) determined by a system variable.
 
@@ -70,8 +72,8 @@ Alternatives:
 
 == Existing providers and client interfaces
 
-The functionality of the following existing providers 
-need to be supported. (With a possible exception of 
+The functionality of the following existing providers
+need to be supported. (With a possible exception of
 medusa.)
 
 [cols="2*", options="header"]
@@ -88,7 +90,7 @@ medusa.)
 
 .As support staff: Change a global setting for `mobile.traffic.tns.cpid`
 * *Today*: Change entry in wp.xml in cetera and get a developer to deploy
-* *Future*: 
+* *Future*:
 ** Near future: Perform change in syzygydata, which gets
 distributed automatically.
 ** More distant: Support staff uses an application edit the config,
@@ -157,7 +159,7 @@ the config communicates with a REST interface.
 .Cache lifetime of element
 * *Today*: When using REST interface in Gaia, the cache-channel header
 is 24h. It gets invalidated with gaia purge from atomizer.
-cetera. 
+cetera.
 * *Future*: TDB
 
 .Figure out which setting that is in use
@@ -168,7 +170,7 @@ cetera.
 * *Today*: Use role in wp.xml. This is something which has introduced
 quite a bit of confusion.
 * *Future*: Use different files and setup, in addition ot have
-an interface (TDB) to query about where different settings are used. 
+an interface (TDB) to query about where different settings are used.
 
 .Encryption of sensitive elements
 * *Today*: The new setup supports eyaml (yaml with encrypted values),
@@ -202,8 +204,8 @@ but these will be decrypted when distributed.
 The most interesting is archaius: https://github.com/Netflix/archaius which is build on top of
 http://commons.apache.org/proper/commons-configuration/userguide/user_guide.html
 
-Archaius does give 3 or 4 MB of extra data. The commons-configuration looks a bit dated. 
-It may also be that the most useful part of this is the other framework technology, and 
+Archaius does give 3 or 4 MB of extra data. The commons-configuration looks a bit dated.
+It may also be that the most useful part of this is the other framework technology, and
 not the configuration as such.
 
 == Changes in applications

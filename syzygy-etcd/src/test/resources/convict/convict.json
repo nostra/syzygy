@@ -1,0 +1,21 @@
+{
+    "example": {
+        "doc": "Example doc.",
+        "format": "*",
+        "default": "default_value"
+    },
+    "convict_key_1": {
+        "default": "key_1_from_convict"
+    },
+    "insist_on_int": {
+        "doc": "This object shall be an integer",
+        "format": "int",
+        "default": "12345"
+    },
+    "semispace": {
+        "doc": "URL to semispace",
+        "format": "url",
+        "default": "http://www.semispace.org"
+    }
+
+}

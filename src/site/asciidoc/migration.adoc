@@ -16,6 +16,11 @@ moved to `pantheon-publication`. This helps you to move away from the api-proper
 as a library.
 
 
+WARNING: This document is now a legacy document. All projects (with the exception of solr3)
+now uses `gaia-apiproperties` (if they used the old library before).
+See: +
+https://apidev.atlassian.net/browse/DEVOPS-521
+
 ## Quick summary of your choices:
 
 [cols="2*"]

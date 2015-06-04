@@ -31,9 +31,10 @@ typically named `syzygy.yaml`:
   - common     # Fallback level
 stop_if_error: true
 
-This says you store your data in `hieradata`. Otherwise, the files are assumed to
+This says you store your data in the directory named `hieradata`.
+Otherwise, the files are assumed to
 be stored in same directory as the configuration file. Note that the hieradata
-directory is relative to the  syzygy.yaml  file, which means that if you fetch it
+directory is *relative to the  syzygy.yaml* file -- which means that if you fetch it
 over HTTP, the address will be relative to that HTTP address.
 
 The content of the files can have 3 different formats:
@@ -41,9 +42,11 @@ The content of the files can have 3 different formats:
 . yaml - support for nesting levels, hierarchical data, lists and maps.
 . json - plain json, support nesting levels
 . json (as convict.js format). Supports data types *, int and url and will
-   validate all data
+   validate all data.
 
-Basically, everything that is supported by jackson is supported by syzygy.
+Basically, everything that is supported by
+https://github.com/FasterXML/jackson[Jackson]
+is supported by syzygy.
 
 You may refer to a java implementation, as in the `SomeImplementation`
 example. More about the correct format for this later.
@@ -63,11 +66,11 @@ added.
   - infile
 stop_if_error: true
 global_etcd_url : "http://127.0.0.1:4001/v2/"
-inetcd_etcd_prefix : "/syzygy/junit/"
+inetcd_etcd_prefix : "/syzygy/somewhere/"
 
-The configuration *inetcd* can be found in etcd, and *infile* in the directory
-hieradata. Notice that `EtcdDynamicConfiguration` usually takes some configuration,
-which is given in the top level configuration file.
+The configuration `inetcd` can be found in etcd, and `infile` in the directory
+`hieradata`. Notice that `EtcdDynamicConfiguration` need configuration of
+where to find etcd, namely `global_etcd_url`
 
 Note the configuration which is specific for etcd:
 
@@ -113,6 +116,10 @@ The key name is `example`, and it is in "any" format. The "default"
 value is what this configuration will return if it is not overridden.
 The configuration will be used if validate is called.
 
+*Note* that convict configuration is *only supported in JSON and yaml* files,
+and *not* in etcd and dynamic configurations.
+
+
 ### Programmatic no.api.someapp.SomeImplementation
 
 Implement `SyzygyDynamicLoader`. This gives you access to the top
@@ -146,8 +153,10 @@ find configured values:
 * `<T> T lookup(String key, Class<T> clazz)` : Lookup for key with a special class - typically a map
 * `List<SyzygyPayload> listAllProperties()` :
 https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/loaders/SyzygyLoader.java
-* `String deepLookup(String key, String nameOfMap)` : For each configuration file, first try lookup in
-  map. This is functionally similar to ApiPropertes#lookup(key, publication );
+* `String deepLookup(String key, String nameOfMap)` : For each configuration file, first try
+  lookup in map. This is functionally similar to ApiPropertes#lookup(key, publication );
+* `<T> SyzygyPayload<T> lookupFor(String key, Class<T> clazz)` : Lookup value and get the
+  syzygy payload object which contains more information, most interestingly, the documentation.
 * `void flush()` : Reload config (but currently not parent config)
 * `void validate` : Validate all elements against convict definition.
 * `Set<String> keys()` : The composite collection of keys

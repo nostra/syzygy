@@ -1,0 +1,8 @@
+---
+:hierarchy:
+# Note that it is not healthy to map a sublevel of a structure like this.
+# It is done here due to junit tests.
+  - no.api.syzygy.etcd.EtcdDynamicConfiguration#convict
+stop_if_error: true
+global_etcd_url : "http://127.0.0.1:4001/v2/"
+convict_etcd_prefix : "/syzygy/junit/"

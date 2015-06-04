@@ -38,7 +38,7 @@ public class MapFileBackAndForthTest {
 
     @Before
     public void determineBaseDirectory() throws IOException {
-        etcd = EtcdConnector.attach("http://127.0.0.1:4001/v2/", "/syzygy/junit/");
+        etcd = EtcdConnector.attach(DirectoryHelper.ETCD_URL, DirectoryHelper.SYZYGY_JUNIT_PATH);
         Assume.assumeTrue(etcd.isAlive());
 
         readFrom = DirectoryHelper.findTestResourcesDirectory();

@@ -18,8 +18,6 @@ import static org.junit.Assert.assertNull;
 
 public class SynchronizationHelperTest {
 
-    public static final String SYZYGY_URL = "http://127.0.0.1:4001/v2/";
-
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private EtcdConnector etcd;
@@ -29,7 +27,7 @@ public class SynchronizationHelperTest {
 
     @Before
     public void determineBaseDirectory() throws IOException {
-        etcd = EtcdConnector.attach(SYZYGY_URL, "/syzygy/junit/");
+        etcd = EtcdConnector.attach(DirectoryHelper.ETCD_URL, DirectoryHelper.SYZYGY_JUNIT_PATH);
         Assume.assumeTrue(etcd.isAlive());
 
         readFrom = DirectoryHelper.findTestResourcesDirectory();
@@ -60,23 +58,23 @@ public class SynchronizationHelperTest {
      */
     @Test
     public void demonstratefunctionality() {
-        SynchronizationHelper.performSync(readFrom+"synctest/toplevel.yaml", SYZYGY_URL, "junit/synced");
+        SynchronizationHelper.performSync(readFrom+"synctest/toplevel.yaml", DirectoryHelper.ETCD_URL, "junit/synced");
         SyzygyConfig toplevel = SyzygyEtcdConfig.connectAs(etcd, "synced");
         assertEquals("value1", toplevel.lookup("key1"));
 
-        SynchronizationHelper.performSync(readFrom+"synctest/sublevel/sublevel.yaml", SYZYGY_URL, "junit/synced/sublevel");
+        SynchronizationHelper.performSync(readFrom+"synctest/sublevel/sublevel.yaml", DirectoryHelper.ETCD_URL, "junit/synced/sublevel");
         SyzygyConfig sublevel = SyzygyEtcdConfig.connectAs(etcd, "synced/sublevel");
         assertEquals("sublevel value 1", sublevel.lookup("key1"));
 
         assertEquals("Value from top level still exists", "value1", toplevel.lookup("key1"));
 
         // Syncing top level again
-        SynchronizationHelper.performSync(readFrom+"synctest/toplevel.yaml", SYZYGY_URL, "junit/synced");
+        SynchronizationHelper.performSync(readFrom+"synctest/toplevel.yaml", DirectoryHelper.ETCD_URL, "junit/synced");
         assertEquals("Value from top level still exists", "value1", toplevel.lookup("key1"));
         assertNull("Value from sub level is now lost", sublevel.lookup("key1"));
 
         // Syncing sub level to get it back.
-        SynchronizationHelper.performSync(readFrom+"synctest/sublevel/sublevel.yaml", SYZYGY_URL, "junit/synced/sublevel");
+        SynchronizationHelper.performSync(readFrom+"synctest/sublevel/sublevel.yaml", DirectoryHelper.ETCD_URL, "junit/synced/sublevel");
 
         assertEquals("Looking into the sublevel by nesting classes", sublevel.lookup("key1"), toplevel.lookup("sublevel", Map.class ).get("key1"));
 

@@ -1,10 +1,7 @@
 ---
 :datadir:
   - hieradata
-  - ../twoconfigdirs/first
 :hierarchy:
 # This does not look good, but it is legal (as of now):
-  - fileinfirst
   - empty
-  - common     # Fallback level
-stop_if_error: true
+  - emptywithcomment

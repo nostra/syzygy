@@ -1,0 +1,5 @@
+# Comment will make jackson barf. This is known.
+# Comments should be stripped away before transforming by Jackson.
+
+# This file is here in order to document this problem. If you
+# fix it, the test which checks this will predictably fail.

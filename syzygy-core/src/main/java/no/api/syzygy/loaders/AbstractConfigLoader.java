@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -52,17 +53,23 @@ public abstract class AbstractConfigLoader implements SyzygyConfig {
         if ( yaml == null ) {
             throw new SyzygyException("Did manage to read any data from "+uri+". This is unexpected.");
         }
+        if (yaml.trim().isEmpty()) {
+            log.warn("Empty file creates empty hashmap");
+            return new HashMap<>();
+        }
         Map map = null;
         try {
             // Validate: readTree will throw exception if not valid
             mapper.readTree(yaml);
-
             map = mapper.readValue(yaml, Map.class);
+
+            // No content to map due to end-of-input
         } catch (IOException e) {
-            log.error("Got exception.", e);
+            throw new SyzygyException("Error reading file "+uri, e);
         }
         if ( map == null ) {
-            throw new SyzygyException("Tree ended up with being null");
+            // TODO At the time of writing, this does not seem to be caught by any test.
+            log.warn("Tree ended up with being null. Maybe the file is empty. Contents: "+yaml);
         }
 
         return map;

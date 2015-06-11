@@ -112,8 +112,8 @@ public class SyzygyLoaderTest {
 
         assertEquals("value from common", loader.lookup("key2"));
         path = loader.lookupFor("key2", String.class).getPath();
-        assertEquals(5, path.size());
-        assertArrayEquals(new String[]{"ending", "convict", "key3", "specific", "common"}, path.toArray(new String[0]));
+        assertEquals(6, path.size());
+        assertArrayEquals(new String[]{"ending", "convict", "key3", "empty", "specific", "common"}, path.toArray(new String[0]));
     }
 
     @Test
@@ -171,7 +171,7 @@ public class SyzygyLoaderTest {
         SyzygyConfig convict = loader.configurationWithName("convict");
         assertNotNull(convict);
         assertNotNull(convict.lookup("shall_be_integer", Integer.class));
-        assertEquals("Expecting the file size to be deterministic", 5, loader.configurationNames().size());
+        assertEquals("Expecting the file size to be deterministic", 6, loader.configurationNames().size());
     }
 
     @Test

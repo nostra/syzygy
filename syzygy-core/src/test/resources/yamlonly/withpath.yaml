@@ -4,5 +4,6 @@
 :hierarchy:
 # This does not look good, but it is legal (as of now):
   - ../../twoconfigdirs/first/fileinfirst
+  - empty
   - common     # Fallback level
 stop_if_error: true

@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class EmptyConfigTest {
 
     @Test
-    public void see_what_happens_with_empty_file() {
+    public void see_what_happens_with_empty_file_with_comment() {
         String readFrom = HieradirectoryHelper.findTestDirectoryReference("yamlonly");
         try {
             SyzygyLoader.loadConfigurationFile(new File(readFrom+"/emptyfile.yaml"));
@@ -27,5 +27,13 @@ public class EmptyConfigTest {
         // You should not get a different error message out of this.
     }
 
+
+    @Test
+    public void see_what_happens_with_empty_file() {
+        String readFrom = HieradirectoryHelper.findTestDirectoryReference("yamlonly");
+        SyzygyLoader config = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/emptyvalid.yaml"));
+        assertNotNull(config);
+        assertEquals(0, config.listAllProperties().size());
+    }
 
 }

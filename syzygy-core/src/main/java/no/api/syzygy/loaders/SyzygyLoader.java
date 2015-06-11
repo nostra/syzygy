@@ -274,9 +274,8 @@ public class SyzygyLoader {
                 found = sc;
             }
         }
-        if ( found == null && shouldStopOnError() ) {
-            throw new SyzygyException("No configuration to found for "+name);
-        }
+        // If found is null, it might be due to automatic config of FQDN or similar.
+
         return found;
     }
 

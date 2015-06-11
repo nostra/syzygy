@@ -1,0 +1,7 @@
+---
+:datadir:
+  - hieradata
+:hierarchy:
+# Configuration is on purpose non-existing
+  - non_existing_config
+stop_if_error: true

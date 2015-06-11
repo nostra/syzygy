@@ -36,4 +36,12 @@ public class EmptyConfigTest {
         assertEquals(0, config.listAllProperties().size());
     }
 
+    @Test
+    public void see_what_happens_when_having_non_existing_file_DEVOPS_505() {
+        String readFrom = HieradirectoryHelper.findTestDirectoryReference("yamlonly");
+        SyzygyLoader config = SyzygyLoader.loadConfigurationFile(new File(readFrom + "/missingfile.yaml"));
+        assertNotNull(config);
+        assertEquals(0, config.listAllProperties().size());
+    }
+
 }

@@ -32,9 +32,13 @@ public class CeteraReadTest {
     @Test
     public void testCeteraRead() {
         SyzygyLoader loader = SyzygyLoader.loadConfigurationFile(syzygyfile);
-        assertEquals("value from common", loader.lookup("this.is.just.a.test.value"));
-        assertEquals("specific value for www.rb.no", loader.deepLookup("this.is.just.a.test.value", "www.rb.no"));
-        assertEquals("value from common", loader.deepLookup("this.is.just.a.test.value", "www.ba.no"));
+        String values_might_change = "If this test fails, you either have a problem, OR a change in " +
+                "cetera. Sorry about that. It is due to testing on real data. Don't want to pollute " +
+                "real server configuration with test data...";
+        assertEquals(values_might_change, "16", loader.lookup("acpcomposer.sectiongrid.maxfloors"));
+        assertEquals(values_might_change, "Origin - Romerikes Blad", loader.deepLookup("adtech.websiteName", "www.rb.no"));
+        assertEquals(values_might_change, "Ukjent", loader.deepLookup("adtech.websiteName", "www.api.no"));
+        assertEquals(values_might_change, "Ukjent", loader.lookup("adtech.websiteName"));
     }
 
 }

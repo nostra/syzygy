@@ -7,7 +7,6 @@ import io.fabric8.etcd.api.Response;
 import io.fabric8.etcd.core.EtcdClientImpl;
 import io.fabric8.etcd.dsl.DeleteDataBuilder;
 import io.fabric8.etcd.reader.jackson.JacksonResponseReader;
-import no.api.pantheon.support.BenchmarkString;
 import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -348,7 +347,7 @@ public class EtcdConnector {
         //    result.add("Unexpected exception caught: "+e);
         //    log.error("Did not expect to get any exceptions", e);
         } finally {
-            result.add("Synchronization finished in "+ BenchmarkString.benchmarkFromMs(System.currentTimeMillis()-benchmarkMs));
+            result.add("Synchronization finished in "+ (System.currentTimeMillis()-benchmarkMs)+" ms");
         }
         return result;
     }

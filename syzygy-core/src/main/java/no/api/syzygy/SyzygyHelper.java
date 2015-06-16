@@ -1,6 +1,5 @@
 package no.api.syzygy;
 
-import no.api.pantheon.lang.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +20,13 @@ public final class SyzygyHelper {
     public static void printConfigTo( List<SyzygyPayload> configs, Writer writer ) {
         try {
             for ( SyzygyPayload c : configs ) {
-                writer.write(Text.trimOrPad( ""+c.getPath().get(0), 10));
+                writer.write(trimOrPad( ""+c.getPath().get(0), 10));
                 writer.write(" ");
-                writer.write(Text.trimOrPad( ""+c.getHits(), 5));
+                writer.write(trimOrPad( ""+c.getHits(), 5));
                 writer.write(" ");
-                writer.write(Text.trimOrPad( c.getName(), 15));
+                writer.write(trimOrPad( c.getName(), 15));
                 writer.write(" ");
-                writer.write(Text.trimOrPad( ""+c.getValue(), 50));
+                writer.write(trimOrPad( ""+c.getValue(), 50));
                 writer.write("\n");
             }
             writer.flush();
@@ -35,4 +34,13 @@ public final class SyzygyHelper {
             log.error("Got exception - output ignored", e);
         }
     }
+
+    private static String trimOrPad( String str, int desiredLength ) {
+        String result = str.substring(0, Math.min(str.length(), desiredLength));
+        while ( result.length() < desiredLength ) {
+            result = " "+result;
+        }
+        return result;
+    }
+
 }

@@ -1,6 +1,5 @@
 package no.api.syzygy.loaders;
 
-import no.api.pantheon.io.FileUtils;
 import no.api.syzygy.ConfigurationProvider;
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyDynamicLoader;
@@ -52,7 +51,7 @@ public class SyzygyLoader {
     }
 
     public static SyzygyLoader loadConfigurationFile( File config ) {
-        if ( ! FileUtils.doesFileExist(config)) {
+        if ( ! config.exists() || !config.canRead()) {
             throw new SyzygyException("Configuration file does not exist. Tried to read: "+config);
         }
         SyzygyLoader loader =
@@ -325,7 +324,7 @@ public class SyzygyLoader {
 
     private boolean uriExistsAndCanBeRead(String scheme, String filename) {
         if ( "file".equalsIgnoreCase( scheme )) {
-            return FileUtils.doesFileExist(filename);
+            return new File(filename).exists();
         }
         try (InputStream is = new URI(scheme, filename, null).toURL().openStream()) {
             return is.read() != -1;

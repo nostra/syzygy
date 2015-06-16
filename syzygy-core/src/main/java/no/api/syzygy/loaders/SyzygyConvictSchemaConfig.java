@@ -1,6 +1,5 @@
 package no.api.syzygy.loaders;
 
-import no.api.pantheon.lang.Numeric;
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
@@ -96,11 +95,11 @@ public class SyzygyConvictSchemaConfig extends AbstractConfigLoader {
                 return value;
             case "int":
                 if ( !(value instanceof Integer)) {
-                    if ( ! Numeric.isIntegerConvertible(""+value)) {
-                        // If validated, this could be removed:
-                        throw new SyzygyException("Value is not an integer as schema says: "+value);
+                    try {
+                        return Integer.valueOf(""+value);
+                    } catch ( NumberFormatException nfe ) {
+                        throw new SyzygyException(value+" is not an integer as schema says: "+nfe);
                     }
-                    return Integer.valueOf(""+value);
                 }
                 return value;
             case "url":

@@ -3,7 +3,6 @@ package no.api.syzygy.loaders;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import no.api.pantheon.io.PantheonFileReader;
 import no.api.syzygy.SyzygyConfig;
 import no.api.syzygy.SyzygyException;
 import org.slf4j.Logger;
@@ -11,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,14 +43,11 @@ public abstract class AbstractConfigLoader implements SyzygyConfig {
 
     protected Map load(final URI uri, ObjectMapper mapper ) {
         String yaml = null;
-        try (InputStream is = uri.toURL().openStream()) {
 
-            yaml = PantheonFileReader.createInstance().readIntoString( new InputStreamReader( is ));
+        try {
+            yaml = new String(Files.readAllBytes( Paths.get(uri) ));
         } catch ( IOException e) {
             throw new SyzygyException("Got exception trying to read "+uri, e);
-        }
-        if ( yaml == null ) {
-            throw new SyzygyException("Did manage to read any data from "+uri+". This is unexpected.");
         }
         if (yaml.trim().isEmpty()) {
             log.warn("Empty file creates empty hashmap");

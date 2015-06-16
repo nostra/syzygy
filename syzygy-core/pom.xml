@@ -11,10 +11,6 @@
     <artifactId>syzygy-core</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>no.api.pantheon</groupId>
-            <artifactId>pantheon-core</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>

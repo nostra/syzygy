@@ -1,11 +1,9 @@
 package no.api.syzygy;
 
-import no.api.pantheon.exception.PantheonException;
-
 /**
  *
  */
-public class SyzygyException extends PantheonException {
+public class SyzygyException extends RuntimeException {
 
     public SyzygyException(String msg) {
         super(msg);

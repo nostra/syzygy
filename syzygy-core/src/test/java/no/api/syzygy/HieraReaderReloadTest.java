@@ -1,13 +1,14 @@
 package no.api.syzygy;
 
-import no.api.pantheon.io.PantheonFileWriter;
 import no.api.syzygy.loaders.SyzygyLoader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,10 +25,10 @@ public class HieraReaderReloadTest {
     public void setUp() throws IOException {
         //tmp = File.createTempFile("syzygy_junit", ".yaml");
         tmp = new File("/tmp/syzygy_junit.yaml");
-        assertTrue(PantheonFileWriter.createInstance().write("key1: 'initial value'", tmp));
+        assertTrue(write("key1: 'initial value'", tmp));
 
         hieracfg = new File("/tmp/syzygy.yaml");
-        PantheonFileWriter.createInstance().write( ":backends:\n" +
+        write( ":backends:\n" +
                 "  - yaml\n" +
                 ":yaml:\n" +
                 "  :datadir: \n" +
@@ -46,10 +47,18 @@ public class HieraReaderReloadTest {
     @Test
     public void testReload() throws IOException {
         assertEquals("initial value", hiera.lookup("key1"));
-        assertTrue(PantheonFileWriter.createInstance().write("key1: 'updated value'", tmp));
+        assertTrue(write("key1: 'updated value'", tmp));
 
         hiera.flush();
 
         assertEquals("updated value", hiera.lookup("key1"));
+    }
+
+    private boolean write(String content, File tmp) throws IOException {
+        try ( Writer writer = new FileWriter( tmp ) ){
+            writer.write(content);
+            writer.flush();
+            return true;
+        }
     }
 }

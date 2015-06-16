@@ -147,9 +147,6 @@
     <modules>
         <module>syzygy-core</module>
         <module>syzygy-etcd</module>
-        <module>syzygy-apiproperties</module>
-        <module>syzygy-service</module>
-        <module>syzygy-app</module>
     </modules>
 
 </project>

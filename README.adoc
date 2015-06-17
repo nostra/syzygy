@@ -188,3 +188,10 @@ https://github.com/amedia/syzygy/blob/master/syzygy-core/src/test/java/no/api/sy
     common     1            key2                                  value from common
     common     2            key3                                  value from common
     common     1          array1             [{key1=array key1}, {key2=array key2}]
+
+## Amedia specific doc
+
+image::https://avatars0.githubusercontent.com/u/582844?v=3&s=200[Amedia Logo]
+
+Please see internal documentation at:
+https://github.com/amedia/syzygy-dw

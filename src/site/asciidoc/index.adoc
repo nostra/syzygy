@@ -112,6 +112,15 @@ Json in convict style:
     }
 }
 
+Doc entries can also be written in yaml:
+
+[source,yaml]
+example:
+  doc: 'Example doc.'
+  format: '*'
+  default: 'default_value'
+      
+
 The key name is `example`, and it is in "any" format. The "default"
 value is what this configuration will return if it is not overridden.
 The configuration will be used if validate is called.

@@ -7,10 +7,9 @@ Syzygy
 :source-highlighter: prettify
 
 Syzygy is a *configuration system* vaguely inspired by
-
-* hiera (https://docs.puppetlabs.com/hiera/1/index.html)
+https://docs.puppetlabs.com/hiera/1/index.html[Hiera]
 and
-* convict.js (https://github.com/mozilla/node-convict).
+https://github.com/mozilla/node-convict[convict.js].
 
 The heart of these systems is support for overriding a "common" or
 "default" setting.

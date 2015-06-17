@@ -6,10 +6,17 @@ Syzygy
 :icons: font
 :source-highlighter: prettify
 
-Syzygy is a *configuration system* vaguely inspired by
+Syzygy is a Java based *configuration system* vaguely
+inspired by
 https://docs.puppetlabs.com/hiera/1/index.html[Hiera]
 and
 https://github.com/mozilla/node-convict[convict.js].
+
+You store the configation in `JSON`, `yaml` or in
+https://github.com/coreos/etcd[etcd]. Or in a
+self baked legacy way, with a
+https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/SyzygyDynamicLoader.java
+[minimal implementation].
 
 The heart of these systems is support for overriding a "common" or
 "default" setting.

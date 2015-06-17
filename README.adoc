@@ -6,7 +6,7 @@ Syzygy
 :icons: font
 :source-highlighter: prettify
 
-Syzygy is a Java based *configuration system* vaguely
+*Syzygy* is a Java based *configuration system* vaguely
 inspired by
 https://docs.puppetlabs.com/hiera/1/index.html[Hiera]
 and

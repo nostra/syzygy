@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!--parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent-->
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>no.api.syzygy</groupId>
@@ -46,6 +51,26 @@
     <prerequisites>
         <maven>3.0.4</maven>
     </prerequisites>
+
+    <profiles>
+        <profile>
+            <id>localdeploy</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <distributionManagement>
+                <repository>
+                    <id>api-repository</id>
+                    <name>API Repository</name>
+                    <!-- comment in maven.api.no if you need to deploy in amedia -->
+                    <!--url>scpexe://maven.api.no/usr/local/maven/repository</url-->
+                    <url>file:///tmp/distro/syzygy</url>
+                </repository>
+            </distributionManagement>
+
+        </profile>
+    </profiles>
+
 
     <dependencyManagement>
         <dependencies>

@@ -54,7 +54,7 @@
 
     <profiles>
         <profile>
-            <id>localdeploy</id>
+            <id>noPublicDeploy</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -67,7 +67,15 @@
                     <url>file:///tmp/distro/syzygy</url>
                 </repository>
             </distributionManagement>
-
+        </profile>
+        <profile>
+            <id>doclint-java8-disable</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+            <properties>
+                <javadoc.opts>-Xdoclint:none</javadoc.opts>
+            </properties>
         </profile>
     </profiles>
 

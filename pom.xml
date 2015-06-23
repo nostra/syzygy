@@ -95,6 +95,16 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <distributionManagement>
+                <!--snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository-->
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
             <!--
             Did not manage to set key in settings.xml, and therefore need to use:
             mvn -Psign verify -Dgpg.passphrase=PASSPHRASE

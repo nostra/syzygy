@@ -1,0 +1,4 @@
+# Syzygy
+
+Documentation can be found in the README file: +
+https://github.com/amedia/syzygy

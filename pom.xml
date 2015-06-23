@@ -20,7 +20,7 @@
     <groupId>no.api.syzygy</groupId>
     <artifactId>syzygy</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.10</version>
+    <version>0.0.11-SNAPSHOT</version>
 
     <name>Syzygy</name>
     <description>A hierarchical system for configuration inspired by hiera and convict.js.</description>
@@ -30,7 +30,7 @@
         <connection>scm:git:ssh://git@github.com/amedia/syzygy.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/amedia/syzygy.git</developerConnection>
         <url>git@github.com:amedia/syzygy.git</url>
-      <tag>syzygy-0.0.10</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>

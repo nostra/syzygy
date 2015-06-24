@@ -21,6 +21,18 @@ The heart of these systems is support for overriding a "common" or
 "default" setting. This makes it easy to plug in legacy configuration, or
 create a specialized configuration setup.
 
+You find syzygy in the central maven repository: +
+http://search.maven.org/#search|ga|1|a%3A%22syzygy%22
+
+For Maven, you would add this to your pom:
+
+  <dependency>
+      <groupId>no.api.syzygy</groupId>
+      <artifactId>syzygy-core</artifactId>
+      <version>0.0.10</version>
+  </dependency>
+
+
 ## Configuration file
 
 The regular way of configuring syzygy, is to create a configuration file,

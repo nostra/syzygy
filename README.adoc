@@ -6,15 +6,14 @@ Syzygy
 :icons: font
 :source-highlighter: prettify
 
-*Syzygy* is a Java based *configuration system* vaguely
+*Syzygy* is a Java-8 based *configuration system* vaguely
 inspired by
 https://docs.puppetlabs.com/hiera/1/index.html[Hiera]
 and
 https://github.com/mozilla/node-convict[convict.js].
 
 You store the configuration in `JSON`, `yaml` or in
-https://github.com/coreos/etcd[etcd]. Or in a
-self baked way, with a
+https://github.com/coreos/etcd[etcd]. Or with your own code, by making a
 https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/SyzygyDynamicLoader.java[minimal
 implementation].
 
@@ -24,7 +23,7 @@ create a specialized configuration setup.
 
 ## Configuration file
 
-The normal way of configuring syzygy, is to create a configuration file,
+The regular way of configuring syzygy, is to create a configuration file,
 typically named `syzygy.yaml`:
 
 [source,yaml]
@@ -44,19 +43,19 @@ be stored in same directory as the configuration file. Note that the configdir
 directory is *relative to the  syzygy.yaml* file -- which means that if you fetch it
 over HTTP, the address will be relative to that HTTP address.
 
-The content of the files can have 3 different formats:
+The configuration can have 4 different formats:
 
-. yaml - support for nesting levels, hierarchical data, lists and maps.
-. json - plain json, support nesting levels
-. json (as convict.js format). Supports data types *, int and url and will
-   validate all data.
+. `yaml` - support for nesting levels, hierarchical data, lists and maps.
+. `json` - plain json, support nesting levels
+. json (as _convict.js_ format). Supports data types `*`, `int` and `url` and will
+   use this to validate also configuration elements not in the convict file.
+. Custom by referring to a Java _implementation_, as in the `SomeImplementation`
+example.
 
 Basically, everything that is supported by
 https://github.com/FasterXML/jackson[Jackson]
 is supported by syzygy.
 
-You may refer to a java implementation, as in the `SomeImplementation`
-example. More about the correct format for this later.
 
 ### Etcd configuration
 

@@ -24,7 +24,7 @@ create a specialized configuration setup.
 
 ## Configuration file
 
-The normal way of configurating syzygy, is to create a configuration file,
+The normal way of configuring syzygy, is to create a configuration file,
 typically named `syzygy.yaml`:
 
 [source,yaml]

@@ -116,7 +116,6 @@
             <!--
             Did not manage to set key in settings.xml, and therefore need to use:
             mvn -Psign verify -Dgpg.passphrase=PASSPHRASE
-            mvn -Psign -Darguments=-Dgpg.passphrase=PASSPHRASE deploy
             mvn -Psign,noPublicDeploy -Dgpg.passphrase=PASSPHRASE clean deploy
             # Release prepare.
             mvn -Dgpg.passphrase=PASSPHRASE -Darguments=-Dgpg.passphrase=PASSPHRASE release:clean release:prepare

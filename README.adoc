@@ -12,14 +12,15 @@ https://docs.puppetlabs.com/hiera/1/index.html[Hiera]
 and
 https://github.com/mozilla/node-convict[convict.js].
 
-You store the configation in `JSON`, `yaml` or in
+You store the configuration in `JSON`, `yaml` or in
 https://github.com/coreos/etcd[etcd]. Or in a
-self baked legacy way, with a
+self baked way, with a
 https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/SyzygyDynamicLoader.java[minimal
 implementation].
 
 The heart of these systems is support for overriding a "common" or
-"default" setting.
+"default" setting. This makes it easy to plug in legacy configuration, or
+create a specialized configuration setup.
 
 ## Configuration file
 
@@ -29,7 +30,7 @@ typically named `syzygy.yaml`:
 [source,yaml]
 ---
 :datadir:
-  - hieradata
+  - configdir
 :hierarchy:
   - special    # Finest granularity
   - role       # A specific
@@ -37,9 +38,9 @@ typically named `syzygy.yaml`:
   - common     # Fallback level
 stop_if_error: true
 
-This says you store your data in the directory named `hieradata`.
+This says you store your data in the directory named `configdir`.
 Otherwise, the files are assumed to
-be stored in same directory as the configuration file. Note that the hieradata
+be stored in same directory as the configuration file. Note that the configdir
 directory is *relative to the  syzygy.yaml* file -- which means that if you fetch it
 over HTTP, the address will be relative to that HTTP address.
 
@@ -66,7 +67,7 @@ added.
 [source,yaml]
 ---
 :datadir:
-  - hieradata
+  - configdir
 :hierarchy:
   - no.api.syzygy.etcd.EtcdDynamicConfiguration#inetcd
   - infile
@@ -75,7 +76,7 @@ global_etcd_url : "http://127.0.0.1:4001/v2/"
 inetcd_etcd_prefix : "/syzygy/somewhere/"
 
 The configuration `inetcd` can be found in etcd, and `infile` in the directory
-`hieradata`. Notice that `EtcdDynamicConfiguration` need configuration of
+`configdir`. Notice that `EtcdDynamicConfiguration` need configuration of
 where to find etcd, namely `global_etcd_url`
 
 Note the configuration which is specific for etcd:
@@ -87,8 +88,6 @@ Note the configuration which is specific for etcd:
 
 
 ### yaml configuration example
-
-Yaml is the format you would know already from dropwizard configuration:
 
 [source,yaml]
 key1: 'value from common'
@@ -125,7 +124,7 @@ example:
   doc: 'Example doc.'
   format: '*'
   default: 'default_value'
-      
+
 
 The key name is `example`, and it is in "any" format. The "default"
 value is what this configuration will return if it is not overridden.
@@ -134,6 +133,9 @@ The configuration will be used if validate is called.
 *Note* that convict configuration is *only supported in JSON and yaml* files,
 and *not* in etcd and dynamic configurations.
 
+When you have a convict configuration, the validation is applied on
+*all* elements with the given key. This enables you to create a set of defaults
+which you can override whilst still getting validation and documentation.
 
 ### Programmatic no.api.someapp.SomeImplementation
 
@@ -155,7 +157,7 @@ stop_if_error: 'true'
 Explanation: The class `DirectoryIntoMap` will load all files from
 the configuration `_directory_to_map`. The "special" configuration will
 override all configuration. The `DirectoryIntoMap` values will override
-the "fallback" values. See: +
+the "fallback" values. Fore example, see: +
  https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/loaders/DirectoryIntoMap.java
 
 ## Query through the SyzygyLoader
@@ -166,10 +168,9 @@ find configured values:
 * `static SyzygyLoader loadConfigurationFile( File config )` : How you instantiate Syzygy (presently)
 * `String lookup(String key)` : Regular query for string value
 * `<T> T lookup(String key, Class<T> clazz)` : Lookup for key with a special class - typically a map
-* `List<SyzygyPayload> listAllProperties()` :
-https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/syzygy/loaders/SyzygyLoader.java
+* `List<SyzygyPayload> listAllProperties()` : Return list of meta description objects for all known properties.
 * `String deepLookup(String key, String nameOfMap)` : For each configuration file, first try
-  lookup in map. This is functionally similar to ApiPropertes#lookup(key, publication );
+  lookup in map. For example: `deepLookup(key, publication )`: Find override value specific for given _publication_
 * `<T> SyzygyPayload<T> lookupFor(String key, Class<T> clazz)` : Lookup value and get the
   syzygy payload object which contains more information, most interestingly, the documentation.
 * `void flush()` : Reload config (but currently not parent config)
@@ -178,9 +179,9 @@ https://github.com/amedia/syzygy/blob/master/syzygy-core/src/main/java/no/api/sy
 
 ### Listing used variables
 
-By combining the listAllProperties, can you find all properties, and whether they are used.
+By using the listAllProperties, can you find all properties, whether they are used, and how much they are used.
 Example of output from
-https://github.com/amedia/syzygy/blob/master/syzygy-core/src/test/java/no/api/syzygy/loaders/SyzygyLoaderTest.java#133
+https://github.com/amedia/syzygy/blob/master/syzygy-core/src/test/java/no/api/syzygy/loaders/SyzygyLoaderTest.java#149
 
 
    convict     1            key4                                         key4_value

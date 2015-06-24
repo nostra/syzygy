@@ -54,8 +54,8 @@ public class SyzygyLoader {
     }
 
     /**
-     * Default way of loading syzygy configuration for users of this API
-     * @return Configuration, after finding it from the V3_CONFIG_HOME, or statically in /etc/api
+     * Convenience method for loading configuration in the Amedia environment
+     * @see #loadConfigurationFile(File)
      */
     public static SyzygyLoader loadConfigurationFromEtcApi() {
         File syzygyFile = new File(System.getProperty("V3_CONFIG_HOME", "/etc/api")+"/syzygy/syzygy.yaml");
@@ -66,22 +66,32 @@ public class SyzygyLoader {
         }
     }
 
-    public static SyzygyLoader loadConfigurationFile( File config ) {
-        if ( ! config.exists() || !config.canRead()) {
-            throw new SyzygyException("Configuration file does not exist. Tried to read: "+config);
+    /**
+     * Default way of loading syzygy configuration for API users of this API
+     * @return Configuration, after loading it from config file
+     */
+    public static SyzygyLoader loadConfigurationFile( File configFile ) {
+        if ( ! configFile.exists() || !configFile.canRead()) {
+            throw new SyzygyException("Configuration file does not exist. Tried to read: "+configFile);
         }
         SyzygyLoader loader =
                 new SyzygyLoader(
-                        new SyzygyFileConfig(config.getName())
-                                .load(config.getPath())
+                        new SyzygyFileConfig(configFile.getName())
+                                .load(configFile.getPath())
         );
         return loader.reloadHierarchy();
     }
 
+    /**
+     * Regular query for string value
+     */
     public String lookup(String key) {
         return lookup(key, String.class);
     }
 
+    /**
+     * Lookup for key with a special class - typically a map or an integer
+     */
     public <T> T lookup(String key, Class<T> clazz) {
         SyzygyPayload<T> result = lookupFor(key, clazz);
         return result == null
@@ -101,6 +111,9 @@ public class SyzygyLoader {
         return null;
     }
 
+    /**
+     * @return A list of names for the configuration
+     */
     public List<String> configurationNames() {
         List<String> names = new ArrayList<>();
         for ( SyzygyConfig conf : configsets ) {
@@ -110,7 +123,7 @@ public class SyzygyLoader {
     }
 
     /**
-     * @return The composite collection of keys.
+     * @return The composite collection of keys, i.e. the set of keys from all configurations combined
      */
     public Set<String> keys() {
         Set<String> keys = new HashSet<>();
@@ -130,7 +143,7 @@ public class SyzygyLoader {
 
     /**
      *
-     * @return SyzygyPayload containing key, object, and name of config
+     * @return A list of @{link SyzygyPayload} containing key, object, and name of config
      */
     public List<SyzygyPayload> listAllProperties() {
         List<SyzygyPayload> all = new ArrayList<>();
@@ -174,6 +187,9 @@ public class SyzygyLoader {
         reloadHierarchy();
     }
 
+    /**
+     * List validation errors on log WARN. If configured to stop on error, throw SyzygyException
+     */
     public void validate() {
         List<String> errs = new ArrayList<>();
         for ( SyzygyConvictSchemaConfig convict : extractConvictSchemas() ) {

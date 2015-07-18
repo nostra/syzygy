@@ -23,7 +23,8 @@ import java.util.Set;
  */
 public interface SyzygyConfig {
 
-    String SYZYGY_CFG_FILE = "_internal_syzygy_cfg_file_";
+    // TODO This static should be replaced or moved
+    public static final String SYZYGY_CFG_FILE = "_internal_syzygy_cfg_file_";
 
     /**
      * @return Name of this configuration service used for reporting purposes

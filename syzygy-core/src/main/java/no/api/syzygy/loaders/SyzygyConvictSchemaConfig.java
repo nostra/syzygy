@@ -139,7 +139,7 @@ public class SyzygyConvictSchemaConfig extends AbstractConfigLoader {
             if ( convict != null ) {
                 try {
                     convert( convict.get("format"), value);
-                } catch (SyzygyException ignored ) {
+                } catch (SyzygyException ignored ) { // NOSONAR: Intentional
                     String doc = convict.get("doc");
                     errs.add("Validation failed for element "+cfg.getName()+"/"+key+". "
                             +"Expecting it to be of type "+convict.get("format")+". "

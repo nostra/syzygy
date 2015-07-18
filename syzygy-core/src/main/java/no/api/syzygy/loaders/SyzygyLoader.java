@@ -361,7 +361,7 @@ public class SyzygyLoader {
         try (InputStream is = new URI(scheme, filename, null).toURL().openStream()) {
             return is.read() != -1;
 
-        } catch (URISyntaxException | IOException ignored) {} // NO_SONAR This is expected, as we will often look up non-existing paths
+        } catch (URISyntaxException | IOException ignored) {} // NOSONAR This is expected, as we will often look up non-existing paths
         return false;
     }
 

@@ -28,6 +28,10 @@ public class FromSyzygyToEtcd {
 
     private EtcdConnector etcdConnector;
 
+    private FromSyzygyToEtcd(EtcdConnector etcdConnector) {
+        this.etcdConnector = etcdConnector;
+    }
+
     /**
      * NOTE that this is additive - it does not remove elements not present in etcd.
      */
@@ -35,9 +39,6 @@ public class FromSyzygyToEtcd {
         new FromSyzygyToEtcd( etcdConnector ).mapFrom( syzgyConfig );
     }
 
-    private FromSyzygyToEtcd(EtcdConnector etcdConnector) {
-        this.etcdConnector = etcdConnector;
-    }
 
     private void mapFrom(SyzygyConfig syzgyConfig) {
         final String prefix = syzgyConfig.getName()+"/";

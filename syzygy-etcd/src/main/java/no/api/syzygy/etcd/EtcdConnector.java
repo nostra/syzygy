@@ -136,7 +136,7 @@ public class EtcdConnector {
             log.info("Connecting to etcd on (possibly redirected URI): "+url);
             client = new EtcdClientImpl.Builder().baseUri(new URI(url)).responseReader(new JacksonResponseReader()).build();
             client.start();
-            try {
+            try { // NOSONAR: Creating directory, ignoring if it already exists
                 client.setData().dir().forKey(prefix);
             } catch (Exception e) { // NOSONAR: Wide net is OK
                 log.trace("Directory for "+prefix+" does (probably) exist already. Masked exception: "+e);
@@ -168,7 +168,7 @@ public class EtcdConnector {
             if ( data.getNode().isDir() ) {
                 return data.getNode().getNodes().size();
             }
-        } catch (EtcdException ignore) {
+        } catch (EtcdException ignore) { // NOSONAR: Intentional
             log.debug("Ignoring exception, which just indicates that " + prefix + key + " is not a directory");
         }
 
@@ -320,7 +320,7 @@ public class EtcdConnector {
             if ( data.getNode().isDir() ) {
                 return true;
             }
-        } catch (EtcdException ignore) {
+        } catch (EtcdException ignore) { // NOSONAR: Intentional
             log.trace("Ignoring exception, which just indicates that {} is not a directory", prefix + key);
         }
         return false;

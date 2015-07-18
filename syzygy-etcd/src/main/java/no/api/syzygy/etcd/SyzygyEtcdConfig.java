@@ -92,7 +92,7 @@ public class SyzygyEtcdConfig implements SyzygyConfig {
     @Override
     public Set<String> keys() {
         if ( isBlacklisted()) {
-            return null;
+            return new HashSet<>();
         }
         // Plus / as a wrapped config really lives in a map
         Set<String> result = new HashSet<>();

@@ -1,8 +1,8 @@
 // -*- Doc -*-
 
-image::http://img.shields.io/maven-central/v/no.api.syzygy/syzygy.svg[link="http://search.maven.org/#search%7Cga%7C1%7Cno.api.syzygy"]
-image::http://www.issuestats.com/github/amedia/syzygy/badge/pr?style=flat-square[link="http://www.issuestats.com/github/amedia/syzygy"]
-image::http://www.issuestats.com/github/amedia/syzygy/badge/issue?style=flat-square[link="http://www.issuestats.com/github/amedia/syzygy"]
+image:http://img.shields.io/maven-central/v/no.api.syzygy/syzygy.svg[link="http://search.maven.org/#search%7Cga%7C1%7Cno.api.syzygy"]
+image:http://www.issuestats.com/github/amedia/syzygy/badge/pr?style=flat-square[link="http://www.issuestats.com/github/amedia/syzygy"]
+image:http://www.issuestats.com/github/amedia/syzygy/badge/issue?style=flat-square[link="http://www.issuestats.com/github/amedia/syzygy"]
 
         
 Syzygy

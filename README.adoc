@@ -5,6 +5,8 @@ Stack: Java
 ---
 <!--(Maintained Duplo labels above. Read more on http://info.api.no/handbook/guidelines/GitHub-guidelines.html)-->
 
+<!--(Maintained Duplo labels above. Read more on http://info.api.no/handbook/guidelines/GitHub-guidelines.html)-->
+
 // -*- Doc -*-
 
 image:http://img.shields.io/maven-central/v/no.api.syzygy/syzygy.svg[link="http://search.maven.org/#search%7Cga%7C1%7Cno.api.syzygy"]
